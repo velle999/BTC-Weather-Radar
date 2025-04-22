@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pi BTC Weather Clock</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Settings Control Panel -->
+    <div id="controls">
+     <div class="control-group">
+    <label for="hourFormat">Time Format:</label>
+    <select id="hourFormat">
+        <option value="12">12-hour</option>
+        <option value="24">24-hour</option>
+    </select>
+</div>
+        <div class="control-header">
+            <h3>Settings Panel</h3>
+            <button id="hideControls" title="Hide Panel">×</button>
+        </div>
+        <div class="control-group">
+            <label for="locationInput">Location (ZIP):</label>
+            <input type="text" id="locationInput" placeholder="e.g., 63090">
+            <button id="updateLocation">Update</button>
+        </div>
+        <div class="control-group">
+            <label for="stockInput">Stock Symbol:</label>
+            <input type="text" id="stockInput" placeholder="e.g., NVDA">
+            <button id="updateStock">Update</button>
+        </div>
+    </div>
+    <button id="showControls" title="Show Settings Panel">⚙️</button>
+
+    <!-- RGB Background Canvas -->
+    <canvas id="rgbBackground"></canvas>
+
+    <!-- Main Application Container -->
+    <div id="shell">
+        <table id="display">
+            <tbody>
+                <tr>
+                    <td id="current" colspan="2">
+                        <div class="icon"></div>
+                        <div class="desc"></div>
+                        <div class="currentTemp">Temperature:<br><span class="temp">--°F</span></div>
+                    </td>
+                    <td colspan="3">
+                        <div id="time">--:--:--</div>
+                        <div id="date">--/--/----</div>
+                        <div id="btcprice">BTC: $--</div>
+                        <div id="stockData">Loading stock data...</div>
+                        <div id="weatherAlerts">Loading weather alerts...</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="forecast" id="forecast1">
+                        <div class="day">Day 1</div>
+                        <div class="icon"></div>
+                        <div class="desc"></div>
+                        <div class="highTemp">High: <span class="high">--°F</span></div>
+                    </td>
+                    <td class="forecast" id="forecast2">
+                        <div class="day">Day 2</div>
+                        <div class="icon"></div>
+                        <div class="desc"></div>
+                        <div class="highTemp">High: <span class="high">--°F</span></div>
+                    </td>
+                    <td class="forecast" id="forecast3">
+                        <div class="day">Day 3</div>
+                        <div class="icon"></div>
+                        <div class="desc"></div>
+                        <div class="highTemp">High: <span class="high">--°F</span></div>
+                    </td>
+                    <td class="forecast" id="forecast4">
+                        <div class="day">Day 4</div>
+                        <div class="icon"></div>
+                        <div class="desc"></div>
+                        <div class="highTemp">High: <span class="high">--°F</span></div>
+                    </td>
+                    <td class="forecast" id="forecast5">
+                        <div class="day">Day 5</div>
+                        <div class="icon"></div>
+                        <div class="desc"></div>
+                        <div class="highTemp">High: <span class="high">--°F</span></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+         <div id="radar-container">
+    <div id="radar-map"></div>
+    <div id="radar-controls">
+        <button id="radar-toggle">Show Radar</button><button id="settings-button">Change Settings</button>
+
+        <div id="radar-timestamp"></div>
+    </div>
+</div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="libs/jquery.min.js"></script>
+    <script src="libs/moment-with-locales.min.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="js/rgb-background.js"></script>
+    <script src="js/app.js"></script>
+<div id="animal-companion">
+    <div class="animal-body">
+        <div class="animal-face"></div>
+        <div class="animal-legs">
+            <div class="animal-leg"></div>
+            <div class="animal-leg"></div>
+            <div class="animal-leg"></div>
+            <div class="animal-leg"></div>
+            <div class="animal-hearts">❤️❤️❤️</div>
+            
+        </div>
+    </div>
+    <div class="animal-message">Hello!</div>
+</div>
+</body>
+</html>
