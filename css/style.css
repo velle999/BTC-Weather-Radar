@@ -208,52 +208,49 @@ body {
 
 /* ===== RADAR CONTAINER ===== */
 #radar-container {
-  position: absolute;
-  bottom: 274px;
-  right: 20px;
-  width: 360px; /* Smaller size */
-  height: 200px;
+  position: relative; /* <-- Not fixed anymore */
+  width: 100%;
+  height: auto;
+  min-height: 250px;
+  background: rgba(0, 0, 0, 0.6);
   border: 2px solid #888;
   border-radius: 12px;
   overflow: hidden;
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.6);
   box-shadow: 0 0 10px #000;
-}
-
-#radar-container.active {
-    width: 420;
-    height: 240px;
-    opacity: 1;
-    transform: scale(1);
+  display: flex;
+  flex-direction: column;
 }
 
 #radar-map {
-    width: 100%;
-    height: calc(100% - 30px);
+  flex: 1;
+  width: 100%;
+  height: 100%;
 }
 
+/* Radar Controls aligned at bottom */
 #radar-controls {
-    height: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
-    background-color: rgba(0, 0, 0, 0.3);
-    font-size: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  padding: 0 10px;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 0.8rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
 }
 
+/* Radar Toggle Button */
 #radar-toggle {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-    padding: 2px 8px;
-    border-radius: 4px;
-    cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 #radar-toggle:hover {
-    background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .control-group select {
@@ -1182,8 +1179,8 @@ body.night-mode {
 }
 
 .right-column {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
   height: 100%;
 }
@@ -1325,6 +1322,16 @@ body.night-mode {
   
   #stocks-container {
     min-height: 300px;
+  }
+
+@media (max-width: 768px) {
+  .right-column {
+    flex-direction: column;
+  }
+
+  #radar-container,
+  #stocks-container {
+    min-height: 200px;
   }
 }
 
@@ -1678,6 +1685,7 @@ img {
     99% { transform: translateX(0) scaleX(-1); }
     100% { transform: translateX(0) scaleX(1); }
   }
+
 
 
 
