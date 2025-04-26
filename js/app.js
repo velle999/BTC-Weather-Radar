@@ -80,7 +80,7 @@ function setupAnimalHover() {
 
 function startCarrotRain() {
   setInterval(() => {
-    if (Math.random() < 0.5) {
+    if (document.body.classList.contains('carrot-mode')) { // Only when active
       const carrot = document.createElement('div');
       carrot.className = 'carrot';
       carrot.textContent = '🥕';
@@ -89,8 +89,9 @@ function startCarrotRain() {
       document.getElementById('carrot-rain').appendChild(carrot);
       setTimeout(() => carrot.remove(), 6000);
     }
-  }, 10000);
+  }, 800); // Faster rain (every 0.8s instead of 10s)
 }
+
 function createClouds(amount) {
   const cloudContainer = document.createDocumentFragment();
   for (let i = 0; i < amount; i++) {
@@ -530,8 +531,6 @@ function initializeApp() {
     setInterval(fetchStockData, 65000);
     setInterval(fetchWeatherAlerts, 900000);
 
-    startCarrotRain();
-
     setInterval(() => {
         const fox = document.getElementById('animal-companion');
         if (Math.random() < 0.4) {
@@ -600,6 +599,26 @@ function applyNightMode() {
     document.getElementById('rgbBackground').style.filter = '';
   }
 }
+
+const carrotToggleButton = document.getElementById('carrot-toggle');
+
+if (localStorage.getItem('carrotRain') === 'true') {
+  document.body.classList.add('carrot-mode');
+}
+
+const carrotLayer = document.querySelector('.carrot-layer');
+
+carrotToggleButton.addEventListener('click', () => {
+  if (document.body.classList.contains('carrot-mode')) {
+    document.body.classList.remove('carrot-mode');
+    carrotLayer.style.opacity = '0';
+    localStorage.setItem('carrotRain', 'false');
+  } else {
+    document.body.classList.add('carrot-mode');
+    carrotLayer.style.opacity = '0.5'; // Visible like rain/snow
+    localStorage.setItem('carrotRain', 'true');
+  }
+});
 
 // ----------------------------
 // INITIALIZATION

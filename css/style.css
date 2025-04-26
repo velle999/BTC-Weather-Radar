@@ -2,25 +2,34 @@
 body {
   background: white;
   color: white;
-  overflow-x: hidden; /* Only hide horizontal scroll */
+  overflow-x: hidden;
   font-family: 'Arial', sans-serif;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
-  min-height: 100vh; /* Allow growing */
+  min-height: 100vh;
 }
 
 /* ===== RGB BACKGROUND ===== */
+
 #rgbBackground {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1; /* Above body background but below effects */
+  z-index: 0;
 }
 
 /* ===== WEATHER EFFECTS ===== */
 #weather-effects {
-  z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: screen;
+  background: transparent;
 }
 
 /* ===== MAIN APP CONTAINER ===== */
@@ -29,9 +38,44 @@ body {
   /* Keep existing styles */
 }
 
+.cloud {
+  z-index: 5;
+}
+#shell {
+  position: relative; /* Fixed to relative */
+  z-index: 20; /* Main content */
+  backdrop-filter: blur(12px);
+  background-color: rgba(25, 25, 25, 0.65);
+  border-radius: 10px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+#radar-container, #stocks-container {
+  position: absolute; /* Changed from fixed */
+  z-index: 30; /* Highest clickable layer */
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
 /* ===== COMPANIONS ===== */
 .companion-stage {
-  z-index: 4; /* Below shell but above background */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25vh;
+  z-index: 15;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
 }
 
 /* ===== INTERACTIVE ELEMENTS ===== */
@@ -146,6 +190,7 @@ body {
   gap: 10px; /* Space between days */
 }
 
+
 /* ===== FINANCIAL DATA ===== */
 #btcprice, #stockData {
     font-size: 1.8vw;
@@ -177,6 +222,10 @@ body {
   border: none;
 }
 
+#controls, #settings-panel, button, input, select {
+  z-index: 21;
+  position: relative;
+}
 
 #rgbBackground {
     z-index: 0; /* very low, background only */
@@ -282,6 +331,7 @@ body {
     position: relative;
     animation: walk 0.8s ease-in-out infinite, float 4s ease-in-out infinite;
     filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+    overflow: visible; /* <-- ADD THIS! */
 }
 
 .animal-face {
@@ -417,11 +467,12 @@ body {
     border-radius: 12px;
     margin-bottom: 10px;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
     width: 150px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    pointer-events: none;
+    /* REMOVE pointer-events: none; */
+    z-index: 31; /* keep this */
 }
 
 #animal-companion:hover .animal-message {
@@ -434,9 +485,11 @@ body {
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
     animation: float-hearts 2s ease-in-out infinite;
-    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    /* REMOVE pointer-events: none; */
+    z-index: 31; /* keep this */
 }
 
 #animal-companion:hover .animal-hearts {
@@ -1684,14 +1737,24 @@ img {
     100% { transform: translateX(0) scaleX(1); }
   }
 
+/* CARROT RAIN EFFECT */
+.carrot-layer {
+  background-image: url('assets/effects/carrot-rain.png'); /* or wherever your carrot rain PNG is */
+  background-repeat: repeat;
+  background-size: contain;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  animation: carrotFall 2.5s linear infinite;
+}
+
+@keyframes carrotFall {
+  0% { background-position: 0 -100vh; }
+  100% { background-position: 0 100vh; }
+}
 
 
+body.carrot-mode .carrot-layer {
+  opacity: 1;
+}
 
-  /* Keep existing companion styles */
 </style>
-
-
-
-
-
-

@@ -8,12 +8,6 @@
 </head>
 <body>
 
-<!-- Settings Control Panel -->
-<div id="controls">
-  <!-- Keep controls content same -->
-</div>
-<button id="showControls" title="Show Settings Panel">⚙️</button>
-
 <!-- RGB Background Canvas -->
 <canvas id="rgbBackground"></canvas>
 
@@ -22,6 +16,8 @@
   <div class="rain-layer"></div>
   <div class="snow-layer"></div>
   <div class="wind-layer"></div>
+  <div class="carrot-layer"></div>
+
 </div>
 
 <!-- Main Application UI -->
@@ -94,6 +90,7 @@
           <button id="radar-toggle">Show Radar</button>
           <button id="settings-button">Change Settings</button>
           <button id="stocks-toggle">Show CNBC</button>
+          <button id="carrot-toggle">Carrot Rain 🥕</button>
           <div id="radar-timestamp"></div>
         </div>
       </div>
@@ -112,21 +109,19 @@
 <div id="weather-effects"></div>
 
 <!-- Dedicated Companion Section -->
-<div class="companion-stage">
-  <!-- Fox Companion -->
-  <div id="animal-companion">
-    <div class="animal-body">
-      <div class="animal-face"></div>
-      <div class="animal-legs">
-        <div class="animal-leg"></div>
-        <div class="animal-leg"></div>
-        <div class="animal-leg"></div>
-        <div class="animal-leg"></div>
-      </div>
-      <div class="animal-hearts">❤️❤️❤️</div>
+<div id="animal-companion">
+  <div class="animal-body">
+    <div class="animal-face"></div>
+    <div class="animal-legs">
+      <div class="animal-leg"></div>
+      <div class="animal-leg"></div>
+      <div class="animal-leg"></div>
+      <div class="animal-leg"></div>
     </div>
-    <div class="animal-message">Hello!</div>
   </div>
+  <div class="animal-hearts">❤️❤️❤️</div> <!-- move here -->
+  <div class="animal-message">Hello!</div>
+</div>
 
   <!-- Bunny Companion -->
   <div id="bunny-container">
@@ -165,8 +160,6 @@
 <div class="cloud"></div>
 <div class="cloud"></div>
 <div class="cloud"></div>
-
-<div id="carrot-rain"></div>
 
 <script src="libs/jquery.min.js"></script>
 <script src="libs/moment-with-locales.min.js"></script>
