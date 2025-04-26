@@ -450,7 +450,7 @@ async function loadRadarData() {
 function toggleRadar() {
     radarActive = !radarActive;
     $('#radar-container').toggleClass('active', radarActive);
-    $('#radar-toggle').text(radarActive ? 'Hide Radar' : 'Show Radar');
+    $('#radar-toggle').text(radarActive ? 'Refresh Radar' : 'Show Radar');
     if (radarActive) loadRadarData();
 }
 

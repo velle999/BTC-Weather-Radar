@@ -1,20 +1,23 @@
 /* ===== BASE STYLES ===== */
 body {
-  display: flex;
-  flex-direction: row; /* side-by-side layout */
+  background: white; /* <-- add this */
+  color: white;
+  overflow: hidden;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  font-family: 'Arial', sans-serif;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 /* ===== RGB BACKGROUND ===== */
 #rgbBackground {
+  background: white; /* <-- this too */
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 0; /* <-- RGB base layer */
+  z-index: 0;
 }
 
 #weather-effects {
