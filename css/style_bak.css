@@ -1,0 +1,1760 @@
+/* ===== BASE STYLES ===== */
+body {
+  background: white;
+  color: white;
+  overflow-x: hidden;
+  font-family: 'Arial', sans-serif;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+  min-height: 100vh;
+}
+
+/* ===== RGB BACKGROUND ===== */
+
+#rgbBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+/* ===== WEATHER EFFECTS ===== */
+#weather-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: screen;
+  background: transparent;
+}
+
+/* ===== MAIN APP CONTAINER ===== */
+#shell {
+  z-index: 3;
+  /* Keep existing styles */
+}
+
+.cloud {
+  z-index: 5;
+}
+#shell {
+  position: relative; /* Fixed to relative */
+  z-index: 20; /* Main content */
+  backdrop-filter: blur(12px);
+  background-color: rgba(25, 25, 25, 0.65);
+  border-radius: 10px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+#radar-container, #stocks-container {
+  position: absolute; /* Changed from fixed */
+  z-index: 30; /* Highest clickable layer */
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* ===== COMPANIONS ===== */
+.companion-stage {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25vh;
+  z-index: 15;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+/* ===== INTERACTIVE ELEMENTS ===== */
+#radar-container,
+#stocks-container {
+  z-index: 5; /* Highest priority */
+}
+
+/* ===== MAIN APP CONTAINER ===== */
+#shell {
+  background-color: rgba(25, 25, 25, 0.65);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-radius: 10px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Change from height: 100vh */
+}
+
+/* ===== DISPLAY TABLE ===== */
+#display {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    flex: 1;
+}
+
+#display tbody {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#display tr {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+#display td {
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(35, 35, 35, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+#display td:hover {
+    background-color: rgba(45, 45, 45, 0.6);
+}
+
+/* ===== CURRENT WEATHER SECTION ===== */
+#current-weather-time {
+    padding: 20px;
+}
+
+.current-weather .icon img {
+    width: 100px;
+    height: 100px;
+    margin: 10px auto;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+}
+
+.current-weather .desc {
+    font-size: 1.8rem;
+    margin: 15px 0;
+    font-weight: 500;
+    color: rgba(255,255,255,0.95);
+}
+
+.currentTemp {
+    font-size: 1.5rem;
+    margin: 15px 0 5px;
+}
+
+.currentTemp .temp {
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+/* ===== TIME/DATE SECTION ===== */
+#time {
+    font-size: 3.5vw;
+    font-weight: bold;
+    margin-bottom: 1vh;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+#date {
+    font-size: 1.8vw;
+    margin-bottom: 3vh;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===== FORECAST SECTION ===== */
+.forecast {
+  background: none; /* <<< REMOVE the wide dark background */
+  flex: none; /* <<< Important: don't stretch */
+  min-width: auto;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  gap: 10px; /* Space between days */
+}
+
+
+/* ===== FINANCIAL DATA ===== */
+#btcprice, #stockData {
+    font-size: 1.8vw;
+    margin: 1vh 0;
+    padding: 8px;
+    background-color: rgba(20, 20, 20, 0.3);
+    border-radius: 5px;
+    color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(4px);
+}
+
+/* ===== STOCKS IFRAME CONTAINER ===== */
+#stocks-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 380px;
+  height: 240px;
+  z-index: 1000;
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+#stocks-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#controls, #settings-panel, button, input, select {
+  z-index: 21;
+  position: relative;
+}
+
+#rgbBackground {
+    z-index: 0; /* very low, background only */
+}
+
+#weather-effects {
+    z-index: 1; /* just above background */
+}
+
+#shell, #controls, #animal-companion, #bunny-companion {
+    z-index: 2; /* main app UI */
+}
+
+/* ===== WEATHER ALERTS ===== */
+#weatherAlerts {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    background-color: rgba(20, 20, 20, 0.25);
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 1.1vw;
+    backdrop-filter: blur(4px);
+}
+
+/* ===== RADAR CONTAINER ===== */
+#radar-container {
+  position: relative;
+  width: 100%;
+  min-height: 250px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #888;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px #000;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px; /* Buffer space */
+}
+
+
+#radar-map {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* Radar Controls aligned at bottom */
+#radar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  padding: 0 10px;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 0.8rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Radar Toggle Button */
+#radar-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#radar-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.control-group select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.control-group select:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+/* ===== COMPANIONS ===== */
+#animal-companion {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    cursor: pointer;
+    animation: roam 20s linear infinite alternate;
+    transform-origin: center;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+}
+
+.animal-body {
+    width: 100px;
+    height: 70px;
+    background-color: #ff6b35;
+    border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
+    position: relative;
+    animation: walk 0.8s ease-in-out infinite, float 4s ease-in-out infinite;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+    overflow: visible; /* <-- ADD THIS! */
+}
+
+.animal-face {
+    position: absolute;
+    width: 40px;
+    height: 30px;
+    background-color: #f7c59f;
+    border-radius: 50%;
+    top: 15px;
+    left: 20px;
+}
+
+.animal-face::before,
+.animal-face::after {
+    content: '';
+    position: absolute;
+    background-color: #333;
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+    top: 10px;
+    animation: blink 3s infinite;
+}
+
+.animal-face::before { left: 8px; }
+.animal-face::after { right: 8px; }
+
+/* Add legs for walking effect */
+.animal-legs {
+    position: absolute;
+    bottom: -5px;
+    width: 100%;
+    height: 10px;
+}
+
+.animal-leg {
+    position: absolute;
+    width: 8px;
+    height: 15px;
+    background-color: #e05a2b;
+    border-radius: 5px;
+    animation: legMove 0.5s infinite;
+}
+
+.animal-leg:nth-child(1) { left: 15px; }
+.animal-leg:nth-child(2) { left: 25px; animation-delay: 0.25s; }
+.animal-leg:nth-child(3) { right: 25px; }
+.animal-leg:nth-child(4) { right: 15px; animation-delay: 0.25s; }
+
+/* Keyframes for fox legs walking */
+@keyframes legMove {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(10deg); }
+}
+
+/* Add legs for walking effect */
+.animal-legs {
+    position: absolute;
+    bottom: -5px;
+    width: 100%;
+    height: 10px;
+}
+
+.animal-leg {
+    position: absolute;
+    width: 8px;
+    height: 15px;
+    background-color: #e05a2b;
+    border-radius: 5px;
+    animation: legMove 0.5s infinite;
+}
+
+.animal-leg:nth-child(1) { left: 15px; }
+.animal-leg:nth-child(2) { left: 25px; animation-delay: 0.25s; }
+.animal-leg:nth-child(3) { right: 25px; }
+.animal-leg:nth-child(4) { right: 15px; animation-delay: 0.25s; }
+
+/* Keyframes for fox legs walking */
+@keyframes legMove {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(10deg); }
+}
+
+@keyframes fox-dash {
+    0% { transform: translateX(0) scaleX(1); }
+    20% { transform: translateX(20vw) scaleX(1) translateY(-20px); }
+    50% { transform: translateX(70vw) scaleX(-1) translateY(0); }
+    70% { transform: translateX(40vw) scaleX(-1) translateY(10px); }
+    100% { transform: translateX(100vw) scaleX(1) translateY(0); }
+}
+
+.animal-tail {
+    position: absolute;
+    width: 40px;
+    height: 25px;
+    background-color: #e05a2b;
+    border-radius: 50%;
+    right: -20px;
+    top: 15px;
+    transform-origin: left center;
+    animation: wag 3s ease-in-out infinite;
+}
+
+.animal-ear {
+    position: absolute;
+    width: 20px;
+    height: 25px;
+    background-color: #ff6b35;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    top: -10px;
+}
+
+.left-ear { left: 15px; transform: rotate(-15deg); }
+.right-ear { right: 15px; transform: rotate(15deg); }
+
+.animal-nose {
+    position: absolute;
+    width: 8px;
+    height: 6px;
+    background-color: #333;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.animal-message {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    width: 150px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    /* REMOVE pointer-events: none; */
+    z-index: 31; /* keep this */
+}
+
+#animal-companion:hover .animal-message {
+    opacity: 1;
+}
+
+.animal-hearts {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    animation: float-hearts 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    /* REMOVE pointer-events: none; */
+    z-index: 31; /* keep this */
+}
+
+#animal-companion:hover .animal-hearts {
+    opacity: 1;
+}
+
+/* ===== BUNNY COMPANION ===== */
+#bunny-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    min-height: 200px; /* increased minimum height */
+    padding-top: 40px; /* ADD ROOM FOR EARS */
+    pointer-events: none;
+    z-index: 100;
+    overflow: visible; /* allow ears to stick out */
+}
+
+#bunny-companion {
+    position: absolute;
+    bottom: 0; /* now align to bottom properly */
+    left: 0;
+    cursor: pointer;
+    animation: bunny-roam 18s linear infinite alternate;
+    transform-origin: center;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* Bunny Body */
+.bunny-body {
+    width: 80px;
+    height: 100px;
+    background-color: #f0f0f0;
+    border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
+    position: relative;
+    animation: 
+        bunny-hop 0.8s ease-in-out infinite,
+        bunny-float 4s ease-in-out infinite;
+}
+
+/* Long Ears */
+.bunny-ears {
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    top: -40px;
+}
+
+.bunny-ear {
+    position: absolute;
+    width: 20px;
+    height: 50px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    transform-origin: bottom center;
+}
+
+.bunny-ear.left { 
+    left: 15px;
+    transform: rotate(-10deg);
+    animation: ear-twitch-left 3s ease-in-out infinite;
+}
+.bunny-ear.right { 
+    right: 15px;
+    transform: rotate(10deg);
+    animation: ear-twitch-right 3s ease-in-out infinite;
+}
+
+/* Face */
+.bunny-face {
+    position: absolute;
+    width: 50px;
+    height: 40px;
+    background-color: #ffffff;
+    border-radius: 40%;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.bunny-eyes {
+    position: absolute;
+    width: 100%;
+    top: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.bunny-eye {
+    width: 12px;
+    height: 12px;
+    background-color: #6b4f40;
+    border-radius: 50%;
+    animation: blink 4s infinite;
+}
+
+.bunny-nose {
+    position: absolute;
+    width: 8px;
+    height: 6px;
+    background-color: #ff9999;
+    border-radius: 40%;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+<div id="bunny-companion">
+    <div class="bunny-body">
+        <div class="bunny-ears">
+            <div class="bunny-ear left"></div>
+            <div class="bunny-ear right"></div>
+        </div>
+        <div class="bunny-face">
+            <div class="bunny-eyes">
+                <div class="bunny-eye"></div>
+                <div class="bunny-eye"></div>
+            </div>
+            <div class="bunny-nose"></div>
+        </div>
+        <div class="bunny-feet">
+            <div class="bunny-foot left-foot"></div>
+            <div class="bunny-foot right-foot"></div>
+        </div>
+    </div>
+    <!-- Message and carrot elements -->
+</div>
+
+/* ===== EAR ANIMATIONS ===== */
+.bunny-ear.left {
+  animation: ear-twitch-left 3s ease-in-out infinite;
+  transform-origin: bottom center !important;
+}
+
+.bunny-ear.right {
+  animation: ear-twitch-right 3s ease-in-out infinite;
+  transform-origin: bottom center !important;
+}
+
+@keyframes ear-twitch-left {
+  0%, 100% { transform: rotate(-10deg) scaleY(1); }
+  50% { transform: rotate(-15deg) scaleY(0.95); }
+}
+
+@keyframes ear-twitch-right {
+  0%, 100% { transform: rotate(10deg) scaleY(1); }
+  50% { transform: rotate(15deg) scaleY(0.95); }
+}
+
+.bunny-foot {
+  animation: footWiggle 1.2s infinite ease-in-out;
+}
+
+@keyframes footWiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(12deg) scale(0.9); }
+}
+
+/* ===== FACE DETAILS ===== */
+.bunny-face {
+    position: absolute;
+    width: 50px;
+    height: 40px;
+    background: white;
+    border-radius: 40%;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.bunny-eye {
+    width: 12px;
+    height: 12px;
+    background: #6b4f40;
+    border-radius: 50%;
+    position: relative;
+    animation: blink 4s infinite, eye-follow 15s infinite linear;
+}
+
+@keyframes blink {
+    0%, 90%, 100% { height: 12px; }
+    92%, 98% { height: 2px; }
+}
+
+/* ===== ENHANCED FOOT ANIMATION ===== */
+@keyframes footWiggle {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(10deg) scale(0.9); }
+}
+
+.bunny-foot {
+    position: absolute;
+    width: 20px;
+    height: 12px;
+    background: white;
+    border-radius: 50% / 50%;
+    bottom: -5px;
+    z-index: -1;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* ===== INTERACTIVE ELEMENTS ===== */
+.bunny-carrot {
+    position: absolute;
+    top: -30px;
+    right: -40px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.bunny-message {
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 8px 12px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    opacity: 0;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.bunny-eye::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    top: 2px;
+    left: 2px;
+    border-radius: 50%;
+    animation: eye-sparkle 3s infinite;
+}
+
+#bunny-companion {
+  pointer-events: auto;
+  z-index: 1001;
+}
+
+.bunny-message, .bunny-carrot {
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.wind-wiggle {
+  animation: windShake 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes windShake {
+  from { transform: translateX(0) rotate(0); }
+  to { transform: translateX(5px) rotate(2deg); }
+}
+
+@keyframes eye-sparkle {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 0.3; }
+}
+
+@keyframes bunny-bounce {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -8px); }
+}
+
+.bunny-body {
+  animation: bunny-bounce 1.2s ease-in-out infinite;
+}
+
+/* ===== WEATHER EFFECTS ===== */
+.wind-wiggle {
+    animation: windShake 0.4s ease-in-out infinite alternate;
+}
+
+.wind-blown {
+    transform: translateX(10px) rotate(3deg);
+}
+
+@keyframes windShake {
+    from { transform: translateX(0) rotate(0); }
+    to { transform: translateX(5px) rotate(2deg); }
+}
+
+/* ===== BOUNCE ANIMATION ===== */
+@keyframes bunny-bounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -10px); }
+}
+
+#bunny-companion:hover {
+    transform: translate(-50%, -5px);
+}
+
+#bunny-companion:hover .bunny-carrot {
+    opacity: 1;
+    transform: scale(1) rotate(15deg);
+}
+
+#bunny-companion:hover .bunny-message {
+    opacity: 1;
+    transform: translate(-50%, -5px);
+}
+
+/* ===== KEYFRAMES ===== */
+@keyframes roam {
+    0% { transform: translateX(0) scaleX(1); }
+    49% { transform: translateX(calc(100vw - 120px)) scaleX(1); }
+    50% { transform: translateX(calc(100vw - 120px)) scaleX(-1); }
+    99% { transform: translateX(0) scaleX(-1); }
+    100% { transform: translateX(0) scaleX(1); }
+}
+
+@keyframes bunny-hyper {
+    0% { transform: translateX(0) scaleX(1) translateY(0); }
+    30% { transform: translateX(30vw) scaleX(1) translateY(-40px); }
+    60% { transform: translateX(60vw) scaleX(-1) translateY(-60px); }
+    90% { transform: translateX(90vw) scaleX(-1) translateY(-40px); }
+    100% { transform: translateX(95vw) scaleX(1) translateY(0); } /* almost right side */
+}
+
+
+@keyframes walk {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    25% { transform: rotate(-8deg) translateY(-6px); }
+    75% { transform: rotate(8deg) translateY(-6px); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+@keyframes bunny-roam {
+    0% { transform: translateX(0) scaleX(1); }
+    49% { transform: translateX(calc(100vw - 100px)) scaleX(1); }
+    50% { transform: translateX(calc(100vw - 100px)) scaleX(-1); }
+    99% { transform: translateX(0) scaleX(-1); }
+    100% { transform: translateX(0) scaleX(1); }
+}
+
+@keyframes bunny-hop {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+@keyframes bunny-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes bunny-hover-hop {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+
+@keyframes wag {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(10deg); }
+}
+
+@keyframes blink {
+    0%, 100% { height: 6px; }
+    50% { height: 2px; }
+}
+
+@keyframes footWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+.animal-hearts {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0; /* <<< fix: hidden by default */
+    transition: opacity 0.3s ease;
+    animation: float-hearts 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+#animal-companion:hover .animal-hearts {
+    opacity: 1; /* <<< only visible on hover */
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    #shell { padding: 15px; }
+    #time { font-size: 6vw; }
+    #date { font-size: 3.5vw; }
+    #btcprice, #stockData { font-size: 3.5vw; }
+    .currentTemp { font-size: 4vw; }
+    .temp { font-size: 5vw; }
+    .day { font-size: 3vw; }
+    #weatherAlerts { font-size: 2.5vw; }
+    .desc { font-size: 2.8vw; }
+    #bunny-container { height: 100px; }
+    .bunny-body { width: 60px; height: 80px; }
+    .bunny-ears { height: 40px; top: -30px; }
+}
+
+/* === WEATHER THEMES === */
+body.weather-clear {
+  background: linear-gradient(to top, #87ceeb, #ffffff); /* Blue sky */
+}
+
+body.weather-clouds {
+  background: linear-gradient(to top, #dfe9f3, #ffffff); /* Light grayish-blue */
+}
+
+body.weather-rain {
+  background: linear-gradient(to top, #a1c4fd, #c2e9fb); /* Soft blue rain */
+}
+
+body.weather-snow {
+  background: linear-gradient(to top, #e0eafc, #cfdef3); /* Very light snowy blue */
+}
+
+body.weather-thunderstorm {
+  background: linear-gradient(to top, #434343, #000000); /* Dark storm */
+}
+
+body.weather-fog {
+  background: linear-gradient(to top, #d7d2cc, #304352); /* Foggy gray */
+}
+
+/* Make clouds more visible on cloudy/foggy/rainy weather */
+body.weather-clouds .cloud,
+body.weather-rain .cloud,
+body.weather-fog .cloud {
+  opacity: 0.6;
+  filter: blur(3px);
+}
+
+/* Subtle cloud opacity for clear weather */
+body.weather-clear .cloud {
+  opacity: 0.3;
+}
+
+/* Snow effect idea */
+body.weather-snow .cloud {
+  background: linear-gradient(135deg, #ffffff 0%, #e0f7fa 100%);
+  filter: blur(4px);
+}
+
+/* Thunderstorm clouds darker */
+body.weather-thunderstorm .cloud {
+  background: linear-gradient(135deg, #555 0%, #222 100%);
+  opacity: 0.7;
+}
+
+/* === CLOUDS === */
+.cloud {
+  position: absolute;
+  background: #ffffff;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+  border-radius: 50%;
+  opacity: 0.4;
+  width: 200px;
+  height: 120px;
+  top: 10%;
+  left: -200px;
+  animation: cloudFloat 60s linear infinite;
+  filter: blur(2px);
+  z-index: 1;
+}
+
+/* Each cloud can have slightly different sizes and speeds */
+.cloud:nth-child(2) {
+  width: 150px;
+  height: 90px;
+  top: 30%;
+  animation-duration: 80s;
+  opacity: 0.35;
+}
+
+.cloud:nth-child(3) {
+  width: 250px;
+  height: 140px;
+  top: 50%;
+  animation-duration: 100s;
+  opacity: 0.3;
+}
+
+.cloud:nth-child(4) {
+  width: 180px;
+  height: 100px;
+  top: 70%;
+  animation-duration: 90s;
+  opacity: 0.32;
+}
+
+/* Keyframes for gentle left-to-right floating */
+@keyframes cloudFloat {
+  0% {
+    transform: translateX(-300px);
+  }
+  100% {
+    transform: translateX(120vw);
+  }
+
+#weather-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: screen; /* <-- Important! */
+  background: transparent; /* <-- Important! */
+}
+
+.rain-layer, .snow-layer, .wind-layer {
+  background-color: transparent;
+  background-repeat: repeat;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  background-size: contain;
+}
+
+/* RAIN EFFECT */
+.rain-layer {
+  background-image: url('assets/effects/rain.png');
+  animation: rainFall 0.8s linear infinite;
+}
+
+@keyframes rainFall {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100vh; }
+}
+
+/* SNOW EFFECT */
+.snow-layer {
+  background-image: url('assets/effects/snow.png');
+  animation: snowFall 3s linear infinite;
+}
+
+@keyframes snowFall {
+  0% { background-position: 0 -100vh; }
+  100% { background-position: 0 100vh; }
+}
+
+/* WIND EFFECT */
+.wind-layer {
+  background-image: url('assets/effects/wind.png');
+  animation: windBlow 5s linear infinite;
+}
+
+@keyframes windBlow {
+  0% { background-position: -100vw 0; }
+  100% { background-position: 100vw 0; }
+}
+.wind-blown {
+  transform: rotateZ(-3deg) translateX(-10px);
+  transition: transform 0.3s ease-in-out;
+}
+/* ==================== WEATHER EFFECTS ==================== */
+#weather-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.rain-layer, .snow-layer, .wind-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Rain effect */
+.rain-layer {
+  background-image: url('assets/effects/rain.png');
+  animation: rainFall 0.8s linear infinite;
+}
+
+@keyframes rainFall {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100vh; }
+}
+
+/* Snow effect */
+.snow-layer {
+  background-image: url('assets/effects/snow.png');
+  animation: snowFall 3s linear infinite;
+}
+
+@keyframes snowFall {
+  0% { background-position: 0 -100vh; }
+  100% { background-position: 0 100vh; }
+}
+
+/* Wind effect */
+.wind-layer {
+  background-image: url('assets/effects/wind.png');
+  animation: windBlow 5s linear infinite;
+}
+
+@keyframes windBlow {
+  0% { background-position: -100vw 0; }
+  100% { background-position: 100vw 0; }
+}
+
+/* Companion reactions */
+.wind-wiggle {
+  animation: wiggle 1.5s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(8deg); }
+  50% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+.wind-blown {
+  transform: translateX(-10px) rotateZ(-5deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* === WIND REACTION ANIMATIONS === */
+
+/* Bunny ears wiggle */
+.bunny-ear.left.wind-wiggle,
+.bunny-ear.right.wind-wiggle {
+  animation: bunnyEarWiggle 1.5s ease-in-out infinite;
+}
+
+@keyframes bunnyEarWiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(8deg); }
+  50% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Fox tail wiggle (pretend animal-hearts area = tail) */
+.animal-hearts.wind-wiggle {
+  animation: foxTailWiggle 2s ease-in-out infinite;
+}
+
+@keyframes foxTailWiggle {
+  0% { transform: rotate(0deg) translateX(0); }
+  50% { transform: rotate(10deg) translateX(5px); }
+  100% { transform: rotate(0deg) translateX(0); }
+}
+.hovering {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.wind-wiggle {
+  animation: wiggle 1.5s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  50% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+.wind-blown {
+  transform: translateX(-10px) rotateZ(-5deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+body.night-mode {
+  background-color: rgba(0, 0, 0, 0.6); /* Optional: slightly darken overall */
+}
+#radar-controls button {
+  margin-right: 8px;
+}
+
+/* ===== BASE STYLES ===== */ 
+/* (Keep existing base styles the same) */
+
+/* ===== ENHANCED LAYOUT STRUCTURE ===== */
+#shell {
+  display: grid;
+  grid-template-rows: 1fr auto; /* Changed to auto for companion area */
+  height: 100vh;
+  padding-bottom: 25vh; /* Reserve space for companions */
+  background-color: rgba(25, 25, 25, 0.65);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-radius: 10px;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 2fr) minmax(250px, 1fr);
+  gap: 20px;
+  height: calc(100vh - 25vh); /* Account for companion area */
+}
+
+.left-column {
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* Adjust if needed */
+  gap: 15px;
+  height: 100%;
+}
+
+.current-and-forecast {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 15px;
+}
+
+.forecast-top {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: 15px;
+  min-height: 200px;
+}
+
+.forecast-bottom {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(80px, 1fr)); /* Smaller boxes */
+  gap: 10px; /* Less space between days */
+  min-height: 120px; /* Smaller overall */
+  align-items: start; /* Push content up nicely */
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+/* Modified Radar Container */
+#radar-container {
+  position: relative; /* Changed from absolute */
+  min-height: 300px;
+  width: 100%;
+  border: 2px solid #888;
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 10px #000;
+}
+
+/* Updated Stocks Container */
+#stocks-container {
+  position: relative; /* Changed from absolute */
+  min-height: 200px;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Companion Area */
+.companion-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25vh;
+  max-height: 250px;
+  z-index: 1000;
+  pointer-events: none;
+  padding: 0 20px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 1440px) {
+  .main-grid {
+    grid-template-columns: 1.8fr 1fr;
+  }
+  
+  .forecast-top {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  #shell {
+    padding-bottom: 30vh;
+  }
+  
+  .main-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 15px;
+  }
+  
+  .right-column {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 992px) {
+  .forecast-bottom {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .right-column {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  
+  #radar-container,
+  #stocks-container {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Modified existing mobile styles */
+  #shell {
+    padding-bottom: 0;
+    grid-template-rows: 1fr;
+    padding: 15px;
+  }
+  
+  .main-grid {
+    height: auto;
+  }
+  
+  .forecast-top,
+  .forecast-bottom {
+    grid-template-columns: 1fr;
+  }
+  
+  .companion-area {
+    position: relative;
+    height: auto;
+    padding: 15px;
+    background: none;
+  }
+  
+  #animal-companion,
+  #bunny-container {
+    transform: scale(0.8);
+  }
+  
+  /* Preserve original mobile styles */
+  #shell { padding: 15px; }
+  #time { font-size: 6vw; }
+  #date { font-size: 3.5vw; }
+  #btcprice, #stockData { font-size: 3.5vw; }
+  .currentTemp { font-size: 4vw; }
+  .temp { font-size: 5vw; }
+  .day { font-size: 3vw; }
+  #weatherAlerts { font-size: 2.5vw; }
+  .desc { font-size: 2.8vw; }
+}
+
+@media (min-width: 2000px) {
+  .main-grid {
+    grid-template-columns: 3fr 1fr;
+  }
+  
+  #radar-container {
+    min-height: 400px;
+  }
+  
+  #stocks-container {
+    min-height: 300px;
+  }
+
+@media (max-width: 768px) {
+  .right-column {
+    flex-direction: column;
+  }
+
+  #radar-container,
+  #stocks-container {
+    min-height: 200px;
+  }\
+}
+
+/* Keep existing styles below */
+/* ===== WEATHER THEMES ==== */
+/* ===== CLOUDS ===== */
+/* ===== COMPANIONS ===== */
+/* ===== ANIMATIONS ===== */
+/* ===== etc... */
+
+@media (max-width: 768px) { /* Mobile Landscape */
+  #display td {
+    flex: 1 1 100%;
+    padding: 10px;
+    min-height: auto;
+  }
+
+  #time {
+    font-size: 8vw;
+  }
+
+  #date {
+    font-size: 4vw;
+    margin-bottom: 2vh;
+  }
+
+  #btcprice, #stockData {
+    font-size: 3.5vw;
+  }
+
+  .forecast .day {
+    font-size: 3vw;
+  }
+
+  #animal-companion {
+    transform: scale(0.8);
+    bottom: 10px;
+  }
+
+  #bunny-companion {
+    transform: scale(0.7);
+  }
+
+  #radar-container {
+    bottom: 120px;
+    width: 280px;
+    height: 160px;
+  }
+
+  #stocks-container {
+    width: 280px;
+    height: 180px;
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) { /* Mobile Portrait */
+  #shell {
+    padding: 10px;
+  }
+
+  #time {
+    font-size: 10vw;
+  }
+
+  #date {
+    font-size: 5vw;
+  }
+
+  #btcprice, #stockData {
+    font-size: 4.5vw;
+  }
+
+  .forecast .day {
+    font-size: 4vw;
+  }
+
+  #controls {
+    width: 90%;
+    left: 5%;
+    top: 5%;
+  }
+
+  .control-group {
+    flex-direction: column;
+  }
+
+  #radar-container {
+    width: 90%;
+    right: 5%;
+    height: 200px;
+    bottom: 100px;
+  }
+
+  #stocks-container {
+    width: 90%;
+    right: 5%;
+    height: 200px;
+  }
+
+  #animal-companion,
+  #bunny-companion {
+    display: none; /* Hide companions on smallest screens */
+  }
+
+  /* Stack forecast items vertically */
+  #display tr:last-child {
+    flex-direction: column;
+  }
+  
+  .forecast {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+
+/* Touch optimization */
+button {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Prevent text size inflation */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Flexible images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Maintain aspect ratios */
+.forecast .icon img {
+  width: auto;
+  max-height: 60px;
+}
+
+/* Radar map adjustments */
+#radar-map {
+  touch-action: pan-x pan-y; /* Allow map panning on mobile */
+}
+
+/* Stock iframe scaling */
+#stocks-iframe {
+  zoom: 0.8;
+  -moz-transform: scale(0.8);
+  -moz-transform-origin: 0 0;
+}
+<!-- Keep all previous HTML structure up to the shell div -->
+
+<div id="shell">
+  <!-- ... main content grid from previous answer ... -->
+</div>
+
+<!-- Dedicated Companion Section -->
+<div class="companion-stage">
+  <!-- Fox Companion -->
+  <div id="animal-companion">
+    <div class="animal-body">
+      <div class="animal-face"></div>
+      <div class="animal-legs">
+        <div class="animal-leg"></div>
+        <div class="animal-leg"></div>
+        <div class="animal-leg"></div>
+        <div class="animal-leg"></div>
+      </div>
+      <div class="animal-hearts">❤️❤️❤️</div>
+    </div>
+    <div class="animal-message">Hello!</div>
+  </div>
+
+  <!-- Bunny Companion -->
+  <div id="bunny-container">
+    <div id="bunny-companion">
+      <div class="bunny-body">
+        <div class="bunny-ears">
+          <div class="bunny-ear left"></div>
+          <div class="bunny-ear right"></div>
+        </div>
+        <div class="bunny-face">
+          <div class="bunny-eyes">
+            <div class="bunny-eye"></div>
+            <div class="bunny-eye"></div>
+          </div>
+          <div class="bunny-nose"></div>
+        </div>
+      </div>
+      <div class="bunny-message">🥕!</div>
+      <div class="bunny-carrot" style="display:none;">🥕</div>
+    </div>
+  </div>
+</div>
+
+<!-- Add this CSS -->
+<style>
+ 
+/* ===== COMPANION STAGE ===== */
+.companion-stage {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25vh;
+  z-index: 50; /* Below main content */
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+#animal-companion,
+#bunny-container {
+  pointer-events: auto;
+  z-index: 51; /* Just above stage */
+  transform: translateY(25%); /* Start partially hidden */
+}
+
+/* Main content should be higher */
+#shell {
+  z-index: 100;
+  position: fixed;
+  backdrop-filter: blur(12px); /* Keep blur effect */
+}
+
+/* Weather effects layer */
+#weather-effects {
+  z-index: 25; /* Below companions */
+}
+
+/* Fix radar/stocks positioning */
+#radar-container,
+#stocks-container {
+  z-index: 150; /* Highest priority */
+  position: fixed !important;
+}
+
+/* ===== COMPANION STAGE ===== */
+.companion-stage {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30vh;
+  z-index: 50; /* Lower than main content */
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 2rem;
+}
+
+/* Keep companions clickable but let content pass through */
+#animal-companion,
+#bunny-container {
+  pointer-events: auto;
+  z-index: 51; /* Slightly above stage but below content */
+}
+
+/* Main content area */
+#shell {
+  z-index: 100; /* Higher than companions */
+  position: relative;
+}
+
+/* Weather effects layer */
+#weather-effects {
+  z-index: 25; /* Below companions but above background */
+}
+
+/* Radar and stocks should be above companions */
+#radar-container,
+#stocks-container {
+  z-index: 150; /* Highest priority */
+}
+
+/* Cloud layer adjustment */
+.cloud {
+  z-index: 20; /* Below everything */
+}
+
+/* Main content area */
+#shell {
+  z-index: 100; /* Higher than companions */
+  position: relative;
+}
+
+/* Weather effects layer */
+#weather-effects {
+  z-index: 25; /* Below companions but above background */
+}
+
+/* Radar and stocks should be above companions */
+#radar-container,
+#stocks-container {
+  z-index: 150; /* Highest priority */
+}
+
+/* Cloud layer adjustment */
+.cloud {
+  z-index: 20; /* Below everything */
+}
+
+  /* Mobile Friendly Companions */
+  @media (max-width: 768px) {
+    .companion-stage {
+      height: 25vh;
+      padding: 0 1rem;
+    }
+    
+    #animal-companion {
+      transform: scale(0.7);
+      left: 2%;
+    }
+    
+    #bunny-container {
+      transform: scale(0.7);
+      right: 2%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .companion-stage {
+      justify-content: space-around;
+    }
+    
+    #animal-companion,
+    #bunny-container {
+      position: relative;
+      transform: scale(0.6);
+      left: auto;
+      right: auto;
+    }
+  }
+
+  /* Preserve Original Animations */
+  @keyframes roam {
+    0% { transform: translateX(0) scaleX(1); }
+    49% { transform: translateX(calc(100vw - 120px)) scaleX(1); }
+    50% { transform: translateX(calc(100vw - 120px)) scaleX(-1); }
+    99% { transform: translateX(0) scaleX(-1); }
+    100% { transform: translateX(0) scaleX(1); }
+  }
+
+  @keyframes bunny-roam {
+    0% { transform: translateX(0) scaleX(1); }
+    49% { transform: translateX(calc(100vw - 100px)) scaleX(1); }
+    50% { transform: translateX(calc(100vw - 100px)) scaleX(-1); }
+    99% { transform: translateX(0) scaleX(-1); }
+    100% { transform: translateX(0) scaleX(1); }
+  }
+
+/* CARROT RAIN EFFECT */
+.carrot-layer {
+  background-image: url('assets/effects/carrot-rain.png'); /* or wherever your carrot rain PNG is */
+  background-repeat: repeat;
+  background-size: contain;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  animation: carrotFall 2.5s linear infinite;
+}
+
+@keyframes carrotFall {
+  0% { background-position: 0 -100vh; }
+  100% { background-position: 0 100vh; }
+}
+
+
+body.carrot-mode .carrot-layer {
+  opacity: 1;
+}
+
+</style>
