@@ -11,30 +11,34 @@ body {
 
 /* ===== RGB BACKGROUND ===== */
 #rgbBackground {
-  background: white; /* <-- this too */
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 0;
+  z-index: 1; /* Above body background but below effects */
 }
 
+/* ===== WEATHER EFFECTS ===== */
 #weather-effects {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 1; /* <-- Above RGB, below other UI */
-  mix-blend-mode: screen;
-  background: transparent;
+  z-index: 2;
 }
 
-#shell, #controls, #animal-companion, #bunny-companion {
-  position: relative;
-  z-index: 2; /* <-- Your main content above everything */
+/* ===== MAIN APP CONTAINER ===== */
+#shell {
+  z-index: 3;
+  /* Keep existing styles */
+}
+
+/* ===== COMPANIONS ===== */
+.companion-stage {
+  z-index: 4; /* Below shell but above background */
+}
+
+/* ===== INTERACTIVE ELEMENTS ===== */
+#radar-container,
+#stocks-container {
+  z-index: 5; /* Highest priority */
 }
 
 /* ===== MAIN APP CONTAINER ===== */
@@ -1125,57 +1129,211 @@ body.night-mode {
   margin-right: 8px;
 }
 
-/* ===== RESPONSIVE ENHANCEMENTS ===== */
-@media (max-width: 1200px) { /* Tablet Landscape */
-  #display td {
-    padding: 10px;
+/* ===== BASE STYLES ===== */ 
+/* (Keep existing base styles the same) */
+
+/* ===== ENHANCED LAYOUT STRUCTURE ===== */
+#shell {
+  display: grid;
+  grid-template-rows: 1fr auto; /* Changed to auto for companion area */
+  height: 100vh;
+  padding-bottom: 25vh; /* Reserve space for companions */
+  background-color: rgba(25, 25, 25, 0.65);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-radius: 10px;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 2fr) minmax(250px, 1fr);
+  gap: 20px;
+  height: calc(100vh - 25vh); /* Account for companion area */
+}
+
+.left-column {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 15px;
+  height: 100%;
+}
+
+.current-and-forecast {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 15px;
+}
+
+.forecast-top {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: 15px;
+  min-height: 200px;
+}
+
+.forecast-bottom {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 15px;
+  min-height: 150px;
+}
+
+.right-column {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+  height: 100%;
+}
+
+/* Modified Radar Container */
+#radar-container {
+  position: relative; /* Changed from absolute */
+  min-height: 300px;
+  width: 100%;
+  border: 2px solid #888;
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 10px #000;
+}
+
+/* Updated Stocks Container */
+#stocks-container {
+  position: relative; /* Changed from absolute */
+  min-height: 200px;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Companion Area */
+.companion-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25vh;
+  max-height: 250px;
+  z-index: 1000;
+  pointer-events: none;
+  padding: 0 20px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 1440px) {
+  .main-grid {
+    grid-template-columns: 1.8fr 1fr;
   }
   
-  #time {
-    font-size: 4.5vw;
-  }
-
-  #date {
-    font-size: 2vw;
-  }
-
-  .forecast .day {
-    font-size: 1.8vw;
+  .forecast-top {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, minmax(150px, 1fr));
   }
 }
 
-@media (max-width: 992px) { /* Tablet Portrait */
+@media (max-width: 1200px) {
   #shell {
+    padding-bottom: 30vh;
+  }
+  
+  .main-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 15px;
+  }
+  
+  .right-column {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 992px) {
+  .forecast-bottom {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .right-column {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  
+  #radar-container,
+  #stocks-container {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Modified existing mobile styles */
+  #shell {
+    padding-bottom: 0;
+    grid-template-rows: 1fr;
     padding: 15px;
   }
-
-  #display tr {
-    flex-wrap: wrap;
+  
+  .main-grid {
+    height: auto;
   }
-
-  #display td {
-    flex: 1 1 45%;
-    margin: 5px;
-    min-height: 150px;
+  
+  .forecast-top,
+  .forecast-bottom {
+    grid-template-columns: 1fr;
   }
-
-  #current {
-    order: -1;
-    flex-basis: 100%;
+  
+  .companion-area {
+    position: relative;
+    height: auto;
+    padding: 15px;
+    background: none;
   }
+  
+  #animal-companion,
+  #bunny-container {
+    transform: scale(0.8);
+  }
+  
+  /* Preserve original mobile styles */
+  #shell { padding: 15px; }
+  #time { font-size: 6vw; }
+  #date { font-size: 3.5vw; }
+  #btcprice, #stockData { font-size: 3.5vw; }
+  .currentTemp { font-size: 4vw; }
+  .temp { font-size: 5vw; }
+  .day { font-size: 3vw; }
+  #weatherAlerts { font-size: 2.5vw; }
+  .desc { font-size: 2.8vw; }
+}
 
+@media (min-width: 2000px) {
+  .main-grid {
+    grid-template-columns: 3fr 1fr;
+  }
+  
   #radar-container {
-    bottom: 150px;
-    right: 10px;
-    width: 300px;
-    height: 180px;
+    min-height: 400px;
   }
-
+  
   #stocks-container {
-    width: 300px;
-    height: 200px;
+    min-height: 300px;
   }
 }
+
+/* Keep existing styles below */
+/* ===== WEATHER THEMES ==== */
+/* ===== CLOUDS ===== */
+/* ===== COMPANIONS ===== */
+/* ===== ANIMATIONS ===== */
+/* ===== etc... */
 
 @media (max-width: 768px) { /* Mobile Landscape */
   #display td {
@@ -1318,6 +1476,213 @@ img {
   -moz-transform: scale(0.8);
   -moz-transform-origin: 0 0;
 }
+<!-- Keep all previous HTML structure up to the shell div -->
+
+<div id="shell">
+  <!-- ... main content grid from previous answer ... -->
+</div>
+
+<!-- Dedicated Companion Section -->
+<div class="companion-stage">
+  <!-- Fox Companion -->
+  <div id="animal-companion">
+    <div class="animal-body">
+      <div class="animal-face"></div>
+      <div class="animal-legs">
+        <div class="animal-leg"></div>
+        <div class="animal-leg"></div>
+        <div class="animal-leg"></div>
+        <div class="animal-leg"></div>
+      </div>
+      <div class="animal-hearts">❤️❤️❤️</div>
+    </div>
+    <div class="animal-message">Hello!</div>
+  </div>
+
+  <!-- Bunny Companion -->
+  <div id="bunny-container">
+    <div id="bunny-companion">
+      <div class="bunny-body">
+        <div class="bunny-ears">
+          <div class="bunny-ear left"></div>
+          <div class="bunny-ear right"></div>
+        </div>
+        <div class="bunny-face">
+          <div class="bunny-eyes">
+            <div class="bunny-eye"></div>
+            <div class="bunny-eye"></div>
+          </div>
+          <div class="bunny-nose"></div>
+        </div>
+      </div>
+      <div class="bunny-message">🥕!</div>
+      <div class="bunny-carrot" style="display:none;">🥕</div>
+    </div>
+  </div>
+</div>
+
+<!-- Add this CSS -->
+<style>
+ 
+/* ===== COMPANION STAGE ===== */
+.companion-stage {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25vh;
+  z-index: 50; /* Below main content */
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+#animal-companion,
+#bunny-container {
+  pointer-events: auto;
+  z-index: 51; /* Just above stage */
+  transform: translateY(25%); /* Start partially hidden */
+}
+
+/* Main content should be higher */
+#shell {
+  z-index: 100;
+  position: fixed;
+  backdrop-filter: blur(12px); /* Keep blur effect */
+}
+
+/* Weather effects layer */
+#weather-effects {
+  z-index: 25; /* Below companions */
+}
+
+/* Fix radar/stocks positioning */
+#radar-container,
+#stocks-container {
+  z-index: 150; /* Highest priority */
+  position: fixed !important;
+}
+
+/* ===== COMPANION STAGE ===== */
+.companion-stage {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30vh;
+  z-index: 50; /* Lower than main content */
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 2rem;
+}
+
+/* Keep companions clickable but let content pass through */
+#animal-companion,
+#bunny-container {
+  pointer-events: auto;
+  z-index: 51; /* Slightly above stage but below content */
+}
+
+/* Main content area */
+#shell {
+  z-index: 100; /* Higher than companions */
+  position: relative;
+}
+
+/* Weather effects layer */
+#weather-effects {
+  z-index: 25; /* Below companions but above background */
+}
+
+/* Radar and stocks should be above companions */
+#radar-container,
+#stocks-container {
+  z-index: 150; /* Highest priority */
+}
+
+/* Cloud layer adjustment */
+.cloud {
+  z-index: 20; /* Below everything */
+}
+
+/* Main content area */
+#shell {
+  z-index: 100; /* Higher than companions */
+  position: relative;
+}
+
+/* Weather effects layer */
+#weather-effects {
+  z-index: 25; /* Below companions but above background */
+}
+
+/* Radar and stocks should be above companions */
+#radar-container,
+#stocks-container {
+  z-index: 150; /* Highest priority */
+}
+
+/* Cloud layer adjustment */
+.cloud {
+  z-index: 20; /* Below everything */
+}
+
+  /* Mobile Friendly Companions */
+  @media (max-width: 768px) {
+    .companion-stage {
+      height: 25vh;
+      padding: 0 1rem;
+    }
+    
+    #animal-companion {
+      transform: scale(0.7);
+      left: 2%;
+    }
+    
+    #bunny-container {
+      transform: scale(0.7);
+      right: 2%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .companion-stage {
+      justify-content: space-around;
+    }
+    
+    #animal-companion,
+    #bunny-container {
+      position: relative;
+      transform: scale(0.6);
+      left: auto;
+      right: auto;
+    }
+  }
+
+  /* Preserve Original Animations */
+  @keyframes roam {
+    0% { transform: translateX(0) scaleX(1); }
+    49% { transform: translateX(calc(100vw - 120px)) scaleX(1); }
+    50% { transform: translateX(calc(100vw - 120px)) scaleX(-1); }
+    99% { transform: translateX(0) scaleX(-1); }
+    100% { transform: translateX(0) scaleX(1); }
+  }
+
+  @keyframes bunny-roam {
+    0% { transform: translateX(0) scaleX(1); }
+    49% { transform: translateX(calc(100vw - 100px)) scaleX(1); }
+    50% { transform: translateX(calc(100vw - 100px)) scaleX(-1); }
+    99% { transform: translateX(0) scaleX(-1); }
+    100% { transform: translateX(0) scaleX(1); }
+  }
+
+
+
+  /* Keep existing companion styles */
+</style>
 
 
 
