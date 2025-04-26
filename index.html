@@ -16,7 +16,7 @@
   <div class="rain-layer"></div>
   <div class="snow-layer"></div>
   <div class="wind-layer"></div>
-  <div class="carrot-layer"></div>
+  <div id="carrot-container"></div>
 
 </div>
 
@@ -90,7 +90,7 @@
           <button id="radar-toggle">Show Radar</button>
           <button id="settings-button">Change Settings</button>
           <button id="stocks-toggle">Show CNBC</button>
-          <button id="carrot-toggle">Carrot Rain 🥕</button>
+          <button id="carrot-toggle" class="weather-button">Carrot Rain 🥕</button>
           <div id="radar-timestamp"></div>
         </div>
       </div>
@@ -169,6 +169,12 @@
 <div id="stocks-container">
   <iframe id="stocks-iframe" src="https://livenewschat.eu/stocks/" allowfullscreen></iframe>
 </div>
+
+<script>
+  document.getElementById('carrot-toggle').addEventListener('click', function() {
+    document.body.classList.toggle('carrot-mode');
+  });
+</script>
 
 </body>
 </html>

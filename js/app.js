@@ -59,37 +59,7 @@ function setupAnimalHover() {
             console.warn(`🐾 Companion ${id} not found`);
             return;
         }
-
-        const body = el.querySelector(bodyClass);
-        const message = el.querySelector(messageClass);
-        const carrot = carrotClass ? el.querySelector(carrotClass) : null;
-
-        el.addEventListener('mouseenter', () => {
-            if (body) body.classList.add('hovering');
-            if (message) message.style.opacity = '1';
-            if (carrot) carrot.style.opacity = '1';
-        });
-
-        el.addEventListener('mouseleave', () => {
-            if (body) body.classList.remove('hovering');
-            if (message) message.style.opacity = '0';
-            if (carrot) carrot.style.opacity = '0';
-        });
     });
-}
-
-function startCarrotRain() {
-  setInterval(() => {
-    if (document.body.classList.contains('carrot-mode')) { // Only when active
-      const carrot = document.createElement('div');
-      carrot.className = 'carrot';
-      carrot.textContent = '🥕';
-      carrot.style.left = Math.random() * 100 + 'vw';
-      carrot.style.animationDuration = (3 + Math.random() * 2) + 's';
-      document.getElementById('carrot-rain').appendChild(carrot);
-      setTimeout(() => carrot.remove(), 6000);
-    }
-  }, 800); // Faster rain (every 0.8s instead of 10s)
 }
 
 function createClouds(amount) {
@@ -600,26 +570,6 @@ function applyNightMode() {
   }
 }
 
-const carrotToggleButton = document.getElementById('carrot-toggle');
-
-if (localStorage.getItem('carrotRain') === 'true') {
-  document.body.classList.add('carrot-mode');
-}
-
-const carrotLayer = document.querySelector('.carrot-layer');
-
-carrotToggleButton.addEventListener('click', () => {
-  if (document.body.classList.contains('carrot-mode')) {
-    document.body.classList.remove('carrot-mode');
-    carrotLayer.style.opacity = '0';
-    localStorage.setItem('carrotRain', 'false');
-  } else {
-    document.body.classList.add('carrot-mode');
-    carrotLayer.style.opacity = '0.5'; // Visible like rain/snow
-    localStorage.setItem('carrotRain', 'true');
-  }
-});
-
 // ----------------------------
 // INITIALIZATION
 // ----------------------------
@@ -656,4 +606,45 @@ document.addEventListener('DOMContentLoaded', function() {
   // Optional: hide stocks by default
   stocksContainer.style.display = 'none';
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  const carrotContainer = document.getElementById('carrot-container');
+  const carrotToggle = document.getElementById('carrot-toggle');
+  let carrotsActive = false;
+  let carrotElements = [];
+
+function createCarrot() {
+  const carrot = document.createElement('div');
+  carrot.classList.add('carrot');
+  carrot.innerHTML = "🥕";
+
+  // random left across full screen width in pixels
+  const screenWidth = window.innerWidth;
+  const randomLeft = Math.random() * screenWidth;
+  carrot.style.left = `${randomLeft}px`;
+
+  // random fall speed
+  carrot.style.animationDuration = `${5 + Math.random() * 5}s`;
+
+  carrotContainer.appendChild(carrot);
+  carrotElements.push(carrot);
+}
+
+  function removeCarrots() {
+    carrotElements.forEach(c => c.remove());
+    carrotElements = [];
+  }
+
+  carrotToggle.addEventListener('click', () => {
+    carrotsActive = !carrotsActive;
+    if (carrotsActive) {
+      for (let i = 0; i < 30; i++) { // 30 carrots
+        createCarrot();
+      }
+    } else {
+      removeCarrots();
+    }
+  });
+});
+
 

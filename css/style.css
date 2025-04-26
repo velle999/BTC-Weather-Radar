@@ -1737,24 +1737,31 @@ img {
     100% { transform: translateX(0) scaleX(1); }
   }
 
-/* CARROT RAIN EFFECT */
-.carrot-layer {
-  background-image: url('assets/effects/carrot-rain.png'); /* or wherever your carrot rain PNG is */
-  background-repeat: repeat;
-  background-size: contain;
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  animation: carrotFall 2.5s linear infinite;
+#carrot-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* full screen width */
+  height: 100vh;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 9999;
 }
 
-@keyframes carrotFall {
-  0% { background-position: 0 -100vh; }
-  100% { background-position: 0 100vh; }
+.carrot {
+  position: absolute;
+  top: -10vh;
+  font-size: 24px;
+  animation: fall linear infinite;
+  pointer-events: none;
+  user-select: none;
 }
 
-
-body.carrot-mode .carrot-layer {
-  opacity: 1;
+/* FALLING DOWN */
+@keyframes fall {
+  0% { top: -10vh; }
+  100% { top: 110vh; }
 }
+
 
 </style>
