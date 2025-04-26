@@ -92,7 +92,6 @@ function applyWeatherEffects(weatherCondition) {
   }
 }
 
-// ----------------------------
 // UTILITY FUNCTIONS
 // ----------------------------
 function promptUserSettings() {
@@ -120,6 +119,15 @@ function promptUserSettings() {
         localStorage.setItem('hourFormat', newFormat);
         $('#hourFormat').val(newFormat);
         updateTime();
+    }
+
+    // NEW: Prompt for AlphaVantage API Key
+    const newApiKey = prompt("Enter AlphaVantage API Key:", CONFIG.STOCK_API_KEY);
+    if (newApiKey) {
+        CONFIG.STOCK_API_KEY = newApiKey;
+        localStorage.setItem('alphaVantageApiKey', newApiKey);
+        $('#alphaVantageKey').val(newApiKey);
+        fetchStockData(); // refetch with new API key
     }
 }
 
