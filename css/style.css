@@ -1,12 +1,11 @@
 /* ===== BASE STYLES ===== */
 body {
-  background: white; /* <-- add this */
+  background: white;
   color: white;
-  overflow: hidden;
-  height: 100vh;
-  width: 100vw;
+  overflow-x: hidden; /* Only hide horizontal scroll */
   font-family: 'Arial', sans-serif;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+  min-height: 100vh; /* Allow growing */
 }
 
 /* ===== RGB BACKGROUND ===== */
@@ -43,21 +42,16 @@ body {
 
 /* ===== MAIN APP CONTAINER ===== */
 #shell {
-    background-color: rgba(25, 25, 25, 0.65);
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
-    border-radius: 10px;
-    margin: 0;
-    padding: 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(25, 25, 25, 0.65);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-radius: 10px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Change from height: 100vh */
 }
 
 /* ===== DISPLAY TABLE ===== */
@@ -143,11 +137,13 @@ body {
 
 /* ===== FORECAST SECTION ===== */
 .forecast {
-    background-color: rgba(40, 40, 40, 0.45);
-    flex: 1;
-    min-width: 0;
-    text-align: center;
-    justify-content: space-between;
+  background: none; /* <<< REMOVE the wide dark background */
+  flex: none; /* <<< Important: don't stretch */
+  min-width: auto;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  gap: 10px; /* Space between days */
 }
 
 /* ===== FINANCIAL DATA ===== */
@@ -208,9 +204,8 @@ body {
 
 /* ===== RADAR CONTAINER ===== */
 #radar-container {
-  position: relative; /* <-- Not fixed anymore */
+  position: relative;
   width: 100%;
-  height: auto;
   min-height: 250px;
   background: rgba(0, 0, 0, 0.6);
   border: 2px solid #888;
@@ -219,7 +214,9 @@ body {
   box-shadow: 0 0 10px #000;
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px; /* Buffer space */
 }
+
 
 #radar-map {
   flex: 1;
@@ -1153,7 +1150,7 @@ body.night-mode {
 
 .left-column {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto; /* Adjust if needed */
   gap: 15px;
   height: 100%;
 }
@@ -1173,9 +1170,10 @@ body.night-mode {
 
 .forecast-bottom {
   display: grid;
-  grid-template-columns: repeat(3, minmax(120px, 1fr));
-  gap: 15px;
-  min-height: 150px;
+  grid-template-columns: repeat(5, minmax(80px, 1fr)); /* Smaller boxes */
+  gap: 10px; /* Less space between days */
+  min-height: 120px; /* Smaller overall */
+  align-items: start; /* Push content up nicely */
 }
 
 .right-column {
@@ -1332,7 +1330,7 @@ body.night-mode {
   #radar-container,
   #stocks-container {
     min-height: 200px;
-  }
+  }\
 }
 
 /* Keep existing styles below */
