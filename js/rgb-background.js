@@ -19,9 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const hue2 = (hue + 120) % 360; // 120° for RGB triad
         const hue3 = (hue + 240) % 360;
         
-        gradient.addColorStop(0, `hsl(${hue1}, 80%, 50%)`);
-        gradient.addColorStop(0.5, `hsl(${hue2}, 80%, 50%)`);
-        gradient.addColorStop(1, `hsl(${hue3}, 80%, 50%)`);
+        gradient.addColorStop(0, `hsl(${hue1}, 80%, 65%)`);
+        gradient.addColorStop(0.5, `hsl(${hue2}, 80%, 65%)`);
+        gradient.addColorStop(1, `hsl(${hue3}, 80%, 65%)`);
         
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
