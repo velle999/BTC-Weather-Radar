@@ -627,10 +627,10 @@ document.addEventListener('DOMContentLoaded', function() {
   stocksToggle.addEventListener('click', () => {
     if (stocksContainer.style.display === 'none' || !stocksContainer.style.display) {
       stocksContainer.style.display = 'block';
-      stocksToggle.textContent = 'Hide Stocks';
+      stocksToggle.textContent = 'Hide CNBC';
     } else {
       stocksContainer.style.display = 'none';
-      stocksToggle.textContent = 'Show Stocks';
+      stocksToggle.textContent = 'Show CNBC';
     }
   });
 
