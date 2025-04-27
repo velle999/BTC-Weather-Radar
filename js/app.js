@@ -648,6 +648,89 @@ function applyNightMode() {
   }
 }
 
+function giveDogTreat() {
+  const dog = document.getElementById('dog-companion');
+  if (!dog) return;
+
+  // Create treat
+  const treat = document.createElement('div');
+  treat.classList.add('dog-treat');
+  treat.innerText = '🦴';
+  dog.appendChild(treat);
+
+  setTimeout(() => {
+    treat.style.transform = 'translateY(-100px)';
+    treat.style.opacity = '0';
+  }, 800);
+
+  // ✨ Wait longer to remove it
+  setTimeout(() => {
+    treat.remove();
+  }, 3000); // <<< was 2200ms, now 3000ms
+
+  // Stop roaming
+  dog.style.animation = 'none';
+  dog.offsetHeight; // Force reflow
+
+  // Happy jump
+  dog.classList.add('dog-happy');
+
+  setTimeout(() => {
+    dog.classList.remove('dog-happy');
+    dog.style.animation = 'dog-roam 24s linear infinite alternate'; // Restore roaming
+  }, 2000);
+}
+
+function giveMountainDew() {
+  const fox = document.getElementById('animal-companion');
+  if (!fox) return;
+
+  // Create a soda element
+  const soda = document.createElement('div');
+  soda.classList.add('fox-soda');
+  soda.innerText = '🥤'; // drink emoji
+
+  // Position soda near the fox
+  soda.style.position = 'absolute';
+  soda.style.bottom = '80px'; // adjust height over fox
+  soda.style.left = '30px';   // adjust left offset if needed
+  soda.style.fontSize = '28px';
+  soda.style.opacity = '1';
+  soda.style.transition = 'all 2s ease-out';
+
+  // Add to fox companion
+  fox.appendChild(soda);
+
+  // Animate soda floating up
+  setTimeout(() => {
+    soda.style.transform = 'translateY(-100px)';
+    soda.style.opacity = '0';
+  }, 50);
+
+  // Remove soda after floating
+  setTimeout(() => {
+    soda.remove();
+  }, 2200);
+
+  // Fox does a happy bounce
+  fox.style.animation = 'none'; // Pause roaming
+  fox.offsetHeight; // Force reflow
+  fox.classList.add('fox-happy');
+
+  setTimeout(() => {
+    fox.classList.remove('fox-happy');
+    fox.style.animation = 'roam 20s linear infinite alternate'; // Restore roaming
+  }, 2000);
+}
+
+
+const dewToggle = document.getElementById('dew-toggle');
+dewToggle.addEventListener('click', giveMountainDew);
+
+
+const treatToggle = document.getElementById('treat-toggle');
+treatToggle.addEventListener('click', giveDogTreat);
+
 // ----------------------------
 // INITIALIZATION
 // ----------------------------
@@ -710,16 +793,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 6000); // match animation
   }
 
-  function bunnyReaction() {
-    const bunny = document.getElementById('bunny-companion');
-    if (!bunny) return;
+function bunnyReaction() {
+  const bunny = document.getElementById('bunny-companion');
+  if (!bunny) return;
 
-    bunny.classList.add('bunny-happy');
+  // Save original animation
+  bunny.style.animation = 'none'; // Stop roaming
+  bunny.offsetHeight; // Force reflow (trick to restart animation)
 
-    setTimeout(() => {
-      bunny.classList.remove('bunny-happy');
-    }, 2000);
-  }
+  // Add happy jump
+  bunny.classList.add('bunny-happy');
+
+  setTimeout(() => {
+    bunny.classList.remove('bunny-happy');
+    bunny.style.animation = 'bunny-roam 18s linear infinite alternate'; // Restore roaming
+  }, 2000);
+}
 
   const carrotToggle = document.getElementById('carrot-toggle');
   carrotToggle.addEventListener('click', () => {

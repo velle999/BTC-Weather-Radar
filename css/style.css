@@ -1969,5 +1969,45 @@ img {
              pulse 4s ease-in-out infinite; /* <-- multiple animations */
 }
 
+/* Treat style */
+.dog-treat {
+  position: absolute;
+  font-size: 24px;
+  animation: floatTreat 2s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Floating up */
+@keyframes floatTreat {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100px); opacity: 0; }
+}
+
+/* Dog happy jump */
+@keyframes dogHappyJump {
+  0% { transform: translateY(0); }
+  30% { transform: translateY(-15px); }
+  60% { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+
+.dog-happy {
+  animation: dogHappyJump 1s ease;
+}
+
+.bunny-soda {
+  position: absolute;
+  font-size: 24px;
+  animation: floatSoda 2s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Floating animation */
+@keyframes floatSoda {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100px); opacity: 0; }
+}
+
+
 
 </style>
