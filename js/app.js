@@ -8,34 +8,6 @@ const CONFIG = {
   DEFAULT_ZONE: 'MOZ070'
 };
 
-// When page is fully loaded
-$(document).ready(() => {
-    initializeApp(); // your normal dashboard startup
-
-    // Delay Tetris setup slightly to avoid conflict
-    setTimeout(() => {
-        createTetrisGrid(); // create the Tetris grid AFTER dashboard ready
-    }, 500); // 500ms delay (half a second)
-});
-
-// Create the Tetris grid
-function createTetrisGrid() {
-    const container = document.getElementById('tetris-container');
-    if (!container) {
-        console.error('Tetris container not found!');
-        return;
-    }
-
-    console.log("Creating Tetris grid..."); // For debugging if needed
-
-    container.innerHTML = ''; // clear previous cells
-    for (let i = 0; i < 200; i++) { // 10x20 grid
-        const cell = document.createElement('div');
-        cell.className = 'tetris-cell';
-        container.appendChild(cell);
-    }
-}
-
 // State variables
 let currentZip = localStorage.getItem('weatherZip') || CONFIG.DEFAULT_ZIP;
 let currentStockSymbol = localStorage.getItem('stockSymbol') || CONFIG.DEFAULT_STOCK;
@@ -713,53 +685,53 @@ document.addEventListener('DOMContentLoaded', function() {
   stocksContainer.style.display = 'none';
 });
 
-carrot.style.left = Math.random() * 100 + 'vw';
-
-document.addEventListener('DOMContentLoaded', function() {
-const carrotContainer = document.getElementById('carrot-layer');
-  const carrotToggle = document.getElementById('carrot-toggle');
-  let carrotsActive = false;
-  let carrotInterval;
+document.addEventListener('DOMContentLoaded', () => {
+  let carrotInterval = null;
 
   function createCarrot() {
     const carrot = document.createElement('div');
     carrot.classList.add('carrot');
-    carrot.innerHTML = "🥕";
+    carrot.innerText = '🥕';
 
-    const screenWidth = window.innerWidth;
-    const randomLeft = Math.random() * screenWidth;
-    carrot.style.left = `${randomLeft}px`;
+    // Random X position
+    carrot.style.left = Math.random() * window.innerWidth + 'px';
 
-    const fallDuration = 5 + Math.random() * 5;
-    carrot.style.animationDuration = `${fallDuration}s`;
+    // Set top position explicitly
+    carrot.style.top = '-50px';
 
-    carrotContainer.appendChild(carrot);
+    // Use scale *separately* without overwriting animation transforms
+    const randomScale = 0.8 + Math.random() * 0.4;
+    carrot.style.scale = randomScale; // ✅ This is better than transform for just size!
 
-    // Remove carrot after it falls
+    document.getElementById('carrot-layer').appendChild(carrot);
+
     setTimeout(() => {
       carrot.remove();
-    }, fallDuration * 1000);
+    }, 6000); // match animation
   }
 
-  function startCarrotRain() {
-    carrotInterval = setInterval(createCarrot, 300);
+  function bunnyReaction() {
+    const bunny = document.getElementById('bunny-companion');
+    if (!bunny) return;
+
+    bunny.classList.add('bunny-happy');
+
+    setTimeout(() => {
+      bunny.classList.remove('bunny-happy');
+    }, 2000);
   }
 
-  function stopCarrotRain() {
-    clearInterval(carrotInterval);
-    carrotContainer.innerHTML = '';
-  }
-
+  const carrotToggle = document.getElementById('carrot-toggle');
   carrotToggle.addEventListener('click', () => {
-    carrotsActive = !carrotsActive;
-    if (carrotsActive) {
-      startCarrotRain();
+    if (!carrotInterval) {
+      carrotInterval = setInterval(createCarrot, 250);
     } else {
-      stopCarrotRain();
+      clearInterval(carrotInterval);
+      carrotInterval = null;
     }
+    bunnyReaction(); // 🎯 CALL BUNNY REACTION HERE after toggling carrots
   });
 });
-
 
 
 

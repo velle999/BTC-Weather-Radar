@@ -245,8 +245,8 @@ body {
   position: absolute;
   top: 20px;
   right: 20px;
-  width: 380px;
-  height: 240px;
+  width: 580px;
+  height: 440px;
   z-index: 1000;
   background: rgba(0,0,0,0.6);
   border-radius: 12px;
@@ -1875,64 +1875,99 @@ img {
     99% { transform: translateX(0) scaleX(-1); }
     100% { transform: translateX(0) scaleX(1); }
   }
+  @keyframes bunnyHappyHop {
+    0% { transform: translateY(0); }
+    25% { transform: translateY(-20px); }
+    50% { transform: translateY(0); }
+    75% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.bunny-happy {
+  animation: bunnyHappyHop 2s ease;
+}
+
 
 #carrot-container {
-  position: fixed; /* <--- SUPER IMPORTANT */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   pointer-events: none;
   overflow: hidden;
-  z-index: 22; /* Higher than background, lower than UI if you want */
+  z-index: 22;
 }
 
 #carrot-layer {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   pointer-events: none;
-  z-index: 22; /* slightly higher inside weather-effects */
-}
-
-@keyframes fall {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(110vh); /* fall past the bottom */
-  }
+  z-index: 9999;
 }
 
 .carrot {
   position: absolute;
   top: -50px;
-  font-size: 24px;
-  animation: fall 5s linear forwards;
+  font-size: 32px;
+  user-select: none;
+  pointer-events: none;
+  animation: fall 6s linear forwards, spin 4s linear infinite;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
-#tetris-container {
-  width: 200px;
-  height: 400px;
-  background: black;
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(20, 1fr);
-  gap: 1px;
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 9999;
-  border: 2px solid red; /* temporary! so you can SEE it */
+@keyframes fall {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(110vh); } /* Fall DOWN! */
 }
 
-.tetris-cell {
-  width: 100%;
-  height: 100%;
-  background: gray; /* <-- gray so you can see the grid now */
+@keyframes spin {
+  0% { rotate: 0deg; }
+  100% { rotate: 360deg; }
 }
+
+/* RGB Border Animation */
+@keyframes animateBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Pulse Glow Animation */
+@keyframes pulse {
+  0%   { box-shadow: 0 0 10px red; }
+  25%  { box-shadow: 0 0 10px orange; }
+  50%  { box-shadow: 0 0 10px lime; }
+  75%  { box-shadow: 0 0 10px blue; }
+  100% { box-shadow: 0 0 10px red; }
+}
+
+/* Shell Style */
+#shell {
+  position: relative;
+  z-index: 10;
+  border: 6px solid transparent;
+  border-radius: 12px; /* rounded corners */
+  
+  background: linear-gradient(white, white) padding-box, 
+              linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red) border-box;
+  background-size: 400% 400%;
+
+  animation: animateBorder 10s linear infinite, 
+             pulse 4s ease-in-out infinite; /* <-- multiple animations */
+}
+
 
 </style>
