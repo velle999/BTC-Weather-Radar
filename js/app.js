@@ -1,7 +1,3 @@
-$(document).ready(() => {
-  initializeApp();
-});
-
 // Constants & Configuration
 const CONFIG = {
   WEATHER_API_KEY: 'c8e85b9c5cd854c7aac3bb9042e0801b',
@@ -11,6 +7,34 @@ const CONFIG = {
   DEFAULT_STOCK: 'NVDA',
   DEFAULT_ZONE: 'MOZ070'
 };
+
+// When page is fully loaded
+$(document).ready(() => {
+    initializeApp(); // your normal dashboard startup
+
+    // Delay Tetris setup slightly to avoid conflict
+    setTimeout(() => {
+        createTetrisGrid(); // create the Tetris grid AFTER dashboard ready
+    }, 500); // 500ms delay (half a second)
+});
+
+// Create the Tetris grid
+function createTetrisGrid() {
+    const container = document.getElementById('tetris-container');
+    if (!container) {
+        console.error('Tetris container not found!');
+        return;
+    }
+
+    console.log("Creating Tetris grid..."); // For debugging if needed
+
+    container.innerHTML = ''; // clear previous cells
+    for (let i = 0; i < 200; i++) { // 10x20 grid
+        const cell = document.createElement('div');
+        cell.className = 'tetris-cell';
+        container.appendChild(cell);
+    }
+}
 
 // State variables
 let currentZip = localStorage.getItem('weatherZip') || CONFIG.DEFAULT_ZIP;
@@ -241,6 +265,80 @@ function applyWindToCompanions(enable) {
     foxBody?.classList.remove('wind-blown');
   }
 }
+
+function spawnRaindrop() {
+  const rainLayer = document.querySelector('.rain-layer');
+  const drop = document.createElement('div');
+  drop.classList.add('raindrop');
+  drop.style.left = Math.random() * 100 + 'vw';
+  drop.style.animationDuration = (2 + Math.random() * 2) + 's'; // 2-4 seconds fall
+  rainLayer.appendChild(drop);
+
+  setTimeout(() => {
+    drop.remove();
+  }, 4000);
+}
+
+function spawnSnowflake() {
+  const snowLayer = document.querySelector('.snow-layer');
+  const flake = document.createElement('div');
+  flake.classList.add('snowflake');
+  flake.innerHTML = '❄️';
+  flake.style.left = Math.random() * 100 + 'vw';
+  flake.style.fontSize = (12 + Math.random() * 12) + 'px'; // Random small/big flakes
+  flake.style.animationDuration = (5 + Math.random() * 5) + 's'; // 5-10 seconds fall
+
+  snowLayer.appendChild(flake);
+
+  setTimeout(() => {
+    flake.remove();
+  }, 10000);
+}
+
+setInterval(() => {
+  if (document.body.classList.contains('weather-snow')) {
+    spawnSnowflake();
+  }
+}, 250); // every 250ms
+
+function spawnDebris() {
+  const windLayer = document.querySelector('.wind-layer');
+  const debris = document.createElement('div');
+  debris.classList.add('debris');
+  debris.innerHTML = '🍂'; // You can swap for leaves, dust, or small branches
+
+  debris.style.left = Math.random() * 100 + 'vw';
+  debris.style.fontSize = (12 + Math.random() * 12) + 'px';
+  debris.style.animationDuration = (3 + Math.random() * 3) + 's'; // 3-6s drift
+
+  windLayer.appendChild(debris);
+
+  setTimeout(() => {
+    debris.remove();
+  }, 6000);
+}
+
+setInterval(() => {
+  if (document.body.classList.contains('weather-thunderstorm') || document.body.classList.contains('weather-wind')) {
+    spawnDebris();
+  }
+}, 500); // every 500ms
+
+
+setInterval(() => {
+  if (document.body.classList.contains('weather-rain')) {
+    spawnRaindrop();
+  }
+}, 150); // every 150ms
+
+
+// Only spawn if rain is active
+setInterval(() => {
+  if (document.body.classList.contains('weather-rain')) {
+    spawnRaindrop();
+  }
+}, 150); // One drop every 150ms
+
 
 async function fetchForecast() {
     try {
@@ -615,44 +713,53 @@ document.addEventListener('DOMContentLoaded', function() {
   stocksContainer.style.display = 'none';
 });
 
+carrot.style.left = Math.random() * 100 + 'vw';
+
 document.addEventListener('DOMContentLoaded', function() {
-  const carrotContainer = document.getElementById('carrot-container');
+const carrotContainer = document.getElementById('carrot-layer');
   const carrotToggle = document.getElementById('carrot-toggle');
   let carrotsActive = false;
-  let carrotElements = [];
+  let carrotInterval;
 
-function createCarrot() {
-  const carrot = document.createElement('div');
-  carrot.classList.add('carrot');
-  carrot.innerHTML = "🥕";
+  function createCarrot() {
+    const carrot = document.createElement('div');
+    carrot.classList.add('carrot');
+    carrot.innerHTML = "🥕";
 
-  // random left across full screen width in pixels
-  const screenWidth = window.innerWidth;
-  const randomLeft = Math.random() * screenWidth;
-  carrot.style.left = `${randomLeft}px`;
+    const screenWidth = window.innerWidth;
+    const randomLeft = Math.random() * screenWidth;
+    carrot.style.left = `${randomLeft}px`;
 
-  // random fall speed
-  carrot.style.animationDuration = `${5 + Math.random() * 5}s`;
+    const fallDuration = 5 + Math.random() * 5;
+    carrot.style.animationDuration = `${fallDuration}s`;
 
-  carrotContainer.appendChild(carrot);
-  carrotElements.push(carrot);
-}
+    carrotContainer.appendChild(carrot);
 
-  function removeCarrots() {
-    carrotElements.forEach(c => c.remove());
-    carrotElements = [];
+    // Remove carrot after it falls
+    setTimeout(() => {
+      carrot.remove();
+    }, fallDuration * 1000);
+  }
+
+  function startCarrotRain() {
+    carrotInterval = setInterval(createCarrot, 300);
+  }
+
+  function stopCarrotRain() {
+    clearInterval(carrotInterval);
+    carrotContainer.innerHTML = '';
   }
 
   carrotToggle.addEventListener('click', () => {
     carrotsActive = !carrotsActive;
     if (carrotsActive) {
-      for (let i = 0; i < 30; i++) { // 30 carrots
-        createCarrot();
-      }
+      startCarrotRain();
     } else {
-      removeCarrots();
+      stopCarrotRain();
     }
   });
 });
+
+
 
 
