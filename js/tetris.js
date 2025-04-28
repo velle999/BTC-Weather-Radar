@@ -1,7 +1,7 @@
 // ===== GLOBALS =====
 let score = 0;
-let highScore = localStorage.getItem('tetrisHighScore') || 0;
-let highScoreInitials = localStorage.getItem('tetrisHighScoreInitials') || '---';
+let highScore = 0;
+let highScoreInitials = '---';
 let canvas, context;
 let running = false;
 let blockSize = 20;
@@ -103,22 +103,19 @@ function spawnNewPiece() {
         drawMatrix(playfield);
 
         setTimeout(() => {
-            // NEW: Always prompt for initials if you beat your previous score
             if (score > highScore) {
                 let initials = prompt('🏆 New High Score! Enter your initials (3 letters):', '').toUpperCase().slice(0, 3) || '---';
                 highScoreInitials = initials;
                 highScore = score;
-
-                // SAVE ONLINE instead of localStorage
-                submitScore(initials, highScore);
+                saveHighScoreOnline(initials, highScore);
             }
 
-            // Always reload the global high score list
-            loadHighScores();
-
-            updateScoreboard();
+            loadHighScores().then(() => {
+                updateScoreboard();
+            });
 
             alert('💀 GAME OVER!\nPress the Tetris button to play again.');
+            playfield = createMatrix(rows, cols); // Clean reset
         }, 300);
     }
 }
@@ -213,15 +210,12 @@ function saveHighScoreOnline(initials, score) {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: new URLSearchParams({
-            initials: initials,
-            score: score
-        })
+        body: new URLSearchParams({ initials, score })
     })
     .then(response => response.text())
     .then(data => {
         console.log('✅ Server responded:', data);
-        loadHighScores(); // Automatically reload after saving
+        loadHighScores().then(() => updateScoreboard());
     })
     .catch(err => {
         console.error('❌ Error saving score:', err);
@@ -230,13 +224,13 @@ function saveHighScoreOnline(initials, score) {
 
 // Load high scores from server
 function loadHighScores() {
-    fetch('get_scores.php')
+    return fetch('get_scores.php')
         .then(response => response.json())
         .then(scores => {
             const table = document.getElementById('highscore-table');
             table.innerHTML = '';
 
-            scores.forEach((entry, index) => {
+            scores.slice(0, 10).forEach((entry, index) => {
                 const row = document.createElement('tr');
 
                 const rankCell = document.createElement('td');
@@ -248,7 +242,6 @@ function loadHighScores() {
                 const scoreCell = document.createElement('td');
                 scoreCell.textContent = entry.score || 0;
 
-                // Fancy colors for Top 3
                 if (index === 0) row.style.color = 'gold';
                 else if (index === 1) row.style.color = 'silver';
                 else if (index === 2) row.style.color = '#cd7f32'; // bronze
@@ -268,7 +261,7 @@ function loadHighScores() {
 document.addEventListener('DOMContentLoaded', () => {
     setupScoreboard();
     updateScoreboard();
-    loadHighScores();
+    loadHighScores().then(() => updateScoreboard());
 });
 
 document.getElementById('tetris-toggle').addEventListener('click', () => {
@@ -285,8 +278,9 @@ document.getElementById('tetris-toggle').addEventListener('click', () => {
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
         event.preventDefault();
-        running = !running;
-        if (running) requestAnimationFrame(drawTetris);
+        if (!running) {
+            startTetris();
+        }
         return;
     }
     if (!running) return;
