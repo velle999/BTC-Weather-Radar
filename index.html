@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
           const items = data.querySelectorAll("item");
           const headlines = Array.from(items).slice(0, 10).map(item => item.querySelector("title").textContent);
-          newsItems.innerHTML = headlines.join(' ⚡ ');
+          newsItems.innerHTML = headlines.join(' 🥕 ');
 
           // RESET animation
           newsItems.style.animation = 'none';
