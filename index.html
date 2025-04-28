@@ -69,21 +69,33 @@
       </div>
     </div>
 
-    <div class="right-column">
-      <div id="time-data" class="info-card">
-        <div id="time">--:--:--</div>
-        <div id="date">--/--/----</div>
-        <div id="btcprice">BTC: $--</div>
-        <div id="stockData">Loading stock data...</div>
-        <div id="weatherAlerts">Loading weather alerts...</div>
-      </div>
+<div class="right-column">
+  <div id="time-data" class="info-card">
+    <div id="time">--:--:--</div>
+    <div id="date">--/--/----</div>
+    <div id="btcprice">BTC: $--</div>
+    <div id="stockData">Loading stock data...</div>
+    <div id="weatherAlerts">Loading weather alerts...</div>
+  </div>
+ 
+ <div id="tetris-wrapper" style="display: none;">
+    <div id="tetris-container">
+      <canvas id="tetris" width="200" height="400" style="background: rgba(0,0,0,0.8);"></canvas>
+    </div>
+  </div>
+<div id="scoreboard">
+  <div>Score: <span id="score">0</span></div>
+  <div>High Score: <span id="highScore">0</span></div>
+</div>
 
+</div>
       <div id="radar-container">
         <div id="radar-map"></div>
         <div id="radar-controls">
           <button id="radar-toggle">Show Radar</button>
           <button id="settings-button">Change Settings</button>
           <button id="stocks-toggle">Show CNBC</button>
+          <button id="tetris-toggle">Play Tetris 🎮</button>
           <button id="carrot-toggle">Carrot Rain 🥕</button>
           <button id="treat-toggle">Leave Treat for Dog</button>
           <button id="dew-toggle">Give Mountain Dew</button>
@@ -170,6 +182,7 @@
   });
 </script>
   <script src="js/carrot.js"></script>
+  <script src="js/tetris.js"></script>
 
 </body>
 </html>

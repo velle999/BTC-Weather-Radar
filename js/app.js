@@ -723,6 +723,10 @@ function giveMountainDew() {
   }, 2000);
 }
 
+function rotate(piece) {
+    // Transpose + Reverse = Rotate 90 degrees clockwise
+    return piece[0].map((_, i) => piece.map(row => row[i]).reverse());
+}
 
 const dewToggle = document.getElementById('dew-toggle');
 dewToggle.addEventListener('click', giveMountainDew);

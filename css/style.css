@@ -1,11 +1,13 @@
 /* ===== BASE STYLES ===== */
 body {
+  position: relative; /* <--- SUPER IMPORTANT */
   background: white;
   color: white;
   overflow-x: hidden;
   font-family: 'Arial', sans-serif;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
   min-height: 100vh;
+  z-index: 0; /* Safe start */
 }
 
 /* ===== RGB BACKGROUND ===== */
@@ -16,7 +18,8 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 0;
+  z-index: -1; /* stays */
+  pointer-events: none; /* super important */
 }
 
 /* ===== WEATHER EFFECTS ===== */
@@ -26,10 +29,8 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 20;
   pointer-events: none;
-  z-index: 21;
-  mix-blend-mode: screen;
-  background: transparent;
 }
 
 .raindrop {
@@ -76,7 +77,7 @@ body {
 
 #shell {
   position: relative; /* needed to layer correctly */
-  z-index: 20; /* Main content, above weather effects */
+  z-index: 50; /* Main content, above weather effects */
   backdrop-filter: blur(12px);
   background-color: rgba(25, 25, 25, 0.65);
   border-radius: 10px;
@@ -95,7 +96,7 @@ body {
 
 #radar-container, #stocks-container {
   position: absolute; /* Changed from fixed */
-  z-index: 30; /* Highest clickable layer */
+  z-index: 150; /* Highest clickable layer */
   background: rgba(0,0,0,0.6);
   border-radius: 12px;
   overflow: hidden;
@@ -114,12 +115,6 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
-}
-
-/* ===== INTERACTIVE ELEMENTS ===== */
-#radar-container,
-#stocks-container {
-  z-index: 5; /* Highest priority */
 }
 
 /* ===== MAIN APP CONTAINER ===== */
@@ -247,11 +242,7 @@ body {
   right: 20px;
   width: 580px;
   height: 440px;
-  z-index: 1000;
-  background: rgba(0,0,0,0.6);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 10000;
 }
 
 #stocks-iframe {
@@ -265,8 +256,12 @@ body {
   position: relative;
 }
 
-#shell, #controls, #animal-companion, #bunny-companion {
-    z-index: 2; /* main app UI */
+#controls {
+    z-index: 2000; /* Settings panel stays very top */
+}
+
+#animal-companion, #bunny-companion {
+    z-index: 950; /* Just below carrots (1000) */
 }
 
 /* ===== WEATHER ALERTS ===== */
@@ -284,6 +279,7 @@ body {
 /* ===== RADAR CONTAINER ===== */
 #radar-container {
   position: relative;
+  z-index: 300; /* LOWER than companions */
   width: 100%;
   min-height: 250px;
   background: rgba(0, 0, 0, 0.6);
@@ -535,7 +531,7 @@ body {
     min-height: 200px; /* increased minimum height */
     padding-top: 40px; /* ADD ROOM FOR EARS */
     pointer-events: none;
-    z-index: 100;
+    z-index: 1500;
     overflow: visible; /* allow ears to stick out */
 }
 
@@ -934,7 +930,7 @@ body {
     width: 70px;
     height: 80px;
     pointer-events: none;
-    z-index: 1200;
+    z-index: 1500;
 }
 
 #dog-companion {
@@ -1896,7 +1892,8 @@ img {
   height: 100vh;
   pointer-events: none;
   overflow: hidden;
-  z-index: 22;
+  z-index: 99999; /* Super high */
+  will-change: transform;
 }
 
 #carrot-layer {
@@ -1905,9 +1902,10 @@ img {
   left: 0;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
   pointer-events: none;
-  z-index: 9999;
+  overflow: hidden;
+  z-index: 99999; /* Slightly higher */
+  will-change: transform;
 }
 
 .carrot {
@@ -1916,10 +1914,9 @@ img {
   font-size: 32px;
   user-select: none;
   pointer-events: none;
+  z-index: 99999;
   animation: fall 6s linear forwards, spin 4s linear infinite;
-  border: 2px solid transparent;
-  border-radius: 50%;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  will-change: transform;
 }
 
 @keyframes fall {
@@ -1930,6 +1927,10 @@ img {
 @keyframes spin {
   0% { rotate: 0deg; }
   100% { rotate: 360deg; }
+}
+
+.carrot {
+  will-change: transform;
 }
 
 /* RGB Border Animation */
@@ -2008,6 +2009,24 @@ img {
   100% { transform: translateY(-100px); opacity: 0; }
 }
 
+#tetris-wrapper {
+  display: none;
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
 
+#tetris-container {
+  width: 220px;
+  height: 440px;
+}
+
+#tetris {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  box-shadow: 0 0 10px cyan;
+}
 
 </style>
