@@ -5,11 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pi BTC Weather Clock</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* NEWS TICKER FIX */
+    #news-ticker {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      overflow: hidden;
+      background: linear-gradient(90deg, #8e2de2, #4a00e0);
+      color: white;
+      font-size: 1.2rem;
+      white-space: nowrap;
+      line-height: 30px;
+      z-index: 9999;
+      display: none; /* Start hidden */
+    }
+
+    #news-items {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scrollNews 60s linear infinite;
+    }
+
+    @keyframes scrollNews {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    /* OPTIONAL: add small padding so content not hidden under ticker */
+    #shell {
+      padding-top: 30px;
+    }
+  </style>
 </head>
 <body>
 
 <!-- RGB Background Canvas -->
 <canvas id="rgbBackground"></canvas>
+
+<!-- News Ticker -->
+<div id="news-ticker">
+  <div id="news-items">
+    🥕 Loading news... 🥕
+  </div>
+</div>
 
 <!-- Carrot Rain Layer -->
 <div id="carrot-container"></div>
@@ -23,17 +68,8 @@
   <div id="cloud-layer"></div> 
 </div>
 
-<div id="news-ticker">
-  <div id="news-items">
-   🥕 Loading news... 🥕
-  </div>
-</div>
-
 <!-- Main App -->
 <div id="shell">
-  <div id="top-bar">
-    <button id="news-toggle">News</button>
-  </div>
   <div class="main-grid">
     <div class="left-column">
       <!-- Current Weather -->
@@ -102,6 +138,7 @@
       <button id="radar-toggle">Show Radar</button>
       <button id="settings-button">Change Settings</button>
       <button id="stocks-toggle">Show CNBC</button>
+      <button id="news-toggle">News</button> <!-- moved button -->
       <button id="tetris-toggle">Play Tetris 🎮</button>
       <button id="carrot-toggle">Carrot Rain 🥕</button>
       <button id="treat-toggle">Give Treat</button>
@@ -165,18 +202,12 @@
 </div>
 
 <!-- Scripts -->
-<script src="libs/jquery.min.js"></script>
-<script src="libs/moment-with-locales.min.js"></script>
-<script src="js/rgb-background.js"></script>
-<script src="js/app.js"></script>
-<script src="js/carrot.js"></script>
-<script src="js/tetris.js"></script>
-
-<script>
-  document.getElementById('carrot-toggle').addEventListener('click', function() {
-    document.body.classList.toggle('carrot-mode');
-  });
-</script>
+<script src="libs/jquery.min.js" defer></script>
+<script src="libs/moment-with-locales.min.js" defer></script>
+<script src="js/rgb-background.js" defer></script>
+<script src="js/app.js" defer></script>
+<script src="js/carrot.js" defer></script>
+<script src="js/tetris.js" defer></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -189,14 +220,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const newsToggle = document.getElementById('news-toggle');
   const ticker = document.getElementById('news-ticker');
+  const newsItems = document.getElementById('news-items');
 
-  if (newsToggle && ticker) {
+  if (newsToggle && ticker && newsItems) {
     ticker.style.display = 'none';
     newsToggle.textContent = 'Show Headlines';
+
+    function fetchGoogleNews() {
+      fetch('https://api.allorigins.win/raw?url=https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en')
+        .then(response => response.text())
+        .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+        .then(data => {
+          const items = data.querySelectorAll("item");
+          const headlines = Array.from(items).slice(0, 10).map(item => item.querySelector("title").textContent);
+          newsItems.innerHTML = headlines.join(' ⚡ ');
+
+          // RESET animation
+          newsItems.style.animation = 'none';
+          void newsItems.offsetWidth;
+          newsItems.style.animation = 'scrollNews 60s linear infinite';
+        })
+        .catch(error => {
+          console.error('Error fetching Google News:', error);
+          newsItems.innerHTML = "Failed to load news.";
+        });
+    }
 
     newsToggle.addEventListener('click', function() {
       const isHidden = window.getComputedStyle(ticker).display === 'none';
       if (isHidden) {
+        fetchGoogleNews();
         ticker.style.display = 'block';
         newsToggle.textContent = 'Hide Headlines';
       } else {

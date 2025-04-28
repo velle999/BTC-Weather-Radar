@@ -260,14 +260,17 @@ html, body {
 
 /* ===== WEATHER ALERTS ===== */
 #weatherAlerts {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px;
-    background-color: rgba(20, 20, 20, 0.25);
-    border-radius: 5px;
-    margin-top: 10px;
-    font-size: 1.1vw;
-    backdrop-filter: blur(4px);
+  flex: 1;
+  overflow-y: auto; /* <<< scroll when needed */
+  max-height: 50px; /* <<< limit size but allow scroll */
+  padding: 8px;
+  background-color: rgba(20, 20, 20, 0.25);
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 1.1vw;
+  backdrop-filter: blur(4px);
+  line-height: 1.4em;
+  word-break: break-word; /* <<< Break long words cleanly */
 }
 
 /* ===== RADAR CONTAINER ===== */
@@ -2117,37 +2120,35 @@ img {
   transform: scale(1.05);
 }
 
-/* News Ticker */
 #news-ticker {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 18px;
+  width: 100%;
+  height: 30px; /* or however tall you want */
   overflow: hidden;
   background: linear-gradient(90deg, #8e2de2, #4a00e0);
   color: white;
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 1.2rem;
   white-space: nowrap;
-  z-index: 9998; /* Lower than button */
-  display: none; /* start hidden */
+  line-height: 30px; /* centers text vertically */
+  z-index: 9999; /* stay on top of other stuff */
+  display: none; /* Start hidden */
 }
 
 #news-items {
   display: inline-block;
   padding-left: 100%;
-  white-space: nowrap;
-  height: 18px;
-  line-height: 18px;
   animation: scrollNews 60s linear infinite;
-  vertical-align: middle;
 }
 
-/* News Scroll Animation */
 @keyframes scrollNews {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-100%); }
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 </style>
