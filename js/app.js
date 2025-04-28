@@ -63,28 +63,21 @@ function createClouds(amount) {
   for (let i = 0; i < amount; i++) {
     const cloud = document.createElement('div');
     cloud.className = 'cloud';
-    
-    // Randomize cloud size and position
+
     cloud.style.width = `${150 + Math.random() * 150}px`;
     cloud.style.height = `${80 + Math.random() * 70}px`;
     cloud.style.top = `${Math.random() * 80}vh`;
-    cloud.style.animationDuration = `${50 + Math.random() * 50}s`;
     cloud.style.left = `${-200 - Math.random() * 200}px`;
+    cloud.style.animationDuration = `${50 + Math.random() * 50}s`;
 
     cloudContainer.appendChild(cloud);
   }
-  document.body.appendChild(cloudContainer);
-}
 
-// After you detect weather:
-function applyWeatherEffects(weatherCondition) {
-  // Clear previous clouds if any
-  document.querySelectorAll('.cloud').forEach(cloud => cloud.remove());
-
-  if (weatherCondition.includes('cloud') || weatherCondition.includes('fog') || weatherCondition.includes('rain') || weatherCondition.includes('snow')) {
-    createClouds(6); // more clouds on cloudy/foggy/rainy/snowy
-  } else if (weatherCondition.includes('clear')) {
-    createClouds(2); // few clouds on clear day
+  const cloudLayer = document.getElementById('cloud-layer');
+  if (cloudLayer) {
+    cloudLayer.appendChild(cloudContainer);
+  } else {
+    console.error('☁️ Cloud layer not found!');
   }
 }
 
@@ -197,6 +190,9 @@ function updateCurrentWeather(data) {
     if (typeof data.coord.lat === 'number' && typeof data.coord.lon === 'number') {
         updateRadarLocation(data.coord.lat, data.coord.lon);
     }
+
+    // 🎯 ADD THIS LINE BELOW:
+    applyWeatherEffects(weatherDesc.toLowerCase());
 }
 
 function showWeatherEffects(mainWeather) {
@@ -754,77 +750,88 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   const stocksContainer = document.getElementById('stocks-container');
   const stocksToggle = document.getElementById('stocks-toggle');
-
-  stocksToggle.addEventListener('click', () => {
-    if (stocksContainer.style.display === 'none' || !stocksContainer.style.display) {
-      stocksContainer.style.display = 'block';
-      stocksToggle.textContent = 'Hide CNBC';
-    } else {
-      stocksContainer.style.display = 'none';
-      stocksToggle.textContent = 'Show CNBC';
-    }
-  });
-
-  // Optional: hide stocks by default
-  stocksContainer.style.display = 'none';
-});
-
-document.addEventListener('DOMContentLoaded', () => {
+  const tetrisWrapper = document.getElementById('tetris-wrapper');
+  const carrotToggle = document.getElementById('carrot-toggle');
+  const bunnyCompanion = document.getElementById('bunny-companion');
   let carrotInterval = null;
 
+  // ----------------------------
+  // Stocks Toggle Logic
+  // ----------------------------
+  if (stocksToggle && stocksContainer) {
+    stocksToggle.addEventListener('click', () => {
+      if (stocksContainer.style.display === 'none' || !stocksContainer.style.display) {
+        stocksContainer.style.display = 'block';
+        stocksToggle.textContent = 'Hide CNBC';
+      } else {
+        stocksContainer.style.display = 'none';
+        stocksToggle.textContent = 'Show CNBC';
+      }
+    });
+
+    stocksContainer.style.display = 'none'; // Hide stocks initially
+  }
+
+  // ----------------------------
+  // Carrot Rain Logic
+  // ----------------------------
   function createCarrot() {
     const carrot = document.createElement('div');
     carrot.classList.add('carrot');
     carrot.innerText = '🥕';
 
-    // Random X position
     carrot.style.left = Math.random() * window.innerWidth + 'px';
-
-    // Set top position explicitly
     carrot.style.top = '-50px';
-
-    // Use scale *separately* without overwriting animation transforms
-    const randomScale = 0.8 + Math.random() * 0.4;
-    carrot.style.scale = randomScale; // ✅ This is better than transform for just size!
+    carrot.style.scale = 0.8 + Math.random() * 0.4;
 
     document.getElementById('carrot-layer').appendChild(carrot);
 
     setTimeout(() => {
       carrot.remove();
-    }, 6000); // match animation
+    }, 6000); // Match fall duration
   }
 
-function bunnyReaction() {
-  const bunny = document.getElementById('bunny-companion');
-  if (!bunny) return;
+  function bunnyReaction() {
+    if (!bunnyCompanion) return;
 
-  // Save original animation
-  bunny.style.animation = 'none'; // Stop roaming
-  bunny.offsetHeight; // Force reflow (trick to restart animation)
+    bunnyCompanion.style.animation = 'none'; // Stop roaming
+    bunnyCompanion.offsetHeight; // Force reflow
 
-  // Add happy jump
-  bunny.classList.add('bunny-happy');
+    bunnyCompanion.classList.add('bunny-happy');
 
-  setTimeout(() => {
-    bunny.classList.remove('bunny-happy');
-    bunny.style.animation = 'bunny-roam 18s linear infinite alternate'; // Restore roaming
-  }, 2000);
-}
+    setTimeout(() => {
+      bunnyCompanion.classList.remove('bunny-happy');
+      bunnyCompanion.style.animation = 'bunny-roam 18s linear infinite alternate'; // Restore roam
+    }, 2000);
+  }
 
-  const carrotToggle = document.getElementById('carrot-toggle');
-  carrotToggle.addEventListener('click', () => {
-    if (!carrotInterval) {
-      carrotInterval = setInterval(createCarrot, 250);
-    } else {
-      clearInterval(carrotInterval);
-      carrotInterval = null;
-    }
-    bunnyReaction(); // 🎯 CALL BUNNY REACTION HERE after toggling carrots
-  });
+  if (carrotToggle) {
+    carrotToggle.addEventListener('click', () => {
+      if (!carrotInterval) {
+        carrotInterval = setInterval(createCarrot, 250);
+      } else {
+        clearInterval(carrotInterval);
+        carrotInterval = null;
+      }
+      bunnyReaction();
+    });
+  }
+
+  // ----------------------------
+  // Tetris Positioning Logic (optional but recommended)
+  // ----------------------------
+  if (stocksContainer && tetrisWrapper) {
+    tetrisWrapper.style.position = 'absolute';
+    tetrisWrapper.style.top = (stocksContainer.offsetTop + stocksContainer.offsetHeight + 20) + 'px';
+    tetrisWrapper.style.left = '50%';
+    tetrisWrapper.style.transform = 'translateX(-50%)';
+    tetrisWrapper.style.zIndex = '5500';
+  }
 });
+
 
 
 

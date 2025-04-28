@@ -19,6 +19,7 @@
   <div class="snow-layer"></div>
   <div class="wind-layer"></div>
   <div id="carrot-layer"></div> 
+  <div id="cloud-layer"></div>
 </div>
 
 <!-- Main Application UI -->
@@ -77,30 +78,37 @@
     <div id="stockData">Loading stock data...</div>
     <div id="weatherAlerts">Loading weather alerts...</div>
   </div>
- 
- <div id="tetris-wrapper" style="display: none;">
+
+  <!-- TETRIS WRAPPER -->
+  <div id="tetris-wrapper" style="display: none;">
     <div id="tetris-container">
       <canvas id="tetris" width="200" height="400" style="background: rgba(0,0,0,0.8);"></canvas>
-    </div>
-  </div>
-<div id="scoreboard">
-  <div>Score: <span id="score">0</span></div>
-  <div>High Score: <span id="highScore">0</span></div>
-</div>
-<div id="touch-controls">
-  <button id="left-btn">⬅️</button>
-  <button id="rotate-btn">🔄</button>
-  <button id="right-btn">➡️</button>
-  <button id="down-btn">⬇️</button>
-</div>
 
-<div id="highscores" style="margin-top:20px; text-align:center; color:white;">
-  <h2>🏆 High Scores 🏆</h2>
-  <table id="highscore-table" style="margin: 0 auto; border-spacing: 10px;">
-    <!-- Will fill dynamically -->
-  </table>
-</div>
+      <!-- Scoreboard under canvas -->
+      <div id="scoreboard" style="margin-top: 15px; text-align: center;">
+        <div>Score: <span id="score">0</span></div>
+        <div>High Score: <span id="highScore">0</span></div>
+      </div>
 
+      <!-- Touch Controls under scoreboard -->
+      <div id="touch-controls">
+        <button id="left-btn">⬅️</button>
+        <button id="rotate-btn">🔄</button>
+        <button id="right-btn">➡️</button>
+        <button id="down-btn">⬇️</button>
+      </div>
+
+      <!-- High Scores -->
+      <div id="highscores" style="margin-top: 15px; text-align: center;">
+        <h2>🏆 High Scores 🏆</h2>
+        <table id="highscore-table" style="margin: 0 auto; border-spacing: 10px;">
+          <!-- Filled dynamically -->
+        </table>
+      </div>
+    </div> <!-- END of #tetris-container -->
+  </div> <!-- END of #tetris-wrapper -->
+
+</div> <!-- END of .right-column -->
 
 </div>
       <div id="radar-container">

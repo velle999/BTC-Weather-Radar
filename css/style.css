@@ -1,12 +1,15 @@
 /* ===== BASE STYLES ===== */
-body {
-  position: relative; /* <--- SUPER IMPORTANT */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* Prevent unwanted scrollbars */
+  font-family: 'Arial', sans-serif;
   background: white;
   color: white;
-  overflow-x: hidden;
-  font-family: 'Arial', sans-serif;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
-  min-height: 100vh;
+  position: relative; /* Important for layering */
   z-index: 0; /* Safe start */
 }
 
@@ -74,20 +77,22 @@ body {
 }
 
 /* ===== MAIN APP CONTAINER ===== */
-
 #shell {
-  position: relative; /* needed to layer correctly */
-  z-index: 50; /* Main content, above weather effects */
-  backdrop-filter: blur(12px);
-  background-color: rgba(25, 25, 25, 0.65);
-  border-radius: 10px;
-  margin: 0 auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
   min-height: 100vh;
   box-sizing: border-box;
+  padding: 20px;
+  background-color: rgba(25, 25, 25, 0.65);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Spread content vertically */
+  margin: 0 auto;
+  border-radius: 10px;
 }
+
 
 .cloud {
   z-index: 5;
@@ -242,7 +247,7 @@ body {
   right: 20px;
   width: 580px;
   height: 440px;
-  z-index: 10000;
+  z-index: 5000;
 }
 
 #stocks-iframe {
@@ -2009,44 +2014,76 @@ img {
   100% { transform: translateY(-100px); opacity: 0; }
 }
 
+/* ===== TETRIS WRAPPER ===== */
 #tetris-wrapper {
   display: none;
-  margin-top: 20px;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
+  position: absolute; /* <<< not fixed */
+  top: 500px; /* <<< right under your iframe roughly */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5500; /* Above stocks, radar, carrots, but under settings panels */
+  width: 240px;
+  pointer-events: auto;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 10px;
+  box-shadow: 0 0 15px cyan;
+  padding: 15px;
 }
 
+/* ===== TETRIS CONTAINER ===== */
 #tetris-container {
   width: 220px;
   height: 440px;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 10px;
+  overflow: hidden;
+  pointer-events: auto;
 }
 
+/* ===== TETRIS CANVAS ===== */
 #tetris {
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.8);
-  box-shadow: 0 0 10px cyan;
+  display: block;
+  background-color: transparent;
 }
 
+/* ===== TOUCH CONTROLS ===== */
 #touch-controls {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative; /* <<< changed from fixed */
+  margin-top: 15px;
   display: flex;
+  justify-content: center;
   gap: 15px;
-  z-index: 2001; /* higher than everything */
+  z-index: 1; /* No need to be super high anymore */
 }
 
 #touch-controls button {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 2px solid white;
   border-radius: 10px;
   font-size: 24px;
   padding: 10px 20px;
   backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+#touch-controls button:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+
+#cloud-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 20; /* Lower than rain/snow layers */
+  overflow: hidden;
 }
 
 </style>
