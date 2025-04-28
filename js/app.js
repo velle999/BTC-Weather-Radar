@@ -67,17 +67,24 @@ function createClouds(amount) {
     cloud.style.width = `${150 + Math.random() * 150}px`;
     cloud.style.height = `${80 + Math.random() * 70}px`;
     cloud.style.top = `${Math.random() * 80}vh`;
-    cloud.style.left = `${-200 - Math.random() * 200}px`;
     cloud.style.animationDuration = `${50 + Math.random() * 50}s`;
+    cloud.style.left = `${-200 - Math.random() * 200}px`;
 
     cloudContainer.appendChild(cloud);
   }
 
-  const cloudLayer = document.getElementById('cloud-layer');
-  if (cloudLayer) {
-    cloudLayer.appendChild(cloudContainer);
-  } else {
-    console.error('☁️ Cloud layer not found!');
+  const weatherEffects = document.getElementById('weather-effects') || document.body;
+  weatherEffects.appendChild(cloudContainer);
+}
+
+// 🛠 MOVE THIS UP EARLY!!
+function applyWeatherEffects(weatherCondition) {
+  document.querySelectorAll('.cloud').forEach(cloud => cloud.remove());
+
+  if (weatherCondition.includes('cloud') || weatherCondition.includes('fog') || weatherCondition.includes('rain') || weatherCondition.includes('snow')) {
+    createClouds(6);
+  } else if (weatherCondition.includes('clear')) {
+    createClouds(2);
   }
 }
 
