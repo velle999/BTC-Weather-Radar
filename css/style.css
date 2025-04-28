@@ -78,21 +78,10 @@ html, body {
 
 /* ===== MAIN APP CONTAINER ===== */
 #shell {
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  box-sizing: border-box;
-  padding: 20px;
-  background-color: rgba(25, 25, 25, 0.65);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Spread content vertically */
-  margin: 0 auto;
-  border-radius: 10px;
+  min-height: 100vh;
 }
-
 
 .cloud {
   z-index: 5;
@@ -2084,6 +2073,81 @@ img {
   pointer-events: none;
   z-index: 20; /* Lower than rain/snow layers */
   overflow: hidden;
+}
+
+.lightning-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* News Toggle Button */
+
+/* Top Bar Styles */
+#top-bar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end; /* <=== this pushes button to the right */
+  align-items: center;
+  padding: 10px 20px 0 20px;
+  box-sizing: border-box;
+  z-index: 200;
+}
+
+/* News Button Style */
+#news-toggle {
+  background: linear-gradient(90deg, #8e2de2, #4a00e0);
+  color: white;
+  font-size: 1rem;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: background 0.3s, transform 0.2s;
+}
+
+#news-toggle:hover {
+  background: linear-gradient(90deg, #4a00e0, #8e2de2);
+  transform: scale(1.05);
+}
+
+/* News Ticker */
+#news-ticker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 18px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #8e2de2, #4a00e0);
+  color: white;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+  z-index: 9998; /* Lower than button */
+  display: none; /* start hidden */
+}
+
+#news-items {
+  display: inline-block;
+  padding-left: 100%;
+  white-space: nowrap;
+  height: 18px;
+  line-height: 18px;
+  animation: scrollNews 60s linear infinite;
+  vertical-align: middle;
+}
+
+/* News Scroll Animation */
+@keyframes scrollNews {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
 }
 
 </style>

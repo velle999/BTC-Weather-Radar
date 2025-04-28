@@ -109,13 +109,51 @@ function applyWeatherEffects(weatherCondition) {
   document.querySelectorAll('.cloud').forEach(cloud => cloud.remove());
 
   if (weatherCondition.includes('thunderstorm')) {
-    createClouds(8, true); // ⚡ More clouds, stormy style
+    createClouds(8, true); // 🥕 More clouds, stormy style
   } else if (weatherCondition.includes('cloud') || weatherCondition.includes('fog') || weatherCondition.includes('rain') || weatherCondition.includes('snow')) {
     createClouds(6);
   } else if (weatherCondition.includes('clear')) {
     createClouds(2);
   }
 }
+
+async function fetchNewsHeadlines() {
+  try {
+    const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://feeds.bbci.co.uk/news/rss.xml'));
+    const data = await response.json();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(data.contents, "application/xml");
+
+    const headlines = Array.from(xml.querySelectorAll('item'))
+      .slice(0, 10)
+      .map(item => item.querySelector('title').textContent.trim())
+      .filter(title => title.length > 0);
+
+    const joinedHeadlines = '🥕 ' + headlines.join(' 🥕 ') + ' 🥕 ';
+    const newsItems = document.getElementById('news-items');
+
+    // 🥕 Set the content
+    newsItems.innerHTML = joinedHeadlines.repeat(3); // repeat 3x for infinite feel
+
+    // 🛠 Reset animation
+    resetTickerAnimation();
+  } catch (error) {
+    console.error('Failed to fetch news:', error);
+    document.getElementById('news-items').textContent = "🥕 News unavailable 🥕";
+  }
+}
+
+function resetTickerAnimation() {
+  const newsItems = document.getElementById('news-items');
+  
+  // 🛠 FORCE RESET
+  newsItems.style.animation = 'none';
+  newsItems.offsetHeight; // ← trick: force reflow
+  newsItems.style.animation = null;
+}
+
+fetchNewsHeadlines();
+setInterval(fetchNewsHeadlines, 600000); // every 10 min
 
 // UTILITY FUNCTIONS
 // ----------------------------
@@ -867,7 +905,3 @@ document.addEventListener('DOMContentLoaded', () => {
     tetrisWrapper.style.zIndex = '5500';
   }
 });
-
-
-
-

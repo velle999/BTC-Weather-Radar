@@ -11,6 +11,7 @@
 <!-- RGB Background Canvas -->
 <canvas id="rgbBackground"></canvas>
 
+<!-- Carrot Rain Layer -->
 <div id="carrot-container"></div>
 
 <!-- Weather Effects -->
@@ -18,14 +19,24 @@
   <div class="rain-layer"></div>
   <div class="snow-layer"></div>
   <div class="wind-layer"></div>
-  <div id="carrot-layer"></div> 
-  <div id="cloud-layer"></div>
+  <div id="carrot-layer"></div>
+  <div id="cloud-layer"></div> 
 </div>
 
-<!-- Main Application UI -->
+<div id="news-ticker">
+  <div id="news-items">
+   🥕 Loading news... 🥕
+  </div>
+</div>
+
+<!-- Main App -->
 <div id="shell">
+  <div id="top-bar">
+    <button id="news-toggle">News</button>
+  </div>
   <div class="main-grid">
     <div class="left-column">
+      <!-- Current Weather -->
       <div id="current" class="info-card">
         <div class="icon"></div>
         <div class="desc"></div>
@@ -34,109 +45,79 @@
           <span class="temp">--°F</span>
         </div>
       </div>
+
+      <!-- Forecast -->
       <div class="forecast-top">
-        <div class="forecast info-card" id="forecast1">
-          <div class="day">Day 1</div>
-          <div class="icon"></div>
-          <div class="desc"></div>
-          <div class="highTemp">High: <span class="high">--°F</span></div>
-        </div>
-        <div class="forecast info-card" id="forecast2">
-          <div class="day">Day 2</div>
-          <div class="icon"></div>
-          <div class="desc"></div>
-          <div class="highTemp">High: <span class="high">--°F</span></div>
-        </div>
+        <div class="forecast info-card" id="forecast1"><div class="day">Day 1</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
+        <div class="forecast info-card" id="forecast2"><div class="day">Day 2</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
       </div>
+
       <div class="forecast-bottom">
-        <div class="forecast info-card" id="forecast3">
-          <div class="day">Day 3</div>
-          <div class="icon"></div>
-          <div class="desc"></div>
-          <div class="highTemp">High: <span class="high">--°F</span></div>
-        </div>
-        <div class="forecast info-card" id="forecast4">
-          <div class="day">Day 4</div>
-          <div class="icon"></div>
-          <div class="desc"></div>
-          <div class="highTemp">High: <span class="high">--°F</span></div>
-        </div>
-        <div class="forecast info-card" id="forecast5">
-          <div class="day">Day 5</div>
-          <div class="icon"></div>
-          <div class="desc"></div>
-          <div class="highTemp">High: <span class="high">--°F</span></div>
+        <div class="forecast info-card" id="forecast3"><div class="day">Day 3</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
+        <div class="forecast info-card" id="forecast4"><div class="day">Day 4</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
+        <div class="forecast info-card" id="forecast5"><div class="day">Day 5</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
+      </div>
+    </div>
+
+    <div class="right-column">
+      <div id="time-data" class="info-card">
+        <div id="time">--:--:--</div>
+        <div id="date">--/--/----</div>
+        <div id="btcprice">BTC: $--</div>
+        <div id="stockData">Loading stock data...</div>
+        <div id="weatherAlerts">Loading weather alerts...</div>
+      </div>
+
+      <!-- Tetris -->
+      <div id="tetris-wrapper" style="display: none;">
+        <div id="tetris-container">
+          <canvas id="tetris" width="200" height="400" style="background: rgba(0,0,0,0.8);"></canvas>
+
+          <div id="scoreboard">
+            <div>Score: <span id="score">0</span></div>
+            <div>High Score: <span id="highScore">0</span></div>
+          </div>
+
+          <div id="touch-controls">
+            <button id="left-btn">⬅️</button>
+            <button id="rotate-btn">🔄</button>
+            <button id="right-btn">➡️</button>
+            <button id="down-btn">⬇️</button>
+          </div>
+
+          <div id="highscores">
+            <h2>🏆 High Scores 🏆</h2>
+            <table id="highscore-table"></table>
+          </div>
         </div>
       </div>
     </div>
 
-<div class="right-column">
-  <div id="time-data" class="info-card">
-    <div id="time">--:--:--</div>
-    <div id="date">--/--/----</div>
-    <div id="btcprice">BTC: $--</div>
-    <div id="stockData">Loading stock data...</div>
-    <div id="weatherAlerts">Loading weather alerts...</div>
   </div>
 
-  <!-- TETRIS WRAPPER -->
-  <div id="tetris-wrapper" style="display: none;">
-    <div id="tetris-container">
-      <canvas id="tetris" width="200" height="400" style="background: rgba(0,0,0,0.8);"></canvas>
-
-      <!-- Scoreboard under canvas -->
-      <div id="scoreboard" style="margin-top: 15px; text-align: center;">
-        <div>Score: <span id="score">0</span></div>
-        <div>High Score: <span id="highScore">0</span></div>
-      </div>
-
-      <!-- Touch Controls under scoreboard -->
-      <div id="touch-controls">
-        <button id="left-btn">⬅️</button>
-        <button id="rotate-btn">🔄</button>
-        <button id="right-btn">➡️</button>
-        <button id="down-btn">⬇️</button>
-      </div>
-
-      <!-- High Scores -->
-      <div id="highscores" style="margin-top: 15px; text-align: center;">
-        <h2>🏆 High Scores 🏆</h2>
-        <table id="highscore-table" style="margin: 0 auto; border-spacing: 10px;">
-          <!-- Filled dynamically -->
-        </table>
-      </div>
-    </div> <!-- END of #tetris-container -->
-  </div> <!-- END of #tetris-wrapper -->
-
-</div> <!-- END of .right-column -->
-
-</div>
-      <div id="radar-container">
-        <div id="radar-map"></div>
-        <div id="radar-controls">
-          <button id="radar-toggle">Show Radar</button>
-          <button id="settings-button">Change Settings</button>
-          <button id="stocks-toggle">Show CNBC</button>
-          <button id="tetris-toggle">Play Tetris 🎮</button>
-          <button id="carrot-toggle">Carrot Rain 🥕</button>
-          <button id="treat-toggle">Leave Treat for Dog</button>
-          <button id="dew-toggle">Give Mountain Dew</button>
-
-          <div id="radar-timestamp"></div>
-        </div>
-      </div>
+  <!-- Radar -->
+  <div id="radar-container">
+    <div id="radar-map"></div>
+    <div id="radar-controls">
+      <button id="radar-toggle">Show Radar</button>
+      <button id="settings-button">Change Settings</button>
+      <button id="stocks-toggle">Show CNBC</button>
+      <button id="tetris-toggle">Play Tetris 🎮</button>
+      <button id="carrot-toggle">Carrot Rain 🥕</button>
+      <button id="treat-toggle">Give Treat</button>
+      <button id="dew-toggle">Give Mt Dew</button>
+      <div id="radar-timestamp"></div>
     </div>
   </div>
+
 </div>
 
+<!-- Companions -->
 <div id="animal-companion">
   <div class="animal-body">
     <div class="animal-face"></div>
     <div class="animal-legs">
-      <div class="animal-leg"></div>
-      <div class="animal-leg"></div>
-      <div class="animal-leg"></div>
-      <div class="animal-leg"></div>
+      <div class="animal-leg"></div><div class="animal-leg"></div><div class="animal-leg"></div><div class="animal-leg"></div>
     </div>
   </div>
   <div class="animal-hearts">❤️❤️❤️</div>
@@ -147,13 +128,11 @@
   <div id="bunny-companion">
     <div class="bunny-body">
       <div class="bunny-ears">
-        <div class="bunny-ear left"></div>
-        <div class="bunny-ear right"></div>
+        <div class="bunny-ear left"></div><div class="bunny-ear right"></div>
       </div>
       <div class="bunny-face">
         <div class="bunny-eyes">
-          <div class="bunny-eye"></div>
-          <div class="bunny-eye"></div>
+          <div class="bunny-eye"></div><div class="bunny-eye"></div>
         </div>
         <div class="bunny-nose"></div>
       </div>
@@ -163,18 +142,15 @@
   </div>
 </div>
 
-<!-- Dog Companion -->
 <div id="dog-container">
   <div id="dog-companion">
     <div class="dog-body">
       <div class="dog-ears">
-        <div class="dog-ear left"></div>
-        <div class="dog-ear right"></div>
+        <div class="dog-ear left"></div><div class="dog-ear right"></div>
       </div>
       <div class="dog-face">
         <div class="dog-eyes">
-          <div class="dog-eye"></div>
-          <div class="dog-eye"></div>
+          <div class="dog-eye"></div><div class="dog-eye"></div>
         </div>
         <div class="dog-nose"></div>
       </div>
@@ -183,28 +159,54 @@
   </div>
 </div>
 
-
-<div class="cloud"></div>
-<div class="cloud"></div>
-<div class="cloud"></div>
-<div class="cloud"></div>
-
-<div id="stocks-container">
-<iframe id="stocks-iframe" src="https://livenewschat.eu/stocks/?autoplay=0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+<!-- Stocks Container -->
+<div id="stocks-container" style="display:none;">
+  <iframe id="stocks-iframe" src="https://livenewschat.eu/stocks/?autoplay=0" allow="autoplay; fullscreen" allowfullscreen></iframe>
 </div>
 
+<!-- Scripts -->
 <script src="libs/jquery.min.js"></script>
 <script src="libs/moment-with-locales.min.js"></script>
 <script src="js/rgb-background.js"></script>
 <script src="js/app.js"></script>
+<script src="js/carrot.js"></script>
+<script src="js/tetris.js"></script>
 
 <script>
   document.getElementById('carrot-toggle').addEventListener('click', function() {
     document.body.classList.toggle('carrot-mode');
   });
 </script>
-  <script src="js/carrot.js"></script>
-  <script src="js/tetris.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const carrotToggle = document.getElementById('carrot-toggle');
+  if (carrotToggle) {
+    carrotToggle.addEventListener('click', function() {
+      document.body.classList.toggle('carrot-mode');
+    });
+  }
+
+  const newsToggle = document.getElementById('news-toggle');
+  const ticker = document.getElementById('news-ticker');
+
+  if (newsToggle && ticker) {
+    ticker.style.display = 'none';
+    newsToggle.textContent = 'Show Headlines';
+
+    newsToggle.addEventListener('click', function() {
+      const isHidden = window.getComputedStyle(ticker).display === 'none';
+      if (isHidden) {
+        ticker.style.display = 'block';
+        newsToggle.textContent = 'Hide Headlines';
+      } else {
+        ticker.style.display = 'none';
+        newsToggle.textContent = 'Show Headlines';
+      }
+    });
+  }
+});
+</script>
 
 </body>
 </html>
