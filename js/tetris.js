@@ -31,9 +31,7 @@ let playfield = createMatrix(rows, cols);
 // ===== FUNCTIONS =====
 function createMatrix(rows, cols) {
     const matrix = [];
-    while (rows--) {
-        matrix.push(new Array(cols).fill(0));
-    }
+    while (rows--) matrix.push(new Array(cols).fill(0));
     return matrix;
 }
 
@@ -76,9 +74,7 @@ function drawTetris(time = 0) {
 function merge(grid, piece, offsetX, offsetY, color) {
     piece.forEach((row, y) => {
         row.forEach((value, x) => {
-            if (value) {
-                grid[y + offsetY][x + offsetX] = color;
-            }
+            if (value) grid[y + offsetY][x + offsetX] = color;
         });
     });
 }
@@ -108,13 +104,13 @@ function spawnNewPiece() {
 
         setTimeout(() => {
             if (score > highScore) {
-                let initials = prompt('🏆 New High Score! Enter your initials (3 letters):', '').toUpperCase().slice(0, 3);
-                if (!initials) initials = '---';
+                let initials = prompt('🏆 New High Score! Enter your initials (3 letters):', '').toUpperCase().slice(0, 3) || '---';
                 highScoreInitials = initials;
                 highScore = score;
                 localStorage.setItem('tetrisHighScore', highScore);
                 localStorage.setItem('tetrisHighScoreInitials', initials);
                 saveHighScoreOnline(initials, highScore);
+                loadHighScores();
             }
             updateScoreboard();
             alert('💀 GAME OVER!\nPress the Tetris button to play again.');
@@ -142,9 +138,7 @@ function clearRows() {
             y++;
         }
     }
-    if (rowsCleared > 0) {
-        updateScore(rowsCleared * 100);
-    }
+    if (rowsCleared > 0) updateScore(rowsCleared * 100);
 }
 
 function startTetris() {
@@ -190,72 +184,68 @@ function tryRotateClockwise() {
     const rotated = rotateClockwise(currentPiece);
     if (!collide(playfield, rotated, posX, posY)) {
         currentPiece = rotated;
-    } else {
-        // Try wall kicks
-        if (!collide(playfield, rotated, posX - 1, posY)) {
-            posX--;
-            currentPiece = rotated;
-        } else if (!collide(playfield, rotated, posX + 1, posY)) {
-            posX++;
-            currentPiece = rotated;
-        }
+    } else if (!collide(playfield, rotated, posX - 1, posY)) {
+        posX--;
+        currentPiece = rotated;
+    } else if (!collide(playfield, rotated, posX + 1, posY)) {
+        posX++;
+        currentPiece = rotated;
     }
 }
-
 
 function rotateClockwise(matrix) {
     return matrix[0].map((_, i) => matrix.map(row => row[i]).reverse());
 }
 
-function tryRotateCounterClockwise() {
-    const rotated = rotateCounterClockwise(currentPiece);
-    if (!collide(playfield, rotated, posX, posY)) {
-        currentPiece = rotated;
-    } else {
-        // Try wall kicks
-        if (!collide(playfield, rotated, posX - 1, posY)) {
-            posX--;
-            currentPiece = rotated;
-        } else if (!collide(playfield, rotated, posX + 1, posY)) {
-            posX++;
-            currentPiece = rotated;
-        }
-    }
+function rotateCounterClockwise(matrix) {
+    return matrix[0].map((_, i) => matrix.map(row => row[matrix.length - 1 - i]));
 }
 
 function saveHighScoreOnline(initials, score) {
-  fetch('save_score.php', {
-    method: 'POST',
-    body: new URLSearchParams({
-      initials: initials,
-      score: score
+    fetch('save_score.php', {
+        method: 'POST',
+        body: new URLSearchParams({ initials, score })
     })
-  }).then(response => response.text())
+    .then(response => response.text())
     .then(data => console.log('✅ Server responded:', data))
     .catch(err => console.error('❌ Error saving score:', err));
 }
 
-function loadHighscores() {
+function loadHighScores() {
     fetch('get_scores.php')
-    .then(response => response.json())
-    .then(scores => {
-        const table = document.getElementById('highscore-table');
-        table.innerHTML = '<tr><th>Rank</th><th>Initials</th><th>Score</th></tr>';
+        .then(response => response.json())
+        .then(scores => {
+            const table = document.getElementById('highscore-table');
+            table.innerHTML = '';
+            scores.forEach((entry, index) => {
+                const row = document.createElement('tr');
+                const rankCell = document.createElement('td');
+                const initialsCell = document.createElement('td');
+                const scoreCell = document.createElement('td');
 
-        scores.forEach((entry, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${entry.initials}</td>
-                <td>${entry.score}</td>
-            `;
-            table.appendChild(row);
-        });
-    })
-    .catch(error => console.error('❌ Failed to load highscores:', error));
+                rankCell.textContent = `#${index + 1}`;
+                initialsCell.textContent = entry.initials;
+                scoreCell.textContent = entry.score;
+
+                if (index === 0) row.style.color = 'gold';
+                else if (index === 1) row.style.color = 'silver';
+                else if (index === 2) row.style.color = '#cd7f32';
+
+                row.appendChild(rankCell);
+                row.appendChild(initialsCell);
+                row.appendChild(scoreCell);
+                table.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error loading high scores:', error));
 }
 
 // ===== EVENTS =====
+document.addEventListener('DOMContentLoaded', () => {
+    setupScoreboard();
+    updateScoreboard();
+    loadHighScores();
+});
 
 document.getElementById('tetris-toggle').addEventListener('click', () => {
     const wrapper = document.getElementById('tetris-wrapper');
@@ -275,54 +265,34 @@ document.addEventListener('keydown', (event) => {
         if (running) requestAnimationFrame(drawTetris);
         return;
     }
-
     if (!running) return;
     event.preventDefault();
 
-    if (event.key === 'ArrowLeft') {
-        posX--;
-        if (collide(playfield, currentPiece, posX, posY)) posX++;
-    }
-    if (event.key === 'ArrowRight') {
-        posX++;
-        if (collide(playfield, currentPiece, posX, posY)) posX--;
-    }
-    if (event.key === 'ArrowDown') {
-        posY++;
-        if (collide(playfield, currentPiece, posX, posY)) posY--;
-    }
-    if (event.key === 'ArrowUp') {
-        tryRotateClockwise(); // <--- THIS
+    if (event.key === 'ArrowLeft') posX--;
+    if (event.key === 'ArrowRight') posX++;
+    if (event.key === 'ArrowDown') posY++;
+    if (event.key === 'ArrowUp') tryRotateClockwise();
+
+    if (collide(playfield, currentPiece, posX, posY)) {
+        if (event.key === 'ArrowLeft') posX++;
+        if (event.key === 'ArrowRight') posX--;
+        if (event.key === 'ArrowDown') posY--;
     }
 });
 
-// === Mobile buttons ===
-document.getElementById('left-btn')?.addEventListener('click', () => {
-    if (!running) return;
-    posX--;
-    if (collide(playfield, currentPiece, posX, posY)) posX++;
+['left-btn', 'right-btn', 'rotate-btn', 'down-btn'].forEach(id => {
+    document.getElementById(id)?.addEventListener('click', () => {
+        if (!running) return;
+        switch (id) {
+            case 'left-btn': posX--; break;
+            case 'right-btn': posX++; break;
+            case 'rotate-btn': tryRotateClockwise(); break;
+            case 'down-btn':
+                while (!collide(playfield, currentPiece, posX, posY + 1)) posY++;
+                merge(playfield, currentPiece, posX, posY, currentColor);
+                clearRows();
+                spawnNewPiece();
+                break;
+        }
+    });
 });
-document.getElementById('right-btn')?.addEventListener('click', () => {
-    if (!running) return;
-    posX++;
-    if (collide(playfield, currentPiece, posX, posY)) posX--;
-});
-document.getElementById('rotate-btn')?.addEventListener('click', () => {
-    if (!running) return;
-    tryRotateClockwise(); // <--- FIX FOR MOBILE TOO
-});
-document.getElementById('down-btn')?.addEventListener('click', () => {
-    if (!running) return;
-    while (!collide(playfield, currentPiece, posX, posY + 1)) {
-        posY++;
-    }
-    // As soon as we collide, lock it into place:
-    merge(playfield, currentPiece, posX, posY, currentColor);
-    clearRows();
-    spawnNewPiece();
-});
-
-// Setup scoreboard immediately
-setupScoreboard();
-updateScoreboard();
-loadHighscores();
