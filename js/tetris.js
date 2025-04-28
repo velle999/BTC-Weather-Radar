@@ -103,16 +103,21 @@ function spawnNewPiece() {
         drawMatrix(playfield);
 
         setTimeout(() => {
+            // NEW: Always prompt for initials if you beat your previous score
             if (score > highScore) {
                 let initials = prompt('🏆 New High Score! Enter your initials (3 letters):', '').toUpperCase().slice(0, 3) || '---';
                 highScoreInitials = initials;
                 highScore = score;
-                localStorage.setItem('tetrisHighScore', highScore);
-                localStorage.setItem('tetrisHighScoreInitials', initials);
-                saveHighScoreOnline(initials, highScore);
-                loadHighScores();
+
+                // SAVE ONLINE instead of localStorage
+                submitScore(initials, highScore);
             }
+
+            // Always reload the global high score list
+            loadHighScores();
+
             updateScoreboard();
+
             alert('💀 GAME OVER!\nPress the Tetris button to play again.');
         }, 300);
     }
@@ -201,35 +206,52 @@ function rotateCounterClockwise(matrix) {
     return matrix[0].map((_, i) => matrix.map(row => row[matrix.length - 1 - i]));
 }
 
+// Save high score online
 function saveHighScoreOnline(initials, score) {
     fetch('save_score.php', {
         method: 'POST',
-        body: new URLSearchParams({ initials, score })
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            initials: initials,
+            score: score
+        })
     })
     .then(response => response.text())
-    .then(data => console.log('✅ Server responded:', data))
-    .catch(err => console.error('❌ Error saving score:', err));
+    .then(data => {
+        console.log('✅ Server responded:', data);
+        loadHighScores(); // Automatically reload after saving
+    })
+    .catch(err => {
+        console.error('❌ Error saving score:', err);
+    });
 }
 
+// Load high scores from server
 function loadHighScores() {
     fetch('get_scores.php')
         .then(response => response.json())
         .then(scores => {
             const table = document.getElementById('highscore-table');
             table.innerHTML = '';
+
             scores.forEach((entry, index) => {
                 const row = document.createElement('tr');
+
                 const rankCell = document.createElement('td');
-                const initialsCell = document.createElement('td');
-                const scoreCell = document.createElement('td');
-
                 rankCell.textContent = `#${index + 1}`;
-                initialsCell.textContent = entry.initials;
-                scoreCell.textContent = entry.score;
 
+                const initialsCell = document.createElement('td');
+                initialsCell.textContent = entry.initials || entry.username || '???';
+
+                const scoreCell = document.createElement('td');
+                scoreCell.textContent = entry.score || 0;
+
+                // Fancy colors for Top 3
                 if (index === 0) row.style.color = 'gold';
                 else if (index === 1) row.style.color = 'silver';
-                else if (index === 2) row.style.color = '#cd7f32';
+                else if (index === 2) row.style.color = '#cd7f32'; // bronze
 
                 row.appendChild(rankCell);
                 row.appendChild(initialsCell);
@@ -237,7 +259,9 @@ function loadHighScores() {
                 table.appendChild(row);
             });
         })
-        .catch(error => console.error('Error loading high scores:', error));
+        .catch(error => {
+            console.error('❌ Error loading high scores:', error);
+        });
 }
 
 // ===== EVENTS =====
