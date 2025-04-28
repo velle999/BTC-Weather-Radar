@@ -101,32 +101,29 @@ function spawnNewPiece() {
     posY = 0;
     currentColor = colors[Math.floor(Math.random() * colors.length)];
 
-if (collide(playfield, currentPiece, posX, posY)) {
-    running = false;
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    drawMatrix(playfield); // show final board
+    if (collide(playfield, currentPiece, posX, posY)) {
+        running = false;
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        drawMatrix(playfield);
 
-    setTimeout(() => {
-        if (score > highScore) {
-            let initials = prompt('🏆 New High Score! Enter your initials (3 letters):', '').toUpperCase().slice(0, 3);
-            if (!initials) initials = '---';
-            highScoreInitials = initials;
-            highScore = score;
-            localStorage.setItem('tetrisHighScore', highScore);
-            localStorage.setItem('tetrisHighScoreInitials', initials);
-        }
-        updateScoreboard();
-        alert('💀 GAME OVER!\nPress the Tetris button to play again.');
-    }, 300);
+        setTimeout(() => {
+            if (score > highScore) {
+                let initials = prompt('🏆 New High Score! Enter your initials (3 letters):', '').toUpperCase().slice(0, 3);
+                if (!initials) initials = '---';
+                highScoreInitials = initials;
+                highScore = score;
+                localStorage.setItem('tetrisHighScore', highScore);
+                localStorage.setItem('tetrisHighScoreInitials', initials);
+            }
+            updateScoreboard();
+            alert('💀 GAME OVER!\nPress the Tetris button to play again.');
+        }, 300);
+    }
 }
-}
-
 
 function updateScore(points) {
     score += points;
     document.getElementById('score').textContent = score;
-
-    // 🛑 NO automatic high score update here!
 }
 
 function updateScoreboard() {
@@ -144,7 +141,6 @@ function clearRows() {
             y++;
         }
     }
-
     if (rowsCleared > 0) {
         updateScore(rowsCleared * 100);
     }
@@ -170,7 +166,6 @@ function startTetris() {
     requestAnimationFrame(drawTetris);
 }
 
-// Auto-setup scoreboard
 function setupScoreboard() {
     if (!document.getElementById('scoreboard')) {
         const scoreboard = document.createElement('div');
@@ -190,11 +185,48 @@ function setupScoreboard() {
     }
 }
 
+function tryRotateClockwise() {
+    const rotated = rotateClockwise(currentPiece);
+    if (!collide(playfield, rotated, posX, posY)) {
+        currentPiece = rotated;
+    } else {
+        // Try wall kicks
+        if (!collide(playfield, rotated, posX - 1, posY)) {
+            posX--;
+            currentPiece = rotated;
+        } else if (!collide(playfield, rotated, posX + 1, posY)) {
+            posX++;
+            currentPiece = rotated;
+        }
+    }
+}
+
+
+function rotateClockwise(matrix) {
+    return matrix[0].map((_, i) => matrix.map(row => row[i]).reverse());
+}
+
+function tryRotateCounterClockwise() {
+    const rotated = rotateCounterClockwise(currentPiece);
+    if (!collide(playfield, rotated, posX, posY)) {
+        currentPiece = rotated;
+    } else {
+        // Try wall kicks
+        if (!collide(playfield, rotated, posX - 1, posY)) {
+            posX--;
+            currentPiece = rotated;
+        } else if (!collide(playfield, rotated, posX + 1, posY)) {
+            posX++;
+            currentPiece = rotated;
+        }
+    }
+}
+
+
 // ===== EVENTS =====
 
 document.getElementById('tetris-toggle').addEventListener('click', () => {
     const wrapper = document.getElementById('tetris-wrapper');
-
     if (running) {
         wrapper.style.display = 'none';
         running = false;
@@ -205,45 +237,11 @@ document.getElementById('tetris-toggle').addEventListener('click', () => {
 });
 
 document.addEventListener('keydown', (event) => {
-    if (!running) return;
-    event.preventDefault();
-
-    if (event.key === 'ArrowLeft') {
-        posX--;
-        if (collide(playfield, currentPiece, posX, posY)) {
-            posX++;
-        }
-    }
-    if (event.key === 'ArrowRight') {
-        posX++;
-        if (collide(playfield, currentPiece, posX, posY)) {
-            posX--;
-        }
-    }
-    if (event.key === 'ArrowDown') {
-        posY++;
-        if (collide(playfield, currentPiece, posX, posY)) {
-            posY--;
-        }
-    }
-    if (event.key === 'ArrowUp') {
-        const rotated = rotate(currentPiece);
-        if (!collide(playfield, rotated, posX, posY)) {
-            currentPiece = rotated;
-        }
-    }
-});
-
-document.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
         event.preventDefault();
-        if (running) {
-            running = false; // Pause the game
-        } else {
-            running = true; // Resume the game
-            requestAnimationFrame(drawTetris); // Resume animation loop
-        }
-        return; // 🚨 VERY IMPORTANT: Stop further key handling if Enter
+        running = !running;
+        if (running) requestAnimationFrame(drawTetris);
+        return;
     }
 
     if (!running) return;
@@ -251,67 +249,47 @@ document.addEventListener('keydown', (event) => {
 
     if (event.key === 'ArrowLeft') {
         posX--;
-        if (collide(playfield, currentPiece, posX, posY)) {
-            posX++;
-        }
+        if (collide(playfield, currentPiece, posX, posY)) posX++;
     }
     if (event.key === 'ArrowRight') {
         posX++;
-        if (collide(playfield, currentPiece, posX, posY)) {
-            posX--;
-        }
+        if (collide(playfield, currentPiece, posX, posY)) posX--;
     }
     if (event.key === 'ArrowDown') {
         posY++;
-        if (collide(playfield, currentPiece, posX, posY)) {
-            posY--;
-        }
+        if (collide(playfield, currentPiece, posX, posY)) posY--;
     }
     if (event.key === 'ArrowUp') {
-        const rotated = rotate(currentPiece);
-        if (!collide(playfield, rotated, posX, posY)) {
-            currentPiece = rotated;
-        }
+        tryRotateClockwise(); // <--- THIS
     }
 });
 
-document.getElementById('left-btn').addEventListener('click', () => {
+// === Mobile buttons ===
+document.getElementById('left-btn')?.addEventListener('click', () => {
     if (!running) return;
     posX--;
-    if (collide(playfield, currentPiece, posX, posY)) {
-        posX++;
-    }
+    if (collide(playfield, currentPiece, posX, posY)) posX++;
 });
-
-document.getElementById('right-btn').addEventListener('click', () => {
+document.getElementById('right-btn')?.addEventListener('click', () => {
     if (!running) return;
     posX++;
-    if (collide(playfield, currentPiece, posX, posY)) {
-        posX--;
-    }
+    if (collide(playfield, currentPiece, posX, posY)) posX--;
 });
-
-document.getElementById('rotate-btn').addEventListener('click', () => {
+document.getElementById('rotate-btn')?.addEventListener('click', () => {
     if (!running) return;
-    const rotated = rotate(currentPiece);
-    if (!collide(playfield, rotated, posX, posY)) {
-        currentPiece = rotated;
-    }
+    tryRotateClockwise(); // <--- FIX FOR MOBILE TOO
 });
-
-document.getElementById('down-btn').addEventListener('click', () => {
+document.getElementById('down-btn')?.addEventListener('click', () => {
     if (!running) return;
-    posY++;
-    if (collide(playfield, currentPiece, posX, posY)) {
-        posY--;
+    while (!collide(playfield, currentPiece, posX, posY + 1)) {
+        posY++;
     }
+    // As soon as we collide, lock it into place:
+    merge(playfield, currentPiece, posX, posY, currentColor);
+    clearRows();
+    spawnNewPiece();
 });
 
-
-function rotate(matrix) {
-    return matrix[0].map((_, i) => matrix.map(row => row[i])).reverse();
-}
-
-// 🎯 Setup scoreboard on page load
+// Setup scoreboard immediately
 setupScoreboard();
 updateScoreboard();
