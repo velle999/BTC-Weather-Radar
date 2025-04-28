@@ -114,6 +114,7 @@ function spawnNewPiece() {
                 highScore = score;
                 localStorage.setItem('tetrisHighScore', highScore);
                 localStorage.setItem('tetrisHighScoreInitials', initials);
+                saveHighScoreOnline(initials, highScore);
             }
             updateScoreboard();
             alert('💀 GAME OVER!\nPress the Tetris button to play again.');
@@ -222,6 +223,37 @@ function tryRotateCounterClockwise() {
     }
 }
 
+function saveHighScoreOnline(initials, score) {
+  fetch('save_score.php', {
+    method: 'POST',
+    body: new URLSearchParams({
+      initials: initials,
+      score: score
+    })
+  }).then(response => response.text())
+    .then(data => console.log('✅ Server responded:', data))
+    .catch(err => console.error('❌ Error saving score:', err));
+}
+
+function loadHighscores() {
+    fetch('get_scores.php')
+    .then(response => response.json())
+    .then(scores => {
+        const table = document.getElementById('highscore-table');
+        table.innerHTML = '<tr><th>Rank</th><th>Initials</th><th>Score</th></tr>';
+
+        scores.forEach((entry, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${entry.initials}</td>
+                <td>${entry.score}</td>
+            `;
+            table.appendChild(row);
+        });
+    })
+    .catch(error => console.error('❌ Failed to load highscores:', error));
+}
 
 // ===== EVENTS =====
 
@@ -293,3 +325,4 @@ document.getElementById('down-btn')?.addEventListener('click', () => {
 // Setup scoreboard immediately
 setupScoreboard();
 updateScoreboard();
+loadHighscores();
