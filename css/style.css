@@ -2029,4 +2029,24 @@ img {
   box-shadow: 0 0 10px cyan;
 }
 
+#touch-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  z-index: 2001; /* higher than everything */
+}
+
+#touch-controls button {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  font-size: 24px;
+  padding: 10px 20px;
+  backdrop-filter: blur(6px);
+}
+
 </style>

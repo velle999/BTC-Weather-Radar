@@ -275,6 +275,38 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+document.getElementById('left-btn').addEventListener('click', () => {
+    if (!running) return;
+    posX--;
+    if (collide(playfield, currentPiece, posX, posY)) {
+        posX++;
+    }
+});
+
+document.getElementById('right-btn').addEventListener('click', () => {
+    if (!running) return;
+    posX++;
+    if (collide(playfield, currentPiece, posX, posY)) {
+        posX--;
+    }
+});
+
+document.getElementById('rotate-btn').addEventListener('click', () => {
+    if (!running) return;
+    const rotated = rotate(currentPiece);
+    if (!collide(playfield, rotated, posX, posY)) {
+        currentPiece = rotated;
+    }
+});
+
+document.getElementById('down-btn').addEventListener('click', () => {
+    if (!running) return;
+    posY++;
+    if (collide(playfield, currentPiece, posX, posY)) {
+        posY--;
+    }
+});
+
 
 function rotate(matrix) {
     return matrix[0].map((_, i) => matrix.map(row => row[i])).reverse();
