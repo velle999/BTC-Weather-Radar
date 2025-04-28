@@ -58,7 +58,7 @@ function setupAnimalHover() {
     });
 }
 
-function createClouds(amount) {
+function createClouds(amount, stormy = false) {
   const cloudContainer = document.createDocumentFragment();
   for (let i = 0; i < amount; i++) {
     const cloud = document.createElement('div');
@@ -67,8 +67,15 @@ function createClouds(amount) {
     cloud.style.width = `${150 + Math.random() * 150}px`;
     cloud.style.height = `${80 + Math.random() * 70}px`;
     cloud.style.top = `${Math.random() * 80}vh`;
-    cloud.style.animationDuration = `${50 + Math.random() * 50}s`;
     cloud.style.left = `${-200 - Math.random() * 200}px`;
+    
+    cloud.style.animationDuration = stormy 
+      ? `${20 + Math.random() * 30}s` // ⚡ faster movement
+      : `${50 + Math.random() * 50}s`;
+
+    if (stormy) {
+      cloud.style.background = 'rgba(50, 50, 50, 0.7)'; // ⚡ darker clouds
+    }
 
     cloudContainer.appendChild(cloud);
   }
@@ -77,11 +84,33 @@ function createClouds(amount) {
   weatherEffects.appendChild(cloudContainer);
 }
 
+function randomLightningFlash() {
+  if (!document.body.classList.contains('weather-thunderstorm')) return;
+
+  const flash = document.createElement('div');
+  flash.className = 'lightning-flash';
+  document.body.appendChild(flash);
+
+  setTimeout(() => {
+    flash.remove();
+  }, 200); // quick flash
+}
+
+// Every 5-15 seconds, maybe flash
+setInterval(() => {
+  if (Math.random() < 0.3) { // 30% chance
+    randomLightningFlash();
+  }
+}, 5000);
+
 // 🛠 MOVE THIS UP EARLY!!
 function applyWeatherEffects(weatherCondition) {
+  // Clear previous clouds
   document.querySelectorAll('.cloud').forEach(cloud => cloud.remove());
 
-  if (weatherCondition.includes('cloud') || weatherCondition.includes('fog') || weatherCondition.includes('rain') || weatherCondition.includes('snow')) {
+  if (weatherCondition.includes('thunderstorm')) {
+    createClouds(8, true); // ⚡ More clouds, stormy style
+  } else if (weatherCondition.includes('cloud') || weatherCondition.includes('fog') || weatherCondition.includes('rain') || weatherCondition.includes('snow')) {
     createClouds(6);
   } else if (weatherCondition.includes('clear')) {
     createClouds(2);
