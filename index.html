@@ -131,23 +131,56 @@
 
   </div>
 
-  <!-- Radar -->
-  <div id="radar-container">
-    <div id="radar-map"></div>
-    <div id="radar-controls">
-      <button id="radar-toggle">Show Radar</button>
-      <button id="settings-button">Change Settings</button>
-      <button id="stocks-toggle">Show CNBC</button>
-      <button id="news-toggle">News</button> <!-- moved button -->
-      <button id="tetris-toggle">Play Tetris 🎮</button>
-      <button id="carrot-toggle">Carrot Rain 🥕</button>
-      <button id="treat-toggle">Give Treat</button>
-      <button id="dew-toggle">Give Mt Dew</button>
-      <div id="radar-timestamp"></div>
-    </div>
-  </div>
-
+<!-- Floating Spotify Player -->
+<div id="spotifyPlayer" style="display: none; position: fixed; bottom: 20px; right: 20px; width: 300px; height: 80px; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.3); border-radius: 8px; overflow: hidden; z-index: 999;">
+  <iframe 
+    id="spotifyIframe"
+    src=""
+    width="100%" 
+    height="100%" 
+    frameborder="0" 
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+  </iframe>
 </div>
+
+<!-- Radar Buttons -->
+<div id="radar-container">
+  <div id="radar-map"></div>
+  <div id="radar-controls">
+    <button id="radar-toggle">Show Radar</button>
+    <button id="settings-button">Change Settings</button>
+    <button id="stocks-toggle">Show CNBC</button>
+    <button id="news-toggle">News</button>
+    <button id="tetris-toggle">Play Tetris 🎮</button>
+    <button id="carrot-toggle">Carrot Rain 🥕</button>
+    <button id="treat-toggle">Give Treat</button>
+    <button id="dew-toggle">Give Mt Dew</button>
+    <button id="spotifyPlayButton">🎧</button> <!-- << renamed this -->
+    <button id="spotifyStopButton" style="display: none;">Stop Music 🚫</button> <!-- << new stop button -->
+  </div>
+</div>
+
+<script>
+  const spotifyPlayButton = document.getElementById('spotifyPlayButton');
+  const spotifyStopButton = document.getElementById('spotifyStopButton');
+  const spotifyPlayer = document.getElementById('spotifyPlayer');
+  const spotifyIframe = document.getElementById('spotifyIframe');
+
+  spotifyPlayButton.addEventListener('click', () => {
+    spotifyIframe.src = "https://open.spotify.com/embed/artist/4MCBfE4596Uoi2O4DtmEMz?utm_source=generator";
+    spotifyPlayer.style.display = 'block';
+    spotifyPlayButton.style.display = 'none';
+    spotifyStopButton.style.display = 'inline-block';
+  });
+
+  spotifyStopButton.addEventListener('click', () => {
+    spotifyIframe.src = ""; // Clear the iframe to stop music
+    spotifyPlayer.style.display = 'none';
+    spotifyPlayButton.style.display = 'inline-block';
+    spotifyStopButton.style.display = 'none';
+  });
+</script>
+
 
 <!-- Companions -->
 <div id="animal-companion">
@@ -195,7 +228,6 @@
     <div class="dog-message">🦴!</div>
   </div>
 </div>
-
 <!-- Stocks Container -->
 <div id="stocks-container" style="display:none;">
   <iframe id="stocks-iframe" src="https://livenewschat.eu/stocks/?autoplay=0" allow="autoplay; fullscreen" allowfullscreen></iframe>
@@ -208,6 +240,13 @@
 <script src="js/app.js" defer></script>
 <script src="js/carrot.js" defer></script>
 <script src="js/tetris.js" defer></script>
+
+<script>
+  document.getElementById('playButton').addEventListener('click', function() {
+    document.getElementById('spotifyPlayer').style.display = 'block';
+    this.style.display = 'none'; // optional: hide the button after clicking
+  });
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -260,6 +299,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
-
+<div id="emergency-overlay"></div>
+<div id="emergency-message" style="display: none;">⚠️ TORNADO WARNING ⚠️</div>
+<button id="stop-button" style="display: none;">Stop Alert</button>
 </body>
 </html>

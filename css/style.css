@@ -2166,4 +2166,59 @@ img {
   100% { transform: scale(5) translate(100px, -100px); opacity: 0; }
 }
 
+/* ===== EMERGENCY ALERT SYSTEM ===== */
+
+#emergency-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 0, 0, 0.6); /* Semi-transparent red */
+  z-index: 9998;
+  display: none;
+  animation: flashRed 1s infinite alternate;
+  pointer-events: none;
+}
+
+#emergency-message {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  color: red;
+  font-size: 2.5rem;
+  font-weight: bold;
+  padding: 20px 40px;
+  border-radius: 15px;
+  z-index: 9999;
+  display: none;
+  text-align: center;
+  box-shadow: 0 0 20px red;
+  pointer-events: none;
+}
+
+#stop-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 12px 20px;
+  font-size: 1.5rem;
+  background: white;
+  color: red;
+  border: 2px solid red;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 10000;
+  display: none;
+}
+
+/* Flash red animation */
+@keyframes flashRed {
+  0% { background: rgba(255, 0, 0, 0.6); }
+  50% { background: rgba(255, 0, 0, 0.3); }
+  100% { background: rgba(255, 0, 0, 0.6); }
+}
+
 </style>

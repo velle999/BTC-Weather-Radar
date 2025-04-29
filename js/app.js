@@ -805,6 +805,57 @@ dewToggle.addEventListener('click', giveMountainDew);
 const treatToggle = document.getElementById('treat-toggle');
 treatToggle.addEventListener('click', giveDogTreat);
 
+let emergencyAudio = null;
+
+function checkAndPlaySevereAlert(alerts) {
+    const lastAlertId = localStorage.getItem('lastAlertId');
+    const severeKeywords = ["Tornado Warning", "Severe Thunderstorm Warning", "Flash Flood Warning"];
+
+    alerts.forEach(alert => {
+        const alertEvent = alert.event || '';
+
+        if (severeKeywords.some(keyword => alertEvent.includes(keyword))) {
+            if (alert.id !== lastAlertId) {
+                emergencyAudio = new Audio('sounds/tornado_alert.mp3');
+                emergencyAudio.loop = true;
+                emergencyAudio.play().catch(error => console.error("Audio play failed:", error));
+
+                // Show Flashing Red
+                const overlay = document.getElementById('emergency-overlay');
+                const message = document.getElementById('emergency-message');
+                const stopButton = document.getElementById('stop-button');
+                if (overlay) overlay.style.display = 'block';
+                if (message) message.style.display = 'block';
+                if (stopButton) stopButton.style.display = 'block';
+
+                localStorage.setItem('lastAlertId', alert.id);
+            }
+        }
+    });
+}
+
+function stopEmergency() {
+    const overlay = document.getElementById('emergency-overlay');
+    const message = document.getElementById('emergency-message');
+    const stopButton = document.getElementById('stop-button');
+    if (overlay) overlay.style.display = 'none';
+    if (message) message.style.display = 'none';
+    if (stopButton) stopButton.style.display = 'none';
+
+    if (emergencyAudio) {
+        emergencyAudio.pause();
+        emergencyAudio.currentTime = 0;
+    }
+}
+
+// Connect stop-button
+document.addEventListener('DOMContentLoaded', () => {
+  const stopButton = document.getElementById('stop-button');
+  if (stopButton) {
+    stopButton.addEventListener('click', stopEmergency);
+  }
+});
+
 // ----------------------------
 // INITIALIZATION
 // ----------------------------
