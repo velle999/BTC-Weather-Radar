@@ -72,37 +72,21 @@
 <div id="shell">
   <div class="main-grid">
     <div class="left-column">
-      <!-- Current Weather -->
-      <div id="current" class="info-card">
-        <div class="icon"></div>
-        <div class="desc"></div>
-        <div class="currentTemp">
-          Temperature:<br>
-          <span class="temp">--°F</span>
-        </div>
-      </div>
+ 
+ <!-- Time, Date, Current, Crypto, Stock, Alerts -->
+<div id="time-data" class="info-card">
+  <div id="time">--:--:--</div>
+  <div id="date">--/--/----</div>
+  <div id="currentTemp">Temperature: --°F</div>
+  <div id="btcprice">BTC: $--</div>
+  <div id="stockData">Loading stock data...</div>
+  <div id="weatherAlerts">Loading weather alerts...</div>
 
-      <!-- Forecast -->
-      <div class="forecast-top">
-        <div class="forecast info-card" id="forecast1"><div class="day">Day 1</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
-        <div class="forecast info-card" id="forecast2"><div class="day">Day 2</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
-      </div>
-
-      <div class="forecast-bottom">
-        <div class="forecast info-card" id="forecast3"><div class="day">Day 3</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
-        <div class="forecast info-card" id="forecast4"><div class="day">Day 4</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
-        <div class="forecast info-card" id="forecast5"><div class="day">Day 5</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
-      </div>
-    </div>
-
-    <div class="right-column">
-      <div id="time-data" class="info-card">
-        <div id="time">--:--:--</div>
-        <div id="date">--/--/----</div>
-        <div id="btcprice">BTC: $--</div>
-        <div id="stockData">Loading stock data...</div>
-        <div id="weatherAlerts">Loading weather alerts...</div>
-      </div>
+  <!-- Live 5-Day Forecast -->
+  <div id="five-day-forecast">
+    <!-- Will be filled dynamically by JS -->
+  </div>
+</div>
 
       <!-- Tetris -->
       <div id="tetris-wrapper" style="display: none;">
@@ -132,7 +116,8 @@
   </div>
 
 <!-- Floating Spotify Player -->
-<div id="spotifyPlayer" style="display: none; position: fixed; bottom: 20px; right: 20px; width: 300px; height: 80px; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.3); border-radius: 8px; overflow: hidden; z-index: 999;">
+
+<div id="spotifyPlayer" style="display: none; position: fixed; bottom: 300px; right: 20px; width: 300px; height: 80px; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.3); border-radius: 8px; overflow: hidden; z-index: 999;">
   <iframe 
     id="spotifyIframe"
     src=""
@@ -142,6 +127,7 @@
     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
   </iframe>
 </div>
+
 
 <!-- Radar Buttons -->
 <div id="radar-container">

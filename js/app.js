@@ -28,7 +28,7 @@ const elements = {
     btcPrice: $('#btcprice'),
     stockData: $('#stockData'),
     weatherAlerts: $('#weatherAlerts'),
-    currentTemp: $('.currentTemp .temp'),
+    currentTemp: $('#currentTemp'),
     currentDesc: $('#current .desc'),
     currentIcon: $('#current .icon'),
     animalMessage: $('#animal-companion .animal-message'),
@@ -384,30 +384,107 @@ setInterval(() => {
 
 async function fetchForecast() {
     try {
-        $('.forecast .day').text('Loading...');
+        const forecastContainer = document.getElementById('five-day-forecast');
+        forecastContainer.innerHTML = '<div>Loading forecast...</div>'; // Small loading state
         const data = await fetchWithRetry(getForecastUrl());
         updateForecast(data);
     } catch (error) {
         console.error('Forecast fetch failed:', error);
-        $('.forecast .day').text('N/A');
+        const forecastContainer = document.getElementById('five-day-forecast');
+        forecastContainer.innerHTML = '<div>Forecast unavailable</div>';
     }
 }
 
 function updateForecast(data) {
-    const dailyForecasts = data.list.filter(item => item.dt_txt.includes('12:00:00'));
-    dailyForecasts.slice(0, 5).forEach((forecast, index) => {
-        const dayElement = $(`#forecast${index + 1}`);
-        const day = moment(forecast.dt_txt).format('ddd');
+    const forecastContainer = document.getElementById('five-day-forecast');
+    forecastContainer.innerHTML = ''; // Clear old forecast first
+
+    const dailyForecasts = data.list.filter(item => item.dt_txt.includes('12:00:00')).slice(0, 5);
+
+    const temps = [];
+
+    dailyForecasts.forEach((forecast, index) => {
+        const dayName = moment(forecast.dt_txt).format('ddd');
         const weatherIcon = forecast.weather[0].icon;
         const highTemp = Math.round(forecast.main.temp_max);
-        const lowTemp = Math.round(forecast.main.temp_min);
 
-        dayElement.find('.day').text(day);
-        dayElement.find('.icon').html(`<img src="https://openweathermap.org/img/wn/${weatherIcon}.png">`);
-        dayElement.find('.high').text(`${highTemp}°F`);
-        dayElement.find('.low').text(`${lowTemp}°F`);
+        temps.push(highTemp); // 👉 Save the high temps to draw trendline later
+
+        const forecastHTML = `
+          <div class="forecast-day">
+            <div class="forecast-icon">
+              <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="${forecast.weather[0].description}" style="width:40px;height:40px;">
+            </div>
+            <div class="forecast-text">${dayName} • ${highTemp}°F</div>
+          </div>
+        `;
+
+        forecastContainer.innerHTML += forecastHTML;
     });
+
+    drawTempTrendline(temps);
 }
+
+function drawTempTrendline(temps) {
+    const container = document.getElementById('five-day-forecast');
+
+    // Clear old canvas if exists
+    const oldCanvas = container.querySelector('canvas');
+    if (oldCanvas) oldCanvas.remove();
+
+    const trendCanvas = document.createElement('canvas');
+    trendCanvas.width = container.offsetWidth;
+    trendCanvas.height = 40;
+    trendCanvas.style.marginTop = '10px';
+    trendCanvas.style.maxWidth = '100%';
+    trendCanvas.style.display = 'block';
+    container.appendChild(trendCanvas);
+
+    const ctx = trendCanvas.getContext('2d');
+    ctx.translate(0.5, 0.5); // crisp line rendering
+
+    const minTemp = Math.min(...temps);
+    const maxTemp = Math.max(...temps);
+
+    const points = temps.map((temp, i) => {
+        const x = (i / (temps.length - 1)) * trendCanvas.width;
+        const y = trendCanvas.height - ((temp - minTemp) / (maxTemp - minTemp)) * trendCanvas.height;
+        return { x, y };
+    });
+
+    let offset = 0;
+    const gradientWidth = trendCanvas.width * 2;
+
+    function draw() {
+        ctx.clearRect(0, 0, trendCanvas.width, trendCanvas.height);
+
+        const gradient = ctx.createLinearGradient(offset, 0, offset + gradientWidth, 0);
+        gradient.addColorStop(0, "red");
+        gradient.addColorStop(0.17, "orange");
+        gradient.addColorStop(0.34, "yellow");
+        gradient.addColorStop(0.51, "lime");
+        gradient.addColorStop(0.68, "blue");
+        gradient.addColorStop(0.85, "indigo");
+        gradient.addColorStop(1, "violet");
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.stroke();
+
+        offset += 1;
+        if (offset > trendCanvas.width) offset = 0;
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+}
+
 
 // ----------------------------
 // STOCK FUNCTIONS
