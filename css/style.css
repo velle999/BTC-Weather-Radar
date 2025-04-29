@@ -669,22 +669,51 @@ img {
 
 #emergency-message {
   position: fixed;
-  top: 40%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 600px;
+  height: 300px; /* --- THIS FIX --- */
   background: white;
   color: red;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
-  padding: 20px 40px;
+  padding: 20px;
   border-radius: 15px;
   box-shadow: 0 0 20px red;
   z-index: 9999;
   display: none;
   text-align: center;
-  pointer-events: none;
+  overflow: hidden; /* --- Prevent outer overflow */
+  pointer-events: auto;
 }
 
+/* THIS is the important SCROLLBOX inside */
+#emergency-scrollbox {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto; /* enable vertical scroll */
+  overflow-x: hidden;
+  font-size: 1.5rem;
+  padding-right: 10px; /* nice scroll */
+  text-align: left;
+  line-height: 1.5;
+}
+
+/* Optional: nice smooth scrolling */
+#emergency-scrollbox::-webkit-scrollbar {
+  width: 8px;
+}
+#emergency-scrollbox::-webkit-scrollbar-thumb {
+  background: red;
+  border-radius: 10px;
+}
+#emergency-scrollbox::-webkit-scrollbar-track {
+  background: #ffe5e5;
+}
+
+/* STOP button */
 #stop-button {
   position: fixed;
   bottom: 30px;
@@ -700,7 +729,7 @@ img {
   display: none;
 }
 
-/* Flash red animation */
+/* Flash red animation stays */
 @keyframes flashRed {
   0% { background: rgba(255, 0, 0, 0.6); }
   50% { background: rgba(255, 0, 0, 0.3); }

@@ -284,9 +284,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-</script>
+
 <div id="emergency-overlay"></div>
-<div id="emergency-message" style="display: none;">⚠️ TORNADO WARNING ⚠️</div>
-<button id="stop-button" style="display: none;">Stop Alert</button>
+
+<div id="emergency-message">
+  <div id="emergency-scrollbox">
+    ⚠️ FLOOD WATCH: 
+    Heavy rainfall expected across Franklin County tonight through tomorrow morning. Rainfall rates may exceed 2-3 inches per hour causing rapid flash flooding in low-lying areas. 
+    Be alert for flooded roadways. Do not attempt to cross water-covered roads.
+    Additional text... (make it long for testing!)
+    Even more text here to overflow the container and force scrolling.
+    Even more warnings and safety messages here so we can test the scrolling properly.
+    Keep adding more until it's obviously overflowing!
+  </div>
+</div>
+
+<button id="stop-button" onclick="stopEmergency()">Stop Alerts</button>
+
+
 </body>
 </html>
