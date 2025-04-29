@@ -72,21 +72,37 @@
 <div id="shell">
   <div class="main-grid">
     <div class="left-column">
- 
- <!-- Time, Date, Current, Crypto, Stock, Alerts -->
-<div id="time-data" class="info-card">
-  <div id="time">--:--:--</div>
-  <div id="date">--/--/----</div>
-  <div id="currentTemp">Temperature: --°F</div>
-  <div id="btcprice">BTC: $--</div>
-  <div id="stockData">Loading stock data...</div>
-  <div id="weatherAlerts">Loading weather alerts...</div>
+      <!-- Current Weather -->
+      <div id="current" class="info-card">
+        <div class="icon"></div>
+        <div class="desc"></div>
+        <div class="currentTemp">
+          Temperature:<br>
+          <span class="temp">--°F</span>
+        </div>
+      </div>
 
-  <!-- Live 5-Day Forecast -->
-  <div id="five-day-forecast">
-    <!-- Will be filled dynamically by JS -->
-  </div>
-</div>
+      <!-- Forecast -->
+      <div class="forecast-top">
+        <div class="forecast info-card" id="forecast1"><div class="day">Day 1</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
+        <div class="forecast info-card" id="forecast2"><div class="day">Day 2</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
+      </div>
+
+      <div class="forecast-bottom">
+        <div class="forecast info-card" id="forecast3"><div class="day">Day 3</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
+        <div class="forecast info-card" id="forecast4"><div class="day">Day 4</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
+        <div class="forecast info-card" id="forecast5"><div class="day">Day 5</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
+      </div>
+    </div>
+
+    <div class="right-column">
+      <div id="time-data" class="info-card">
+        <div id="time">--:--:--</div>
+        <div id="date">--/--/----</div>
+        <div id="btcprice">BTC: $--</div>
+        <div id="stockData">Loading stock data...</div>
+        <div id="weatherAlerts">Loading weather alerts...</div>
+      </div>
 
       <!-- Tetris -->
       <div id="tetris-wrapper" style="display: none;">
@@ -115,58 +131,23 @@
 
   </div>
 
-<!-- Floating Spotify Player -->
-
-<div id="spotifyPlayer" style="display: none; position: fixed; bottom: 300px; right: 20px; width: 300px; height: 80px; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.3); border-radius: 8px; overflow: hidden; z-index: 999;">
-  <iframe 
-    id="spotifyIframe"
-    src=""
-    width="100%" 
-    height="100%" 
-    frameborder="0" 
-    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-  </iframe>
-</div>
-
-
-<!-- Radar Buttons -->
-<div id="radar-container">
-  <div id="radar-map"></div>
-  <div id="radar-controls">
-    <button id="radar-toggle">Show Radar</button>
-    <button id="settings-button">Change Settings</button>
-    <button id="stocks-toggle">Show CNBC</button>
-    <button id="news-toggle">News</button>
-    <button id="tetris-toggle">Play Tetris 🎮</button>
-    <button id="carrot-toggle">Carrot Rain 🥕</button>
-    <button id="treat-toggle">Give Treat</button>
-    <button id="dew-toggle">Give Mt Dew</button>
-    <button id="spotifyPlayButton">🎧</button> <!-- << renamed this -->
-    <button id="spotifyStopButton" style="display: none;">Stop Music 🚫</button> <!-- << new stop button -->
+  <!-- Radar -->
+  <div id="radar-container">
+    <div id="radar-map"></div>
+    <div id="radar-controls">
+      <button id="radar-toggle">Show Radar</button>
+      <button id="settings-button">Change Settings</button>
+      <button id="stocks-toggle">Show CNBC</button>
+      <button id="news-toggle">News</button> <!-- moved button -->
+      <button id="tetris-toggle">Play Tetris 🎮</button>
+      <button id="carrot-toggle">Carrot Rain 🥕</button>
+      <button id="treat-toggle">Give Treat</button>
+      <button id="dew-toggle">Give Mt Dew</button>
+      <div id="radar-timestamp"></div>
+    </div>
   </div>
+
 </div>
-
-<script>
-  const spotifyPlayButton = document.getElementById('spotifyPlayButton');
-  const spotifyStopButton = document.getElementById('spotifyStopButton');
-  const spotifyPlayer = document.getElementById('spotifyPlayer');
-  const spotifyIframe = document.getElementById('spotifyIframe');
-
-  spotifyPlayButton.addEventListener('click', () => {
-    spotifyIframe.src = "https://open.spotify.com/embed/artist/4MCBfE4596Uoi2O4DtmEMz?utm_source=generator";
-    spotifyPlayer.style.display = 'block';
-    spotifyPlayButton.style.display = 'none';
-    spotifyStopButton.style.display = 'inline-block';
-  });
-
-  spotifyStopButton.addEventListener('click', () => {
-    spotifyIframe.src = ""; // Clear the iframe to stop music
-    spotifyPlayer.style.display = 'none';
-    spotifyPlayButton.style.display = 'inline-block';
-    spotifyStopButton.style.display = 'none';
-  });
-</script>
-
 
 <!-- Companions -->
 <div id="animal-companion">
@@ -214,6 +195,7 @@
     <div class="dog-message">🦴!</div>
   </div>
 </div>
+
 <!-- Stocks Container -->
 <div id="stocks-container" style="display:none;">
   <iframe id="stocks-iframe" src="https://livenewschat.eu/stocks/?autoplay=0" allow="autoplay; fullscreen" allowfullscreen></iframe>
@@ -226,13 +208,6 @@
 <script src="js/app.js" defer></script>
 <script src="js/carrot.js" defer></script>
 <script src="js/tetris.js" defer></script>
-
-<script>
-  document.getElementById('playButton').addEventListener('click', function() {
-    document.getElementById('spotifyPlayer').style.display = 'block';
-    this.style.display = 'none'; // optional: hide the button after clicking
-  });
-</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -284,23 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-
-<div id="emergency-overlay"></div>
-
-<div id="emergency-message">
-  <div id="emergency-scrollbox">
-    ⚠️ FLOOD WATCH: 
-    Heavy rainfall expected across Franklin County tonight through tomorrow morning. Rainfall rates may exceed 2-3 inches per hour causing rapid flash flooding in low-lying areas. 
-    Be alert for flooded roadways. Do not attempt to cross water-covered roads.
-    Additional text... (make it long for testing!)
-    Even more text here to overflow the container and force scrolling.
-    Even more warnings and safety messages here so we can test the scrolling properly.
-    Keep adding more until it's obviously overflowing!
-  </div>
-</div>
-
-<button id="stop-button" onclick="stopEmergency()">Stop Alerts</button>
-
+</script>
 
 </body>
 </html>

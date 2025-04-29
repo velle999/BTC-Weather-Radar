@@ -1,7 +1,7 @@
 // ===== GLOBALS =====
 let score = 0;
-let highScore = 0;
-let highScoreInitials = '---';
+let highScore = localStorage.getItem('tetrisHighScore') || 0;
+let highScoreInitials = localStorage.getItem('tetrisHighScoreInitials') || '---';
 let canvas, context;
 let running = false;
 let blockSize = 20;
@@ -107,15 +107,13 @@ function spawnNewPiece() {
                 let initials = prompt('🏆 New High Score! Enter your initials (3 letters):', '').toUpperCase().slice(0, 3) || '---';
                 highScoreInitials = initials;
                 highScore = score;
+                localStorage.setItem('tetrisHighScore', highScore);
+                localStorage.setItem('tetrisHighScoreInitials', initials);
                 saveHighScoreOnline(initials, highScore);
+                loadHighScores();
             }
-
-            loadHighScores().then(() => {
-                updateScoreboard();
-            });
-
+            updateScoreboard();
             alert('💀 GAME OVER!\nPress the Tetris button to play again.');
-            playfield = createMatrix(rows, cols); // Clean reset
         }, 300);
     }
 }
@@ -203,48 +201,35 @@ function rotateCounterClockwise(matrix) {
     return matrix[0].map((_, i) => matrix.map(row => row[matrix.length - 1 - i]));
 }
 
-// Save high score online
 function saveHighScoreOnline(initials, score) {
     fetch('save_score.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
         body: new URLSearchParams({ initials, score })
     })
     .then(response => response.text())
-    .then(data => {
-        console.log('✅ Server responded:', data);
-        loadHighScores().then(() => updateScoreboard());
-    })
-    .catch(err => {
-        console.error('❌ Error saving score:', err);
-    });
+    .then(data => console.log('✅ Server responded:', data))
+    .catch(err => console.error('❌ Error saving score:', err));
 }
 
-// Load high scores from server
 function loadHighScores() {
-    return fetch('get_scores.php')
+    fetch('get_scores.php')
         .then(response => response.json())
         .then(scores => {
             const table = document.getElementById('highscore-table');
             table.innerHTML = '';
-
-            scores.slice(0, 10).forEach((entry, index) => {
+            scores.forEach((entry, index) => {
                 const row = document.createElement('tr');
-
                 const rankCell = document.createElement('td');
-                rankCell.textContent = `#${index + 1}`;
-
                 const initialsCell = document.createElement('td');
-                initialsCell.textContent = entry.initials || entry.username || '???';
-
                 const scoreCell = document.createElement('td');
-                scoreCell.textContent = entry.score || 0;
+
+                rankCell.textContent = `#${index + 1}`;
+                initialsCell.textContent = entry.initials;
+                scoreCell.textContent = entry.score;
 
                 if (index === 0) row.style.color = 'gold';
                 else if (index === 1) row.style.color = 'silver';
-                else if (index === 2) row.style.color = '#cd7f32'; // bronze
+                else if (index === 2) row.style.color = '#cd7f32';
 
                 row.appendChild(rankCell);
                 row.appendChild(initialsCell);
@@ -252,16 +237,14 @@ function loadHighScores() {
                 table.appendChild(row);
             });
         })
-        .catch(error => {
-            console.error('❌ Error loading high scores:', error);
-        });
+        .catch(error => console.error('Error loading high scores:', error));
 }
 
 // ===== EVENTS =====
 document.addEventListener('DOMContentLoaded', () => {
     setupScoreboard();
     updateScoreboard();
-    loadHighScores().then(() => updateScoreboard());
+    loadHighScores();
 });
 
 document.getElementById('tetris-toggle').addEventListener('click', () => {
@@ -278,9 +261,8 @@ document.getElementById('tetris-toggle').addEventListener('click', () => {
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
         event.preventDefault();
-        if (!running) {
-            startTetris();
-        }
+        running = !running;
+        if (running) requestAnimationFrame(drawTetris);
         return;
     }
     if (!running) return;
