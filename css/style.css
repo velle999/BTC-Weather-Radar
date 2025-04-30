@@ -293,146 +293,154 @@ img {
 
 /* ===== FOX COMPANION ===== */
 #animal-companion {
-  position: fixed;
-  top: 80vh;
-  left: 0;
-  animation: roam 20s linear infinite alternate;
-  display: block;
-  opacity: 1;
-  z-index: 2000; /* match bunny/dog layering */
-  pointer-events: auto;
+    position: absolute;
+    bottom: 350px;
+    left: 0;
+    cursor: pointer;
+    animation: roam 20s linear infinite alternate;
+    transform-origin: center;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
 }
 
 .animal-body {
-  width: 100px;
-  height: 85px;
-  background-color: #ff6b35;
-  border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
-  position: relative;
-  animation: walk 0.8s ease-in-out infinite, float 4s ease-in-out infinite;
+    width: 100px;
+    height: 70px;
+    background-color: #ff6b35;
+    border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
+    position: relative;
+    animation: walk 0.8s ease-in-out infinite, float 4s ease-in-out infinite;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+    overflow: visible;
 }
 
 .animal-face {
-  position: absolute;
-  width: 40px;
-  height: 30px;
-  background-color: #f7c59f;
-  border-radius: 50%;
-  top: 15px;
-  left: 20px;
+    position: absolute;
+    width: 40px;
+    height: 30px;
+    background-color: #f7c59f;
+    border-radius: 50%;
+    top: 15px;
+    left: 20px;
 }
 
 .animal-face::before,
 .animal-face::after {
-  content: '';
-  position: absolute;
-  background-color: #333;
-  border-radius: 50%;
-  width: 6px;
-  height: 6px;
-  top: 10px;
-  animation: blink 3s infinite;
+    content: '';
+    position: absolute;
+    background-color: #333;
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+    top: 10px;
+    animation: blink 3s infinite;
 }
 
 .animal-face::before { left: 8px; }
 .animal-face::after { right: 8px; }
 
-.animal-tail {
-  position: absolute;
-  width: 40px;
-  height: 25px;
-  background-color: #e05a2b;
-  border-radius: 50%;
-  right: -20px;
-  top: 15px;
-  animation: wag 3s ease-in-out infinite;
-}
-
-.animal-message {
-  position: absolute;
-  bottom: 100%;
-  right: 0;
-  background: white;
-  color: black;
-  padding: 8px 12px;
-  border-radius: 12px;
-  opacity: 0;
-  transition: all 0.3s ease;
-  width: 150px;
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-#animal-companion:hover .animal-message {
-  opacity: 1;
-}
-
-.animal-hearts {
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  animation: float-hearts 2s ease-in-out infinite;
-}
-
-#animal-companion:hover .animal-hearts {
-  opacity: 1;
-}
-
 .animal-legs {
-  position: absolute;
-  bottom: -5px; /* lower legs slightly outside body */
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
+    position: absolute;
+    bottom: -5px;
+    width: 100%;
+    height: 10px;
 }
 
 .animal-leg {
-  width: 10px;
-  height: 18px; /* longer legs */
-  background: #ff6b35;
-  border-radius: 5px;
-  animation: legMove 0.8s ease-in-out infinite alternate;
+    position: absolute;
+    width: 8px;
+    height: 15px;
+    background-color: #e05a2b;
+    border-radius: 5px;
+    animation: legMove 0.5s infinite;
 }
 
-/* Cute staggered movement */
-.animal-leg:nth-child(odd) {
-  animation-delay: 0s;
-}
-.animal-leg:nth-child(even) {
-  animation-delay: 0.4s;
-}
+.animal-leg:nth-child(1) { left: 15px; }
+.animal-leg:nth-child(2) { left: 25px; animation-delay: 0.25s; }
+.animal-leg:nth-child(3) { right: 25px; }
+.animal-leg:nth-child(4) { right: 15px; animation-delay: 0.25s; }
 
-/* Walking animation */
 @keyframes legMove {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-6px) rotate(8deg); }
-}
-
-@keyframes roam {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(30vw); }
-  100% { transform: translateX(0); }
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(10deg); }
 }
 
 @keyframes fox-dash {
-  0%   { transform: translateX(0); opacity: 1; }
-  100% { transform: translateX(100vw); opacity: 1; } /* keep opacity */
+    0% { transform: translateX(0) scaleX(1); }
+    20% { transform: translateX(20vw) scaleX(1) translateY(-20px); }
+    50% { transform: translateX(70vw) scaleX(-1) translateY(0); }
+    70% { transform: translateX(40vw) scaleX(-1) translateY(10px); }
+    100% { transform: translateX(100vw) scaleX(1) translateY(0); }
 }
 
-
-/* When wind blows */
-.wind-blown {
-  animation: roam 20s linear infinite alternate, fox-wiggle 2s ease-in-out infinite;
+.animal-tail {
+    position: absolute;
+    width: 40px;
+    height: 25px;
+    background-color: #e05a2b;
+    border-radius: 50%;
+    right: -20px;
+    top: 15px;
+    transform-origin: left center;
+    animation: wag 3s ease-in-out infinite;
 }
 
-@keyframes fox-wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(2deg); }
-  75% { transform: rotate(-2deg); }
+.animal-ear {
+    position: absolute;
+    width: 20px;
+    height: 25px;
+    background-color: #ff6b35;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    top: -10px;
+}
+
+.left-ear { left: 15px; transform: rotate(-15deg); }
+.right-ear { right: 15px; transform: rotate(15deg); }
+
+.animal-nose {
+    position: absolute;
+    width: 8px;
+    height: 6px;
+    background-color: #333;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.animal-message {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    width: 150px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 31;
+}
+
+#animal-companion:hover .animal-message {
+    opacity: 1;
+}
+
+.animal-hearts {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    animation: float-hearts 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    z-index: 31;
+}
+
+#animal-companion:hover .animal-hearts {
+    opacity: 1;
 }
 
 /* ===== BUNNY COMPANION ===== */
@@ -444,6 +452,10 @@ img {
   min-height: 200px;
   pointer-events: none;
   z-index: 1500;
+}
+
+.fox-dash {
+  animation: fox-dash 3s ease-in-out forwards;
 }
 
 #bunny-companion {

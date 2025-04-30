@@ -513,18 +513,30 @@ function createCarrot() {
 function giveDogTreat() {
   const dog = document.getElementById('dog-companion');
   if (!dog) return;
+
   const treat = document.createElement('div');
   treat.className = 'dog-treat';
   treat.textContent = '🦴';
+  treat.style.position = 'absolute';
+  treat.style.bottom = '80px';
+  treat.style.left = '30px';
+  treat.style.fontSize = '28px';
+  treat.style.opacity = '1';
+  treat.style.transition = 'all 2s ease-out';
+
   dog.appendChild(treat);
+
   setTimeout(() => {
     treat.style.transform = 'translateY(-100px)';
     treat.style.opacity = '0';
-  }, 800);
-  setTimeout(() => treat.remove(), 3000);
+  }, 50);
+
+  setTimeout(() => treat.remove(), 2200);
+
   dog.style.animation = 'none';
-  dog.offsetHeight;
+  dog.offsetHeight; // force reflow
   dog.classList.add('dog-happy');
+
   setTimeout(() => {
     dog.classList.remove('dog-happy');
     dog.style.animation = 'dog-roam 24s linear infinite alternate';
@@ -534,6 +546,8 @@ function giveDogTreat() {
 function giveMountainDew() {
   const fox = document.getElementById('animal-companion');
   if (!fox) return;
+
+  // 🥤 Add soda emoji effect
   const soda = document.createElement('div');
   soda.className = 'fox-soda';
   soda.innerText = '🥤';
@@ -544,18 +558,22 @@ function giveMountainDew() {
   soda.style.opacity = '1';
   soda.style.transition = 'all 2s ease-out';
   fox.appendChild(soda);
+
   setTimeout(() => {
     soda.style.transform = 'translateY(-100px)';
     soda.style.opacity = '0';
   }, 50);
   setTimeout(() => soda.remove(), 2200);
+
+  // 🦊 Reset animation
   fox.style.animation = 'none';
   fox.offsetHeight;
-  fox.classList.add('fox-happy');
+  fox.classList.add('fox-happy', 'fox-dash');
+
   setTimeout(() => {
-    fox.classList.remove('fox-happy');
+    fox.classList.remove('fox-happy', 'fox-dash');
     fox.style.animation = 'roam 20s linear infinite alternate';
-  }, 2000);
+  }, 3000);
 }
 
 // ---------------------------
@@ -813,11 +831,16 @@ function updateTime() {
   const now = moment();
   elements.time.text(now.format(hourFormat === '12' ? 'hh:mm:ss A' : 'HH:mm:ss'));
   elements.date.text(now.format('MMM DD, YYYY'));
+  applyNightMode(); // ← call it every second
   setTimeout(updateTime, 1000 - now.milliseconds());
 }
 
 function applyNightMode() {
-  console.warn('applyNightMode() not implemented yet.');
+  const now = new Date();
+  const hour = now.getHours();
+  const isNight = (hour >= 22 || hour < 6);
+
+  document.body.classList.toggle('night-mode', isNight);
 }
 
 function initializeApp() {
@@ -840,6 +863,16 @@ function initializeApp() {
   setInterval(fetchWeatherAlerts, 900000);
   setInterval(fetchNewsHeadlines, 600000);
 }
+
+    setInterval(() => {
+        const fox = document.getElementById('animal-companion');
+        if (Math.random() < 0.4) {
+            fox.style.animation = 'fox-dash 3s ease-in-out forwards';
+            setTimeout(() => {
+                fox.style.animation = 'roam 20s linear infinite alternate';
+            }, 3000);
+        }
+    }, 7000);
 
 // Start the app when the DOM is ready
 $(document).ready(initializeApp);
@@ -890,3 +923,40 @@ spotifyStopButton?.addEventListener('click', () => {
   spotifyIframe.src = ""; // unload to stop playback
   spotifyStopButton.style.display = 'none';
 });
+
+let manualNightOverride = null;
+
+function applyNightMode() {
+  const now = new Date();
+  const hour = now.getHours();
+  const autoNight = (hour >= 22 || hour < 6);
+  const isNight = manualNightOverride !== null ? manualNightOverride : autoNight;
+
+  document.body.classList.toggle('night-mode', isNight);
+  document.body.style.filter = isNight ? 'brightness(80%)' : 'brightness(100%)';
+
+  const nightToggleBtn = document.getElementById('night-toggle');
+  if (nightToggleBtn) {
+    if (manualNightOverride === true) {
+      nightToggleBtn.textContent = '🌞 Day Mode';
+    } else if (manualNightOverride === false) {
+      nightToggleBtn.textContent = '🌙 Night Mode';
+    } else {
+      nightToggleBtn.textContent = '🌙 Auto Night';
+    }
+  }
+}
+
+document.getElementById('night-toggle')?.addEventListener('click', () => {
+  if (manualNightOverride === null) {
+    manualNightOverride = true;
+  } else if (manualNightOverride === true) {
+    manualNightOverride = false;
+  } else {
+    manualNightOverride = null;
+  }
+
+  applyNightMode();
+});
+
+
