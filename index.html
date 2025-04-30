@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pi BTC Weather Clock</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* NEWS TICKER FIX */
+    /* News Ticker Bar */
     #news-ticker {
       position: fixed;
       top: 0;
@@ -20,43 +20,31 @@
       white-space: nowrap;
       line-height: 30px;
       z-index: 9999;
-      display: none; /* Start hidden */
+      display: none;
     }
-
     #news-items {
       display: inline-block;
       padding-left: 100%;
       animation: scrollNews 60s linear infinite;
     }
-
     @keyframes scrollNews {
-      0% {
-        transform: translateX(0%);
-      }
-      100% {
-        transform: translateX(-100%);
-      }
+      0%   { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
     }
-
-    /* OPTIONAL: add small padding so content not hidden under ticker */
-    #shell {
-      padding-top: 30px;
-    }
+    /* Add top padding to shell to make space for ticker */
+    #shell { padding-top: 30px; }
   </style>
 </head>
 <body>
 
-<!-- RGB Background Canvas -->
 <canvas id="rgbBackground"></canvas>
 
 <!-- News Ticker -->
 <div id="news-ticker">
-  <div id="news-items">
-    🥕 Loading news... 🥕
-  </div>
+  <div id="news-items">🥕 Loading news... 🥕</div>
 </div>
 
-<!-- Carrot Rain Layer -->
+<!-- Carrot Rain -->
 <div id="carrot-container"></div>
 
 <!-- Weather Effects -->
@@ -65,91 +53,119 @@
   <div class="snow-layer"></div>
   <div class="wind-layer"></div>
   <div id="carrot-layer"></div>
-  <div id="cloud-layer"></div> 
+  <div id="cloud-layer"></div>
 </div>
 
-<!-- Main App -->
+<div id="carrot-container"></div>
+
+<div id="cloud-layer">
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+</div>
+
+<!-- Main App Container -->
 <div id="shell">
   <div class="main-grid">
     <div class="left-column">
-      <!-- Current Weather -->
-      <div id="current" class="info-card">
-        <div class="icon"></div>
-        <div class="desc"></div>
-        <div class="currentTemp">
-          Temperature:<br>
-          <span class="temp">--°F</span>
-        </div>
-      </div>
+<div id="time-data" class="info-card">
+  <div id="time">--:--:--</div>
+  <div id="date">--/--/----</div>
+  
+  <div id="weatherIcon" class="icon"></div>
+  <div id="weatherDesc" class="desc"></div>
+  
+  <div id="currentTemp">
+    Temperature: <span id="currentTemp">--°F</span>
+  </div>
+  
+  <div id="btcprice">BTC: $--</div>
+  <div id="stockData">Loading stock data...</div>
+  <div id="weatherAlerts" style="
+  max-height: 75px;
+  overflow-y: auto;
+  padding-right: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+">
+  Loading weather alerts...
+</div>
 
-      <!-- Forecast -->
-      <div class="forecast-top">
-        <div class="forecast info-card" id="forecast1"><div class="day">Day 1</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
-        <div class="forecast info-card" id="forecast2"><div class="day">Day 2</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
-      </div>
 
-      <div class="forecast-bottom">
-        <div class="forecast info-card" id="forecast3"><div class="day">Day 3</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
-        <div class="forecast info-card" id="forecast4"><div class="day">Day 4</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
-        <div class="forecast info-card" id="forecast5"><div class="day">Day 5</div><div class="icon"></div><div class="highTemp">High: <span class="high">--°F</span></div></div>
-      </div>
-    </div>
+  <!-- ✅ Added 5-Day Forecast -->
+  <div id="five-day-forecast"></div>
+</div>
 
-    <div class="right-column">
-      <div id="time-data" class="info-card">
-        <div id="time">--:--:--</div>
-        <div id="date">--/--/----</div>
-        <div id="btcprice">BTC: $--</div>
-        <div id="stockData">Loading stock data...</div>
-        <div id="weatherAlerts">Loading weather alerts...</div>
-      </div>
-
-      <!-- Tetris -->
-      <div id="tetris-wrapper" style="display: none;">
+      <div id="tetris-wrapper" style="display:none;">
         <div id="tetris-container">
           <canvas id="tetris" width="200" height="400" style="background: rgba(0,0,0,0.8);"></canvas>
-
           <div id="scoreboard">
             <div>Score: <span id="score">0</span></div>
             <div>High Score: <span id="highScore">0</span></div>
           </div>
-
           <div id="touch-controls">
             <button id="left-btn">⬅️</button>
             <button id="rotate-btn">🔄</button>
             <button id="right-btn">➡️</button>
             <button id="down-btn">⬇️</button>
           </div>
-
           <div id="highscores">
             <h2>🏆 High Scores 🏆</h2>
             <table id="highscore-table"></table>
           </div>
         </div>
       </div>
-    </div>
+    </div><!-- .left-column -->
 
-  </div>
+    <div class="right-column">
+      <div id="radar-container">
+        <div id="radar-map"></div>
+        <div id="radar-controls">
+          <button id="radar-toggle">Show Radar</button>
+          <button id="settings-button">Change Settings</button>
+          <button id="stocks-toggle">Show CNBC</button>
+          <button id="news-toggle">Headlines</button>
+          <button id="tetris-toggle">Play Tetris 🎮</button>
+          <button id="carrot-toggle">Carrot Rain 🥕</button>
+          <button id="treat-toggle">Give Treat</button>
+          <button id="dew-toggle">Give Mt Dew</button>
+          <button id="spotifyPlayButton">🎧</button>
+          <button id="spotifyStopButton" style="display: none;">Stop Music 🚫</button>
+        </div>
+      </div>
+    </div><!-- .right-column -->
+  </div><!-- .main-grid -->
+</div><!-- #shell -->
 
-  <!-- Radar -->
-  <div id="radar-container">
-    <div id="radar-map"></div>
-    <div id="radar-controls">
-      <button id="radar-toggle">Show Radar</button>
-      <button id="settings-button">Change Settings</button>
-      <button id="stocks-toggle">Show CNBC</button>
-      <button id="news-toggle">News</button> <!-- moved button -->
-      <button id="tetris-toggle">Play Tetris 🎮</button>
-      <button id="carrot-toggle">Carrot Rain 🥕</button>
-      <button id="treat-toggle">Give Treat</button>
-      <button id="dew-toggle">Give Mt Dew</button>
-      <div id="radar-timestamp"></div>
-    </div>
-  </div>
+<!-- Debug toggle button (for development) - remove or hide if not needed in production -->
+<button id="debug-toggle" style="position: fixed; bottom: 10px; right: 10px; z-index: 999999;">🐞</button>
+<button id="wolf3d-gun-toggle" title="Launch Wolf3D" style="
+  position: fixed;
+  bottom: 60px;
+  right: 10px;
+  font-size: 1.5rem;
+  z-index: 999999;
+">🔫</button>
 
+<!-- Wolfenstein 3D Embed -->
+<div id="wolf3d-wrapper">
+  <iframe
+    id="wolf3d-iframe"
+    width="100%"
+    height="100%"
+    style="border: none; border-radius: 10px;">
+  </iframe>
 </div>
 
-<!-- Companions -->
+
+<!-- Spotify Floating Player -->
+<div id="spotifyPlayer" style="display: none; position: fixed; bottom: 300px; right: 20px; width: 300px; height: 80px; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.3); border-radius: 8px; overflow: hidden; z-index: 999;">
+  <iframe id="spotifyIframe" src="" width="100%" height="100%" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+</div>
+
+<!-- Companions (Animal and Bunny) -->
 <div id="animal-companion">
   <div class="animal-body">
     <div class="animal-face"></div>
@@ -196,70 +212,27 @@
   </div>
 </div>
 
-<!-- Stocks Container -->
+<!-- Stocks Container (CNBC embed) -->
 <div id="stocks-container" style="display:none;">
   <iframe id="stocks-iframe" src="https://livenewschat.eu/stocks/?autoplay=0" allow="autoplay; fullscreen" allowfullscreen></iframe>
 </div>
 
+<!-- Emergency Alert System -->
+<div id="emergency-overlay"></div>
+<div id="emergency-message">
+  <div id="emergency-intro"></div>
+  <div id="emergency-scrollbox"></div>
+</div>
+<button id="stop-button">Stop Alerts</button>
+
 <!-- Scripts -->
-<script src="libs/jquery.min.js" defer></script>
-<script src="libs/moment-with-locales.min.js" defer></script>
-<script src="js/rgb-background.js" defer></script>
-<script src="js/app.js" defer></script>
-<script src="js/carrot.js" defer></script>
-<script src="js/tetris.js" defer></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const carrotToggle = document.getElementById('carrot-toggle');
-  if (carrotToggle) {
-    carrotToggle.addEventListener('click', function() {
-      document.body.classList.toggle('carrot-mode');
-    });
-  }
-
-  const newsToggle = document.getElementById('news-toggle');
-  const ticker = document.getElementById('news-ticker');
-  const newsItems = document.getElementById('news-items');
-
-  if (newsToggle && ticker && newsItems) {
-    ticker.style.display = 'none';
-    newsToggle.textContent = 'Show Headlines';
-
-    function fetchGoogleNews() {
-      fetch('https://api.allorigins.win/raw?url=https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en')
-        .then(response => response.text())
-        .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
-        .then(data => {
-          const items = data.querySelectorAll("item");
-          const headlines = Array.from(items).slice(0, 10).map(item => item.querySelector("title").textContent);
-          newsItems.innerHTML = headlines.join(' 🥕 ');
-
-          // RESET animation
-          newsItems.style.animation = 'none';
-          void newsItems.offsetWidth;
-          newsItems.style.animation = 'scrollNews 60s linear infinite';
-        })
-        .catch(error => {
-          console.error('Error fetching Google News:', error);
-          newsItems.innerHTML = "Failed to load news.";
-        });
-    }
-
-    newsToggle.addEventListener('click', function() {
-      const isHidden = window.getComputedStyle(ticker).display === 'none';
-      if (isHidden) {
-        fetchGoogleNews();
-        ticker.style.display = 'block';
-        newsToggle.textContent = 'Hide Headlines';
-      } else {
-        ticker.style.display = 'none';
-        newsToggle.textContent = 'Show Headlines';
-      }
-    });
-  }
-});
-</script>
+<script defer src="libs/jquery.min.js"></script>
+<script defer src="libs/moment-with-locales.min.js"></script>
+<script defer src="js/rgb-background.js"></script>
+<script defer src="js/app.js"></script>   <!-- Main app script with UI logic -->
+<script defer src="js/carrot.js"></script>
+<script defer src="js/tetris.js"></script>
+<script defer src="alerts.js"></script>
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 // ===== GLOBALS =====
 let score = 0;
-let highScore = localStorage.getItem('tetrisHighScore') || 0;
-let highScoreInitials = localStorage.getItem('tetrisHighScoreInitials') || '---';
+let highScore = 0;
+let highScoreInitials = '---';
 let canvas, context;
 let running = false;
 let blockSize = 20;
@@ -107,13 +107,15 @@ function spawnNewPiece() {
                 let initials = prompt('🏆 New High Score! Enter your initials (3 letters):', '').toUpperCase().slice(0, 3) || '---';
                 highScoreInitials = initials;
                 highScore = score;
-                localStorage.setItem('tetrisHighScore', highScore);
-                localStorage.setItem('tetrisHighScoreInitials', initials);
                 saveHighScoreOnline(initials, highScore);
-                loadHighScores();
             }
-            updateScoreboard();
+
+            loadHighScores().then(() => {
+                updateScoreboard();
+            });
+
             alert('💀 GAME OVER!\nPress the Tetris button to play again.');
+            playfield = createMatrix(rows, cols); // Clean reset
         }, 300);
     }
 }
@@ -165,16 +167,22 @@ function setupScoreboard() {
     if (!document.getElementById('scoreboard')) {
         const scoreboard = document.createElement('div');
         scoreboard.id = 'scoreboard';
-        scoreboard.style.color = 'white';
-        scoreboard.style.fontSize = '18px';
+        scoreboard.style.color = '#00ffcc'; // bright cyan for black background
+        scoreboard.style.fontSize = '20px';
+        scoreboard.style.fontFamily = 'monospace';
         scoreboard.style.textAlign = 'center';
         scoreboard.style.marginBottom = '10px';
-        scoreboard.style.textShadow = '1px 1px 2px black';
+        scoreboard.style.textShadow = '2px 2px 4px black'; // extra glow
         scoreboard.style.position = 'fixed';
         scoreboard.style.top = '10px';
         scoreboard.style.left = '50%';
         scoreboard.style.transform = 'translateX(-50%)';
         scoreboard.style.zIndex = '3000';
+        scoreboard.style.background = 'rgba(0,0,0,0.6)';
+        scoreboard.style.padding = '10px 20px';
+        scoreboard.style.border = '2px solid #00ffcc';
+        scoreboard.style.borderRadius = '10px';
+
         scoreboard.innerHTML = `Score: <span id="score">0</span> | High Score: <span id="highScore">0 (---)</span>`;
         document.body.appendChild(scoreboard);
     }
@@ -201,35 +209,48 @@ function rotateCounterClockwise(matrix) {
     return matrix[0].map((_, i) => matrix.map(row => row[matrix.length - 1 - i]));
 }
 
+// Save high score online
 function saveHighScoreOnline(initials, score) {
     fetch('save_score.php', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
         body: new URLSearchParams({ initials, score })
     })
     .then(response => response.text())
-    .then(data => console.log('✅ Server responded:', data))
-    .catch(err => console.error('❌ Error saving score:', err));
+    .then(data => {
+        console.log('✅ Server responded:', data);
+        loadHighScores().then(() => updateScoreboard());
+    })
+    .catch(err => {
+        console.error('❌ Error saving score:', err);
+    });
 }
 
+// Load high scores from server
 function loadHighScores() {
-    fetch('get_scores.php')
+    return fetch('get_scores.php')
         .then(response => response.json())
         .then(scores => {
             const table = document.getElementById('highscore-table');
             table.innerHTML = '';
-            scores.forEach((entry, index) => {
-                const row = document.createElement('tr');
-                const rankCell = document.createElement('td');
-                const initialsCell = document.createElement('td');
-                const scoreCell = document.createElement('td');
 
+            scores.slice(0, 10).forEach((entry, index) => {
+                const row = document.createElement('tr');
+
+                const rankCell = document.createElement('td');
                 rankCell.textContent = `#${index + 1}`;
-                initialsCell.textContent = entry.initials;
-                scoreCell.textContent = entry.score;
+
+                const initialsCell = document.createElement('td');
+                initialsCell.textContent = entry.initials || entry.username || '???';
+
+                const scoreCell = document.createElement('td');
+                scoreCell.textContent = entry.score || 0;
 
                 if (index === 0) row.style.color = 'gold';
                 else if (index === 1) row.style.color = 'silver';
-                else if (index === 2) row.style.color = '#cd7f32';
+                else if (index === 2) row.style.color = '#cd7f32'; // bronze
 
                 row.appendChild(rankCell);
                 row.appendChild(initialsCell);
@@ -237,14 +258,16 @@ function loadHighScores() {
                 table.appendChild(row);
             });
         })
-        .catch(error => console.error('Error loading high scores:', error));
+        .catch(error => {
+            console.error('❌ Error loading high scores:', error);
+        });
 }
 
 // ===== EVENTS =====
 document.addEventListener('DOMContentLoaded', () => {
     setupScoreboard();
     updateScoreboard();
-    loadHighScores();
+    loadHighScores().then(() => updateScoreboard());
 });
 
 document.getElementById('tetris-toggle').addEventListener('click', () => {
@@ -261,8 +284,9 @@ document.getElementById('tetris-toggle').addEventListener('click', () => {
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
         event.preventDefault();
-        running = !running;
-        if (running) requestAnimationFrame(drawTetris);
+        if (!running) {
+            startTetris();
+        }
         return;
     }
     if (!running) return;

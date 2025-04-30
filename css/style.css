@@ -2,234 +2,237 @@
 html, body {
   margin: 0;
   padding: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden; /* Prevent unwanted scrollbars */
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: 'Arial', sans-serif;
-  background: white;
-  color: white;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
-  position: relative; /* Important for layering */
-  z-index: 0; /* Safe start */
+  background-color: #111;
+  color: #000000; /* <-- fixed color contrast */
+  position: relative;
+  z-index: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* ===== RGB BACKGROUND ===== */
-
 #rgbBackground {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1; /* stays */
-  pointer-events: none; /* super important */
+  z-index: -1;
+  pointer-events: none;
+  background: transparent;
 }
 
 /* ===== WEATHER EFFECTS ===== */
-#weather-effects {
+#weather-effects, #carrot-container, #carrot-layer, #cloud-layer {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 20;
   pointer-events: none;
 }
 
-.raindrop {
-  position: absolute;
-  top: -10px;
-  width: 2px;
-  height: 15px;
-  background: #8ecae6;
-  opacity: 0.7;
-  animation-name: raindropFall;
-  animation-timing-function: linear;
+#weather-effects { z-index: 20; }
+#carrot-container, #carrot-layer { z-index: 99999; }
+#cloud-layer { z-index: 20; }
+
+.rain-layer, .snow-layer, .wind-layer {
+  background-color: transparent;
+  background-repeat: repeat;
+  background-size: contain;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
 }
 
-@keyframes raindropFall {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(110vh); }
+.rain-layer {
+  background-image: url('assets/effects/rain.png');
+  animation: rainFall 0.8s linear infinite;
 }
 
-.snowflake {
-  position: absolute;
-  top: -20px;
-  animation-name: snowflakeFall;
-  animation-timing-function: linear;
+.snow-layer {
+  background-image: url('assets/effects/snow.png');
+  animation: snowFall 3s linear infinite;
 }
 
-@keyframes snowflakeFall {
-  0% { transform: translateY(0) translateX(0); }
-  100% { transform: translateY(110vh) translateX(30px); }
+.wind-layer {
+  background-image: url('assets/effects/wind.png');
+  animation: windBlow 5s linear infinite;
 }
 
-.debris {
-  position: absolute;
-  top: -30px;
-  animation-name: debrisDrift;
-  animation-timing-function: linear;
+@keyframes rainFall {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100vh; }
 }
 
-@keyframes debrisDrift {
-  0% { transform: translateY(0) translateX(0); }
-  100% { transform: translateY(120vh) translateX(-80px); }
+@keyframes snowFall {
+  0% { background-position: 0 -100vh; }
+  100% { background-position: 0 100vh; }
+}
+
+@keyframes windBlow {
+  0% { background-position: -100vw 0; }
+  100% { background-position: 100vw 0; }
+}
+
+/* WIND WIGGLE EFFECT */
+.wind-wiggle {
+  animation: wiggle 1.5s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  50% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
 }
 
 /* ===== MAIN APP CONTAINER ===== */
 #shell {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 1fr auto;
   min-height: 100vh;
+  padding: 20px;
+  padding-bottom: 25vh;
+  background: linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.15)) padding-box,
+              linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red) border-box;
+  background-size: 400% 400%;
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 6px solid transparent;
+  border-radius: 12px;
+  animation: animateBorder 40s linear infinite, pulse 8s ease-in-out infinite;
+  z-index: 10;
+  box-sizing: border-box;
+  color: #111; /* make sure you can read text */
 }
 
+
+@keyframes animateBorder {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 10px red; }
+  25%  { box-shadow: 0 0 10px orange; }
+  50%  { box-shadow: 0 0 10px lime; }
+  75%  { box-shadow: 0 0 10px blue; }
+  100% { box-shadow: 0 0 10px red; }
+}
+
+/* ===== CLOUDS ===== */
 .cloud {
-  z-index: 5;
-
+  position: absolute;
+  width: 200px;
+  height: 120px;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+  border-radius: 50%;
+  opacity: 0.4;
+  top: 10%;
+  left: -200px;
+  animation: cloudFloat 60s linear infinite;
+  filter: blur(2px);
+  z-index: 1;
 }
 
-#radar-container, #stocks-container {
-  position: absolute; /* Changed from fixed */
-  z-index: 150; /* Highest clickable layer */
+.cloud:nth-child(2) {
+  width: 150px;
+  height: 90px;
+  top: 30%;
+  animation-duration: 80s;
+}
+
+.cloud:nth-child(3) {
+  width: 250px;
+  height: 140px;
+  top: 50%;
+  animation-duration: 100s;
+}
+
+.cloud:nth-child(4) {
+  width: 180px;
+  height: 100px;
+  top: 70%;
+  animation-duration: 90s;
+}
+
+@keyframes cloudFloat {
+  0% { transform: translateX(-300px); }
+  100% { transform: translateX(120vw); }
+}
+
+/* ===== RADAR CONTAINER ===== */
+#radar-container {
+  position: relative;
+  display: flex;         /* <-- ADD THIS */
+  flex-direction: column; /* <-- ADD THIS */
+  width: 100%;
+  min-height: 400px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.7);
+  z-index: 500;
+  margin: 20px 0;
+}
+
+#radar-map {
+  flex: 1 1 auto;  /* Grow nicely but not force height */
+  min-height: 300px; /* Set minimum so radar loads properly */
+  width: 100%;
+  touch-action: pan-x pan-y;
+}
+
+/* ===== RADAR CONTROLS ===== */
+#radar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  border-top: 2px solid rgba(255,255,255,0.2);
+  z-index: 60000;
+  margin-top: 10px;
+}
+
+#radar-controls button {
+  background: linear-gradient(90deg, #8e2de2, #4a00e0);
+  color: white;
+  font-size: 1rem;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+  transition: background 0.3s, transform 0.2s;
+}
+
+#radar-controls button:hover {
+  background: linear-gradient(90deg, #4a00e0, #8e2de2);
+  transform: scale(1.05);
+}
+
+/* ===== STOCKS CONTAINER ===== */
+#stocks-container {
+  position: relative;
+  min-height: 200px;
+  width: 100%;
   background: rgba(0,0,0,0.6);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 5000;
 }
-
-/* ===== COMPANIONS ===== */
-.companion-stage {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 25vh;
-  z-index: 15;
-  pointer-events: none;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 20px;
-}
-
-/* ===== MAIN APP CONTAINER ===== */
-#shell {
-  background-color: rgba(25, 25, 25, 0.65);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border-radius: 10px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Change from height: 100vh */
-}
-
-/* ===== DISPLAY TABLE ===== */
-#display {
-    width: 100%;
-    height: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    flex: 1;
-}
-
-#display tbody {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-#display tr {
-    display: flex;
-    flex: 1;
-    min-height: 0;
-}
-
-#display td {
-    padding: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    display: flex;
-    flex-direction: column;
-    background-color: rgba(35, 35, 35, 0.5);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: all 0.3s ease;
-}
-
-#display td:hover {
-    background-color: rgba(45, 45, 45, 0.6);
-}
-
-/* ===== CURRENT WEATHER SECTION ===== */
-#current-weather-time {
-    padding: 20px;
-}
-
-.current-weather .icon img {
-    width: 100px;
-    height: 100px;
-    margin: 10px auto;
-    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
-}
-
-.current-weather .desc {
-    font-size: 1.8rem;
-    margin: 15px 0;
-    font-weight: 500;
-    color: rgba(255,255,255,0.95);
-}
-
-.currentTemp {
-    font-size: 1.5rem;
-    margin: 15px 0 5px;
-}
-
-.currentTemp .temp {
-    font-size: 2.5rem;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: 5px;
-}
-
-/* ===== TIME/DATE SECTION ===== */
-#time {
-    font-size: 3.5vw;
-    font-weight: bold;
-    margin-bottom: 1vh;
-    color: rgba(255, 255, 255, 0.95);
-}
-
-#date {
-    font-size: 1.8vw;
-    margin-bottom: 3vh;
-    color: rgba(255, 255, 255, 0.85);
-}
-
-/* ===== FORECAST SECTION ===== */
-.forecast {
-  background: none; /* <<< REMOVE the wide dark background */
-  flex: none; /* <<< Important: don't stretch */
-  min-width: auto;
-  text-align: center;
-  justify-content: center;
-  display: flex;
-  gap: 10px; /* Space between days */
-}
-
-
-/* ===== FINANCIAL DATA ===== */
-#btcprice, #stockData {
-    font-size: 1.8vw;
-    margin: 1vh 0;
-    padding: 8px;
-    background-color: rgba(20, 20, 20, 0.3);
-    border-radius: 5px;
-    color: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(4px);
-}
-
-/* ===== STOCKS IFRAME CONTAINER ===== */
 #stocks-container {
   position: absolute;
   top: 20px;
@@ -245,1864 +248,17 @@ html, body {
   border: none;
 }
 
-#controls, #settings-panel, button, input, select {
-  z-index: 21;
-  position: relative;
-}
-
-#controls {
-    z-index: 2000; /* Settings panel stays very top */
-}
-
-#animal-companion, #bunny-companion {
-    z-index: 950; /* Just below carrots (1000) */
-}
-
-/* ===== WEATHER ALERTS ===== */
-#weatherAlerts {
-  flex: 1;
-  overflow-y: auto; /* <<< scroll when needed */
-  max-height: 50px; /* <<< limit size but allow scroll */
-  padding: 8px;
-  background-color: rgba(20, 20, 20, 0.25);
-  border-radius: 5px;
-  margin-top: 10px;
-  font-size: 1.1vw;
-  backdrop-filter: blur(4px);
-  line-height: 1.4em;
-  word-break: break-word; /* <<< Break long words cleanly */
-}
-
-/* ===== RADAR CONTAINER ===== */
-#radar-container {
-  position: relative;
-  z-index: 300; /* LOWER than companions */
-  width: 100%;
-  min-height: 250px;
-  background: rgba(0, 0, 0, 0.6);
-  border: 2px solid #888;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 0 10px #000;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px; /* Buffer space */
-}
-
-
-#radar-map {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-}
-
-/* Radar Controls aligned at bottom */
-#radar-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 40px;
-  padding: 0 10px;
-  background: rgba(0, 0, 0, 0.3);
-  font-size: 0.8rem;
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-/* Radar Toggle Button */
-#radar-toggle {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#radar-toggle:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.control-group select {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 5px;
-    border-radius: 4px;
-    margin-right: 10px;
-}
-
-.control-group select:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.4);
-}
-/* ===== COMPANIONS ===== */
-#animal-companion {
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    cursor: pointer;
-    animation: roam 20s linear infinite alternate;
-    transform-origin: center;
-    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
-}
-
-.animal-body {
-    width: 100px;
-    height: 70px;
-    background-color: #ff6b35;
-    border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
-    position: relative;
-    animation: walk 0.8s ease-in-out infinite, float 4s ease-in-out infinite;
-    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
-    overflow: visible; /* <-- ADD THIS! */
-}
-
-.animal-face {
-    position: absolute;
-    width: 40px;
-    height: 30px;
-    background-color: #f7c59f;
-    border-radius: 50%;
-    top: 15px;
-    left: 20px;
-}
-
-.animal-face::before,
-.animal-face::after {
-    content: '';
-    position: absolute;
-    background-color: #333;
-    border-radius: 50%;
-    width: 6px;
-    height: 6px;
-    top: 10px;
-    animation: blink 3s infinite;
-}
-
-.animal-face::before { left: 8px; }
-.animal-face::after { right: 8px; }
-
-/* Add legs for walking effect */
-.animal-legs {
-    position: absolute;
-    bottom: -5px;
-    width: 100%;
-    height: 10px;
-}
-
-.animal-leg {
-    position: absolute;
-    width: 8px;
-    height: 15px;
-    background-color: #e05a2b;
-    border-radius: 5px;
-    animation: legMove 0.5s infinite;
-}
-
-.animal-leg:nth-child(1) { left: 15px; }
-.animal-leg:nth-child(2) { left: 25px; animation-delay: 0.25s; }
-.animal-leg:nth-child(3) { right: 25px; }
-.animal-leg:nth-child(4) { right: 15px; animation-delay: 0.25s; }
-
-/* Keyframes for fox legs walking */
-@keyframes legMove {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-5px) rotate(10deg); }
-}
-
-/* Add legs for walking effect */
-.animal-legs {
-    position: absolute;
-    bottom: -5px;
-    width: 100%;
-    height: 10px;
-}
-
-.animal-leg {
-    position: absolute;
-    width: 8px;
-    height: 15px;
-    background-color: #e05a2b;
-    border-radius: 5px;
-    animation: legMove 0.5s infinite;
-}
-
-.animal-leg:nth-child(1) { left: 15px; }
-.animal-leg:nth-child(2) { left: 25px; animation-delay: 0.25s; }
-.animal-leg:nth-child(3) { right: 25px; }
-.animal-leg:nth-child(4) { right: 15px; animation-delay: 0.25s; }
-
-/* Keyframes for fox legs walking */
-@keyframes legMove {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-5px) rotate(10deg); }
-}
-
-@keyframes fox-dash {
-    0% { transform: translateX(0) scaleX(1); }
-    20% { transform: translateX(20vw) scaleX(1) translateY(-20px); }
-    50% { transform: translateX(70vw) scaleX(-1) translateY(0); }
-    70% { transform: translateX(40vw) scaleX(-1) translateY(10px); }
-    100% { transform: translateX(100vw) scaleX(1) translateY(0); }
-}
-
-.animal-tail {
-    position: absolute;
-    width: 40px;
-    height: 25px;
-    background-color: #e05a2b;
-    border-radius: 50%;
-    right: -20px;
-    top: 15px;
-    transform-origin: left center;
-    animation: wag 3s ease-in-out infinite;
-}
-
-.animal-ear {
-    position: absolute;
-    width: 20px;
-    height: 25px;
-    background-color: #ff6b35;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    top: -10px;
-}
-
-.left-ear { left: 15px; transform: rotate(-15deg); }
-.right-ear { right: 15px; transform: rotate(15deg); }
-
-.animal-nose {
-    position: absolute;
-    width: 8px;
-    height: 6px;
-    background-color: #333;
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.animal-message {
-    position: absolute;
-    bottom: 100%;
-    right: 0;
-    background: white;
-    padding: 8px 12px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    opacity: 0;
-    transition: all 0.3s ease;
-    width: 150px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    /* REMOVE pointer-events: none; */
-    z-index: 31; /* keep this */
-}
-
-#animal-companion:hover .animal-message {
-    opacity: 1;
-}
-
-.animal-hearts {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: all 0.3s ease;
-    animation: float-hearts 2s ease-in-out infinite;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-    /* REMOVE pointer-events: none; */
-    z-index: 31; /* keep this */
-}
-
-#animal-companion:hover .animal-hearts {
-    opacity: 1;
-}
-
-/* ===== BUNNY COMPANION ===== */
-#bunny-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    min-height: 200px; /* increased minimum height */
-    padding-top: 40px; /* ADD ROOM FOR EARS */
-    pointer-events: none;
-    z-index: 1500;
-    overflow: visible; /* allow ears to stick out */
-}
-
-#bunny-companion {
-    position: absolute;
-    bottom: 0; /* now align to bottom properly */
-    left: 0;
-    cursor: pointer;
-    animation: bunny-roam 18s linear infinite alternate;
-    transform-origin: center;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-}
-
-/* Bunny Body */
-.bunny-body {
-    width: 80px;
-    height: 100px;
-    background-color: #f0f0f0;
-    border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
-    position: relative;
-    animation: 
-        bunny-hop 0.8s ease-in-out infinite,
-        bunny-float 4s ease-in-out infinite;
-}
-
-/* Long Ears */
-.bunny-ears {
-    position: absolute;
-    width: 100%;
-    height: 60px;
-    top: -40px;
-}
-
-.bunny-ear {
-    position: absolute;
-    width: 20px;
-    height: 50px;
-    background-color: #f0f0f0;
-    border-radius: 50%;
-    transform-origin: bottom center;
-}
-
-.bunny-ear.left { 
-    left: 15px;
-    transform: rotate(-10deg);
-    animation: ear-twitch-left 3s ease-in-out infinite;
-}
-.bunny-ear.right { 
-    right: 15px;
-    transform: rotate(10deg);
-    animation: ear-twitch-right 3s ease-in-out infinite;
-}
-
-/* Face */
-.bunny-face {
-    position: absolute;
-    width: 50px;
-    height: 40px;
-    background-color: #ffffff;
-    border-radius: 40%;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.bunny-eyes {
-    position: absolute;
-    width: 100%;
-    top: 10px;
-    display: flex;
-    justify-content: space-around;
-}
-
-.bunny-eye {
-    width: 12px;
-    height: 12px;
-    background-color: #6b4f40;
-    border-radius: 50%;
-    animation: blink 4s infinite;
-}
-
-.bunny-nose {
-    position: absolute;
-    width: 8px;
-    height: 6px;
-    background-color: #ff9999;
-    border-radius: 40%;
-    top: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-<div id="bunny-companion">
-    <div class="bunny-body">
-        <div class="bunny-ears">
-            <div class="bunny-ear left"></div>
-            <div class="bunny-ear right"></div>
-        </div>
-        <div class="bunny-face">
-            <div class="bunny-eyes">
-                <div class="bunny-eye"></div>
-                <div class="bunny-eye"></div>
-            </div>
-            <div class="bunny-nose"></div>
-        </div>
-        <div class="bunny-feet">
-            <div class="bunny-foot left-foot"></div>
-            <div class="bunny-foot right-foot"></div>
-        </div>
-    </div>
-    <!-- Message and carrot elements -->
-</div>
-
-/* ===== EAR ANIMATIONS ===== */
-.bunny-ear.left {
-  animation: ear-twitch-left 3s ease-in-out infinite;
-  transform-origin: bottom center !important;
-}
-
-.bunny-ear.right {
-  animation: ear-twitch-right 3s ease-in-out infinite;
-  transform-origin: bottom center !important;
-}
-
-@keyframes ear-twitch-left {
-  0%, 100% { transform: rotate(-10deg) scaleY(1); }
-  50% { transform: rotate(-15deg) scaleY(0.95); }
-}
-
-@keyframes ear-twitch-right {
-  0%, 100% { transform: rotate(10deg) scaleY(1); }
-  50% { transform: rotate(15deg) scaleY(0.95); }
-}
-
-.bunny-foot {
-  animation: footWiggle 1.2s infinite ease-in-out;
-}
-
-@keyframes footWiggle {
-  0%, 100% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(12deg) scale(0.9); }
-}
-
-/* ===== FACE DETAILS ===== */
-.bunny-face {
-    position: absolute;
-    width: 50px;
-    height: 40px;
-    background: white;
-    border-radius: 40%;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-}
-
-.bunny-eye {
-    width: 12px;
-    height: 12px;
-    background: #6b4f40;
-    border-radius: 50%;
-    position: relative;
-    animation: blink 4s infinite, eye-follow 15s infinite linear;
-}
-
-@keyframes blink {
-    0%, 90%, 100% { height: 12px; }
-    92%, 98% { height: 2px; }
-}
-
-/* ===== ENHANCED FOOT ANIMATION ===== */
-@keyframes footWiggle {
-    0%, 100% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(10deg) scale(0.9); }
-}
-
-.bunny-foot {
-    position: absolute;
-    width: 20px;
-    height: 12px;
-    background: white;
-    border-radius: 50% / 50%;
-    bottom: -5px;
-    z-index: -1;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* ===== INTERACTIVE ELEMENTS ===== */
-.bunny-carrot {
-    position: absolute;
-    top: -30px;
-    right: -40px;
-    opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-}
-
-.bunny-message {
-    position: absolute;
-    top: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    padding: 8px 12px;
-    border-radius: 12px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-    opacity: 0;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-}
-
-.bunny-eye::after {
-    content: '';
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: white;
-    top: 2px;
-    left: 2px;
-    border-radius: 50%;
-    animation: eye-sparkle 3s infinite;
-}
-
-#bunny-companion {
-  pointer-events: auto;
-  z-index: 1001;
-}
-
-.bunny-message, .bunny-carrot {
-  pointer-events: none;
-  transition: all 0.3s ease;
-}
-
-.wind-wiggle {
-  animation: windShake 0.4s ease-in-out infinite alternate;
-}
-
-@keyframes windShake {
-  from { transform: translateX(0) rotate(0); }
-  to { transform: translateX(5px) rotate(2deg); }
-}
-
-@keyframes eye-sparkle {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 0.3; }
-}
-
-@keyframes bunny-bounce {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, -8px); }
-}
-
-.bunny-body {
-  animation: bunny-bounce 1.2s ease-in-out infinite;
-}
-
-/* ===== WEATHER EFFECTS ===== */
-.wind-wiggle {
-    animation: windShake 0.4s ease-in-out infinite alternate;
-}
-
-.wind-blown {
-    transform: translateX(10px) rotate(3deg);
-}
-
-@keyframes windShake {
-    from { transform: translateX(0) rotate(0); }
-    to { transform: translateX(5px) rotate(2deg); }
-}
-
-/* ===== BOUNCE ANIMATION ===== */
-@keyframes bunny-bounce {
-    0%, 100% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, -10px); }
-}
-
-#bunny-companion:hover {
-    transform: translate(-50%, -5px);
-}
-
-#bunny-companion:hover .bunny-carrot {
-    opacity: 1;
-    transform: scale(1) rotate(15deg);
-}
-
-#bunny-companion:hover .bunny-message {
-    opacity: 1;
-    transform: translate(-50%, -5px);
-}
-
-/* ===== KEYFRAMES ===== */
-@keyframes roam {
-    0% { transform: translateX(0) scaleX(1); }
-    49% { transform: translateX(calc(100vw - 120px)) scaleX(1); }
-    50% { transform: translateX(calc(100vw - 120px)) scaleX(-1); }
-    99% { transform: translateX(0) scaleX(-1); }
-    100% { transform: translateX(0) scaleX(1); }
-}
-
-@keyframes bunny-hyper {
-    0% { transform: translateX(0) scaleX(1) translateY(0); }
-    30% { transform: translateX(30vw) scaleX(1) translateY(-40px); }
-    60% { transform: translateX(60vw) scaleX(-1) translateY(-60px); }
-    90% { transform: translateX(90vw) scaleX(-1) translateY(-40px); }
-    100% { transform: translateX(95vw) scaleX(1) translateY(0); } /* almost right side */
-}
-
-
-@keyframes walk {
-    0%, 100% { transform: rotate(0deg) translateY(0); }
-    25% { transform: rotate(-8deg) translateY(-6px); }
-    75% { transform: rotate(8deg) translateY(-6px); }
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-}
-
-@keyframes bunny-roam {
-    0% { transform: translateX(0) scaleX(1); }
-    49% { transform: translateX(calc(100vw - 100px)) scaleX(1); }
-    50% { transform: translateX(calc(100vw - 100px)) scaleX(-1); }
-    99% { transform: translateX(0) scaleX(-1); }
-    100% { transform: translateX(0) scaleX(1); }
-}
-
-@keyframes bunny-hop {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-}
-
-@keyframes bunny-float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-
-@keyframes bunny-hover-hop {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-10px); }
-}
-
-@keyframes wag {
-    0%, 100% { transform: rotate(-10deg); }
-    50% { transform: rotate(10deg); }
-}
-
-@keyframes blink {
-    0%, 100% { height: 6px; }
-    50% { height: 2px; }
-}
-
-@keyframes footWiggle {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-10deg); }
-    75% { transform: rotate(10deg); }
-}
-
-.animal-hearts {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0; /* <<< fix: hidden by default */
-    transition: opacity 0.3s ease;
-    animation: float-hearts 2s ease-in-out infinite;
-    pointer-events: none;
-}
-
-#animal-companion:hover .animal-hearts {
-    opacity: 1; /* <<< only visible on hover */
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    #shell { padding: 15px; }
-    #time { font-size: 6vw; }
-    #date { font-size: 3.5vw; }
-    #btcprice, #stockData { font-size: 3.5vw; }
-    .currentTemp { font-size: 4vw; }
-    .temp { font-size: 5vw; }
-    .day { font-size: 3vw; }
-    #weatherAlerts { font-size: 2.5vw; }
-    .desc { font-size: 2.8vw; }
-    #bunny-container { height: 100px; }
-    .bunny-body { width: 60px; height: 80px; }
-    .bunny-ears { height: 40px; top: -30px; }
-}
-
-/* ===== DOG COMPANION (Black/Grey version) ===== */
-#dog-container {
-    position: absolute;
-    bottom: 0;
-    left: 25%; /* 🐾 Between fox and bunny */
-    width: 70px;
-    height: 80px;
-    pointer-events: none;
-    z-index: 1500;
-}
-
-#dog-companion {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    animation: dog-roam 24s linear infinite alternate;
-    transform-origin: center;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-    pointer-events: auto;
-}
-
-/* Body */
-.dog-body {
-    width: 60px;
-    height: 60px;
-    background-color: #555; /* Dark Grey Body */
-    border-radius: 50%;
-    position: relative;
-    animation: dog-bounce 2s ease-in-out infinite;
-}
-
-/* Ears */
-.dog-ears {
-    position: absolute;
-    width: 100%;
-    height: 20px;
-    top: -10px;
-}
-
-.dog-ear {
-    width: 14px;
-    height: 20px;
-    background: #222; /* Black Ears */
-    border-radius: 50%;
-    position: absolute;
-}
-
-.dog-ear.left {
-    left: 5px;
-    transform: rotate(-20deg);
-}
-
-.dog-ear.right {
-    right: 5px;
-    transform: rotate(20deg);
-}
-
-/* Face */
-.dog-face {
-    position: absolute;
-    width: 40px;
-    height: 30px;
-    background: #ccc; /* Light Grey Muzzle */
-    border-radius: 50%;
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.dog-eyes {
-    position: absolute;
-    width: 100%;
-    top: 8px;
-    display: flex;
-    justify-content: space-around;
-}
-
-.dog-eye {
-    width: 6px;
-    height: 6px;
-    background: #000; /* Black Eyes */
-    border-radius: 50%;
-}
-
-.dog-nose {
-    position: absolute;
-    width: 6px;
-    height: 4px;
-    background: black;
-    border-radius: 50%;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-/* Message */
-.dog-message {
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    padding: 5px 8px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    opacity: 0;
-    transition: all 0.3s ease;
-    font-size: 1.2rem;
-}
-
-/* Show on hover */
-#dog-companion:hover .dog-message {
-    opacity: 1;
-}
-
-/* Animations */
-@keyframes dog-roam {
-    0% { transform: translateX(0) scaleX(1); }
-    49% { transform: translateX(calc(100vw - 120px)) scaleX(1); }
-    50% { transform: translateX(calc(100vw - 120px)) scaleX(-1); }
-    99% { transform: translateX(0) scaleX(-1); }
-    100% { transform: translateX(0) scaleX(1); }
-}
-
-@keyframes dog-bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-
-
-/* === WEATHER THEMES === */
-body.weather-clear {
-  background: linear-gradient(to top, #87ceeb, #ffffff); /* Blue sky */
-}
-
-body.weather-clouds {
-  background: linear-gradient(to top, #dfe9f3, #ffffff); /* Light grayish-blue */
-}
-
-body.weather-rain {
-  background: linear-gradient(to top, #a1c4fd, #c2e9fb); /* Soft blue rain */
-}
-
-body.weather-snow {
-  background: linear-gradient(to top, #e0eafc, #cfdef3); /* Very light snowy blue */
-}
-
-body.weather-thunderstorm {
-  background: linear-gradient(to top, #434343, #000000); /* Dark storm */
-}
-
-body.weather-fog {
-  background: linear-gradient(to top, #d7d2cc, #304352); /* Foggy gray */
-}
-
-/* Make clouds more visible on cloudy/foggy/rainy weather */
-body.weather-clouds .cloud,
-body.weather-rain .cloud,
-body.weather-fog .cloud {
-  opacity: 0.6;
-  filter: blur(3px);
-}
-
-/* Subtle cloud opacity for clear weather */
-body.weather-clear .cloud {
-  opacity: 0.3;
-}
-
-/* Snow effect idea */
-body.weather-snow .cloud {
-  background: linear-gradient(135deg, #ffffff 0%, #e0f7fa 100%);
-  filter: blur(4px);
-}
-
-/* Thunderstorm clouds darker */
-body.weather-thunderstorm .cloud {
-  background: linear-gradient(135deg, #555 0%, #222 100%);
-  opacity: 0.7;
-}
-
-/* === CLOUDS === */
-.cloud {
-  position: absolute;
-  background: #ffffff;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
-  border-radius: 50%;
-  opacity: 0.4;
-  width: 200px;
-  height: 120px;
-  top: 10%;
-  left: -200px;
-  animation: cloudFloat 60s linear infinite;
-  filter: blur(2px);
-  z-index: 1;
-}
-
-/* Each cloud can have slightly different sizes and speeds */
-.cloud:nth-child(2) {
-  width: 150px;
-  height: 90px;
-  top: 30%;
-  animation-duration: 80s;
-  opacity: 0.35;
-}
-
-.cloud:nth-child(3) {
-  width: 250px;
-  height: 140px;
-  top: 50%;
-  animation-duration: 100s;
-  opacity: 0.3;
-}
-
-.cloud:nth-child(4) {
-  width: 180px;
-  height: 100px;
-  top: 70%;
-  animation-duration: 90s;
-  opacity: 0.32;
-}
-
-/* Keyframes for gentle left-to-right floating */
-@keyframes cloudFloat {
-  0% {
-    transform: translateX(-300px);
-  }
-  100% {
-    transform: translateX(120vw);
-  }
-
-.rain-layer, .snow-layer, .wind-layer {
-  background-color: transparent;
-  background-repeat: repeat;
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  background-size: contain;
-}
-
-/* RAIN EFFECT */
-.rain-layer {
-  background-image: url('assets/effects/rain.png');
-  animation: rainFall 0.8s linear infinite;
-}
-
-@keyframes rainFall {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 100vh; }
-}
-
-/* SNOW EFFECT */
-.snow-layer {
-  background-image: url('assets/effects/snow.png');
-  animation: snowFall 3s linear infinite;
-}
-
-@keyframes snowFall {
-  0% { background-position: 0 -100vh; }
-  100% { background-position: 0 100vh; }
-}
-
-/* WIND EFFECT */
-.wind-layer {
-  background-image: url('assets/effects/wind.png');
-  animation: windBlow 5s linear infinite;
-}
-
-@keyframes windBlow {
-  0% { background-position: -100vw 0; }
-  100% { background-position: 100vw 0; }
-}
-.wind-blown {
-  transform: rotateZ(-3deg) translateX(-10px);
-  transition: transform 0.3s ease-in-out;
-}
-/* ==================== WEATHER EFFECTS ==================== */
-
-.rain-layer, .snow-layer, .wind-layer {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-repeat: repeat;
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-}
-
-/* Rain effect */
-.rain-layer {
-  background-image: url('assets/effects/rain.png');
-  animation: rainFall 0.8s linear infinite;
-}
-
-@keyframes rainFall {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 100vh; }
-}
-
-/* Snow effect */
-.snow-layer {
-  background-image: url('assets/effects/snow.png');
-  animation: snowFall 3s linear infinite;
-}
-
-@keyframes snowFall {
-  0% { background-position: 0 -100vh; }
-  100% { background-position: 0 100vh; }
-}
-
-/* Wind effect */
-.wind-layer {
-  background-image: url('assets/effects/wind.png');
-  animation: windBlow 5s linear infinite;
-}
-
-@keyframes windBlow {
-  0% { background-position: -100vw 0; }
-  100% { background-position: 100vw 0; }
-}
-
-/* Companion reactions */
-.wind-wiggle {
-  animation: wiggle 1.5s ease-in-out infinite;
-}
-
-@keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(8deg); }
-  50% { transform: rotate(-8deg); }
-  75% { transform: rotate(8deg); }
-}
-
-.wind-blown {
-  transform: translateX(-10px) rotateZ(-5deg);
-  transition: transform 0.3s ease-in-out;
-}
-
-/* === WIND REACTION ANIMATIONS === */
-
-/* Bunny ears wiggle */
-.bunny-ear.left.wind-wiggle,
-.bunny-ear.right.wind-wiggle {
-  animation: bunnyEarWiggle 1.5s ease-in-out infinite;
-}
-
-@keyframes bunnyEarWiggle {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(8deg); }
-  50% { transform: rotate(-8deg); }
-  75% { transform: rotate(8deg); }
-  100% { transform: rotate(0deg); }
-}
-
-/* Fox tail wiggle (pretend animal-hearts area = tail) */
-.animal-hearts.wind-wiggle {
-  animation: foxTailWiggle 2s ease-in-out infinite;
-}
-
-@keyframes foxTailWiggle {
-  0% { transform: rotate(0deg) translateX(0); }
-  50% { transform: rotate(10deg) translateX(5px); }
-  100% { transform: rotate(0deg) translateX(0); }
-}
-.hovering {
-  transform: scale(1.05);
-  transition: transform 0.3s ease;
-}
-
-.wind-wiggle {
-  animation: wiggle 1.5s ease-in-out infinite;
-}
-
-@keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(5deg); }
-  50% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
-}
-
-.wind-blown {
-  transform: translateX(-10px) rotateZ(-5deg);
-  transition: transform 0.3s ease-in-out;
-}
-
-body.night-mode {
-  background-color: rgba(0, 0, 0, 0.6); /* Optional: slightly darken overall */
-}
-#radar-controls button {
-  margin-right: 8px;
-}
-
-/* ===== BASE STYLES ===== */ 
-/* (Keep existing base styles the same) */
-
-/* ===== ENHANCED LAYOUT STRUCTURE ===== */
-#shell {
-  display: grid;
-  grid-template-rows: 1fr auto; /* Changed to auto for companion area */
-  height: 100vh;
-  padding-bottom: 25vh; /* Reserve space for companions */
-  background-color: rgba(25, 25, 25, 0.65);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border-radius: 10px;
-  margin: 0;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.main-grid {
-  display: grid;
-  grid-template-columns: minmax(300px, 2fr) minmax(250px, 1fr);
-  gap: 20px;
-  height: calc(100vh - 25vh); /* Account for companion area */
-}
-
-.left-column {
-  display: grid;
-  grid-template-rows: auto 1fr auto; /* Adjust if needed */
-  gap: 15px;
-  height: 100%;
-}
-
-.current-and-forecast {
-  display: grid;
-  grid-template-rows: auto auto;
-  gap: 15px;
-}
-
-.forecast-top {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(150px, 1fr));
-  gap: 15px;
-  min-height: 200px;
-}
-
-.forecast-bottom {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(80px, 1fr)); /* Smaller boxes */
-  gap: 10px; /* Less space between days */
-  min-height: 120px; /* Smaller overall */
-  align-items: start; /* Push content up nicely */
-}
-
-.right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  height: 100%;
-}
-
-/* Modified Radar Container */
-#radar-container {
-  position: relative; /* Changed from absolute */
-  min-height: 300px;
-  width: 100%;
-  border: 2px solid #888;
-  border-radius: 12px;
-  overflow: hidden;
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.6);
-  box-shadow: 0 0 10px #000;
-}
-
-/* Updated Stocks Container */
-#stocks-container {
-  position: relative; /* Changed from absolute */
-  min-height: 200px;
-  width: 100%;
-  z-index: 1000;
-  background: rgba(0,0,0,0.6);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-}
-
-/* Companion Area */
-.companion-area {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 25vh;
-  max-height: 250px;
-  z-index: 1000;
-  pointer-events: none;
-  padding: 0 20px 10px;
-  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
-}
-
-/* ===== RESPONSIVE ADJUSTMENTS ===== */
-@media (max-width: 1440px) {
-  .main-grid {
-    grid-template-columns: 1.8fr 1fr;
-  }
-  
-  .forecast-top {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(2, minmax(150px, 1fr));
-  }
-}
-
-@media (max-width: 1200px) {
-  #shell {
-    padding-bottom: 30vh;
-  }
-  
-  .main-grid {
-    grid-template-columns: 1fr;
-    height: auto;
-    gap: 15px;
-  }
-  
-  .right-column {
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    min-height: 400px;
-  }
-}
-
-@media (max-width: 992px) {
-  .forecast-bottom {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .right-column {
-    grid-template-columns: 1fr;
-    min-height: auto;
-  }
-  
-  #radar-container,
-  #stocks-container {
-    min-height: 250px;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Modified existing mobile styles */
-  #shell {
-    padding-bottom: 0;
-    grid-template-rows: 1fr;
-    padding: 15px;
-  }
-  
-  .main-grid {
-    height: auto;
-  }
-  
-  .forecast-top,
-  .forecast-bottom {
-    grid-template-columns: 1fr;
-  }
-  
-  .companion-area {
-    position: relative;
-    height: auto;
-    padding: 15px;
-    background: none;
-  }
-  
-  #animal-companion,
-  #bunny-container {
-    transform: scale(0.8);
-  }
-  
-  /* Preserve original mobile styles */
-  #shell { padding: 15px; }
-  #time { font-size: 6vw; }
-  #date { font-size: 3.5vw; }
-  #btcprice, #stockData { font-size: 3.5vw; }
-  .currentTemp { font-size: 4vw; }
-  .temp { font-size: 5vw; }
-  .day { font-size: 3vw; }
-  #weatherAlerts { font-size: 2.5vw; }
-  .desc { font-size: 2.8vw; }
-}
-
-@media (min-width: 2000px) {
-  .main-grid {
-    grid-template-columns: 3fr 1fr;
-  }
-  
-  #radar-container {
-    min-height: 400px;
-  }
-  
-  #stocks-container {
-    min-height: 300px;
-  }
-
-@media (max-width: 768px) {
-  .right-column {
-    flex-direction: column;
-  }
-
-  #radar-container,
-  #stocks-container {
-    min-height: 200px;
-  }\
-}
-
-/* Keep existing styles below */
-/* ===== WEATHER THEMES ==== */
-/* ===== CLOUDS ===== */
-/* ===== COMPANIONS ===== */
-/* ===== ANIMATIONS ===== */
-/* ===== etc... */
-
-@media (max-width: 768px) { /* Mobile Landscape */
-  #display td {
-    flex: 1 1 100%;
-    padding: 10px;
-    min-height: auto;
-  }
-
-  #time {
-    font-size: 8vw;
-  }
-
-  #date {
-    font-size: 4vw;
-    margin-bottom: 2vh;
-  }
-
-  #btcprice, #stockData {
-    font-size: 3.5vw;
-  }
-
-  .forecast .day {
-    font-size: 3vw;
-  }
-
-  #animal-companion {
-    transform: scale(0.8);
-    bottom: 10px;
-  }
-
-  #bunny-companion {
-    transform: scale(0.7);
-  }
-
-  #radar-container {
-    bottom: 120px;
-    width: 280px;
-    height: 160px;
-  }
-
-  #stocks-container {
-    width: 280px;
-    height: 180px;
-    right: 10px;
-  }
-}
-
-@media (max-width: 480px) { /* Mobile Portrait */
-  #shell {
-    padding: 10px;
-  }
-
-  #time {
-    font-size: 10vw;
-  }
-
-  #date {
-    font-size: 5vw;
-  }
-
-  #btcprice, #stockData {
-    font-size: 4.5vw;
-  }
-
-  .forecast .day {
-    font-size: 4vw;
-  }
-
-  #controls {
-    width: 90%;
-    left: 5%;
-    top: 5%;
-  }
-
-  .control-group {
-    flex-direction: column;
-  }
-
-  #radar-container {
-    width: 90%;
-    right: 5%;
-    height: 200px;
-    bottom: 100px;
-  }
-
-  #stocks-container {
-    width: 90%;
-    right: 5%;
-    height: 200px;
-  }
-
-  #animal-companion,
-  #bunny-companion {
-    display: none; /* Hide companions on smallest screens */
-  }
-
-  /* Stack forecast items vertically */
-  #display tr:last-child {
-    flex-direction: column;
-  }
-  
-  .forecast {
-    width: 100%;
-    margin: 5px 0;
-  }
-}
-
-/* Touch optimization */
-button {
-  min-width: 44px;
-  min-height: 44px;
-}
-
-/* Prevent text size inflation */
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
-/* Flexible images */
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Maintain aspect ratios */
-.forecast .icon img {
-  width: auto;
-  max-height: 60px;
-}
-
-/* Radar map adjustments */
-#radar-map {
-  touch-action: pan-x pan-y; /* Allow map panning on mobile */
-}
-
-/* Stock iframe scaling */
-#stocks-iframe {
-  zoom: 0.8;
-  -moz-transform: scale(0.8);
-  -moz-transform-origin: 0 0;
-}
-<!-- Keep all previous HTML structure up to the shell div -->
-
-<div id="shell">
-  <!-- ... main content grid from previous answer ... -->
-</div>
-
-<!-- Dedicated Companion Section -->
-<div class="companion-stage">
-  <!-- Fox Companion -->
-  <div id="animal-companion">
-    <div class="animal-body">
-      <div class="animal-face"></div>
-      <div class="animal-legs">
-        <div class="animal-leg"></div>
-        <div class="animal-leg"></div>
-        <div class="animal-leg"></div>
-        <div class="animal-leg"></div>
-      </div>
-      <div class="animal-hearts">❤️❤️❤️</div>
-    </div>
-    <div class="animal-message">Hello!</div>
-  </div>
-
-  <!-- Bunny Companion -->
-  <div id="bunny-container">
-    <div id="bunny-companion">
-      <div class="bunny-body">
-        <div class="bunny-ears">
-          <div class="bunny-ear left"></div>
-          <div class="bunny-ear right"></div>
-        </div>
-        <div class="bunny-face">
-          <div class="bunny-eyes">
-            <div class="bunny-eye"></div>
-            <div class="bunny-eye"></div>
-          </div>
-          <div class="bunny-nose"></div>
-        </div>
-      </div>
-      <div class="bunny-message">🥕!</div>
-      <div class="bunny-carrot" style="display:none;">🥕</div>
-    </div>
-  </div>
-</div>
-
-<!-- Add this CSS -->
-<style>
- 
-/* ===== COMPANION STAGE ===== */
-.companion-stage {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 25vh;
-  z-index: 50; /* Below main content */
-  pointer-events: none;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 20px;
-}
-
-#animal-companion,
-#bunny-container {
-  pointer-events: auto;
-  z-index: 51; /* Just above stage */
-  transform: translateY(25%); /* Start partially hidden */
-}
-
-/* Main content should be higher */
-#shell {
-  z-index: 100;
-  position: fixed;
-  backdrop-filter: blur(12px); /* Keep blur effect */
-}
-
-/* Weather effects layer */
-#weather-effects {
-  z-index: 25; /* Below companions */
-}
-
-/* Fix radar/stocks positioning */
-#radar-container,
-#stocks-container {
-  z-index: 150; /* Highest priority */
-  position: fixed !important;
-}
-
-/* ===== COMPANION STAGE ===== */
-.companion-stage {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 30vh;
-  z-index: 50; /* Lower than main content */
-  pointer-events: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0 2rem;
-}
-
-/* Keep companions clickable but let content pass through */
-#animal-companion,
-#bunny-container {
-  pointer-events: auto;
-  z-index: 51; /* Slightly above stage but below content */
-}
-
-/* Main content area */
-#shell {
-  z-index: 100; /* Higher than companions */
-  position: relative;
-}
-
-/* Weather effects layer */
-#weather-effects {
-  z-index: 25; /* Below companions but above background */
-}
-
-/* Radar and stocks should be above companions */
-#radar-container,
-#stocks-container {
-  z-index: 150; /* Highest priority */
-}
-
-/* Cloud layer adjustment */
-.cloud {
-  z-index: 20; /* Below everything */
-}
-
-/* Main content area */
-#shell {
-  z-index: 100; /* Higher than companions */
-  position: relative;
-}
-
-/* Weather effects layer */
-#weather-effects {
-  z-index: 25; /* Below companions but above background */
-}
-
-/* Radar and stocks should be above companions */
-#radar-container,
-#stocks-container {
-  z-index: 150; /* Highest priority */
-}
-
-/* Cloud layer adjustment */
-.cloud {
-  z-index: 20; /* Below everything */
-}
-
-  /* Mobile Friendly Companions */
-  @media (max-width: 768px) {
-    .companion-stage {
-      height: 25vh;
-      padding: 0 1rem;
-    }
-    
-    #animal-companion {
-      transform: scale(0.7);
-      left: 2%;
-    }
-    
-    #bunny-container {
-      transform: scale(0.7);
-      right: 2%;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .companion-stage {
-      justify-content: space-around;
-    }
-    
-    #animal-companion,
-    #bunny-container {
-      position: relative;
-      transform: scale(0.6);
-      left: auto;
-      right: auto;
-    }
-  }
-
-  /* Preserve Original Animations */
-  @keyframes roam {
-    0% { transform: translateX(0) scaleX(1); }
-    49% { transform: translateX(calc(100vw - 120px)) scaleX(1); }
-    50% { transform: translateX(calc(100vw - 120px)) scaleX(-1); }
-    99% { transform: translateX(0) scaleX(-1); }
-    100% { transform: translateX(0) scaleX(1); }
-  }
-
-  @keyframes bunny-roam {
-    0% { transform: translateX(0) scaleX(1); }
-    49% { transform: translateX(calc(100vw - 100px)) scaleX(1); }
-    50% { transform: translateX(calc(100vw - 100px)) scaleX(-1); }
-    99% { transform: translateX(0) scaleX(-1); }
-    100% { transform: translateX(0) scaleX(1); }
-  }
-  @keyframes bunnyHappyHop {
-    0% { transform: translateY(0); }
-    25% { transform: translateY(-20px); }
-    50% { transform: translateY(0); }
-    75% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
-}
-
-.bunny-happy {
-  animation: bunnyHappyHop 2s ease;
-}
-
-
-#carrot-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 99999; /* Super high */
-  will-change: transform;
-}
-
-#carrot-layer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 99999; /* Slightly higher */
-  will-change: transform;
-}
-
-.carrot {
-  position: absolute;
-  top: -50px;
-  font-size: 32px;
-  user-select: none;
-  pointer-events: none;
-  z-index: 99999;
-  animation: fall 6s linear forwards, spin 4s linear infinite;
-  will-change: transform;
-}
-
-@keyframes fall {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(110vh); } /* Fall DOWN! */
-}
-
-@keyframes spin {
-  0% { rotate: 0deg; }
-  100% { rotate: 360deg; }
-}
-
-.carrot {
-  will-change: transform;
-}
-
-/* RGB Border Animation */
-@keyframes animateBorder {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Pulse Glow Animation */
-@keyframes pulse {
-  0%   { box-shadow: 0 0 10px red; }
-  25%  { box-shadow: 0 0 10px orange; }
-  50%  { box-shadow: 0 0 10px lime; }
-  75%  { box-shadow: 0 0 10px blue; }
-  100% { box-shadow: 0 0 10px red; }
-}
-
-/* Shell Style */
-#shell {
-  position: relative;
-  z-index: 10;
-  border: 6px solid transparent;
-  border-radius: 12px; /* rounded corners */
-  
-  background: linear-gradient(white, white) padding-box, 
-              linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red) border-box;
-  background-size: 400% 400%;
-
-  animation: animateBorder 10s linear infinite, 
-             pulse 4s ease-in-out infinite; /* <-- multiple animations */
-}
-
-/* Treat style */
-.dog-treat {
-  position: absolute;
-  font-size: 24px;
-  animation: floatTreat 2s ease-out forwards;
-  pointer-events: none;
-}
-
-/* Floating up */
-@keyframes floatTreat {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-100px); opacity: 0; }
-}
-
-/* Dog happy jump */
-@keyframes dogHappyJump {
-  0% { transform: translateY(0); }
-  30% { transform: translateY(-15px); }
-  60% { transform: translateY(0); }
-  100% { transform: translateY(0); }
-}
-
-.dog-happy {
-  animation: dogHappyJump 1s ease;
-}
-
-.bunny-soda {
-  position: absolute;
-  font-size: 24px;
-  animation: floatSoda 2s ease-out forwards;
-  pointer-events: none;
-}
-
-/* Floating animation */
-@keyframes floatSoda {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-100px); opacity: 0; }
-}
-
-/* ===== TETRIS WRAPPER ===== */
-#tetris-wrapper {
-  display: none;
-  position: absolute; /* <<< not fixed */
-  top: 500px; /* <<< right under your iframe roughly */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5500; /* Above stocks, radar, carrots, but under settings panels */
-  width: 240px;
-  pointer-events: auto;
-  background: rgba(0, 0, 0, 0.85);
-  border-radius: 10px;
-  box-shadow: 0 0 15px cyan;
-  padding: 15px;
-}
-
-/* ===== TETRIS CONTAINER ===== */
-#tetris-container {
-  width: 220px;
-  height: 440px;
-  background: rgba(0, 0, 0, 0.85);
-  border-radius: 10px;
-  overflow: hidden;
-  pointer-events: auto;
-}
-
-/* ===== TETRIS CANVAS ===== */
-#tetris {
-  width: 100%;
-  height: 100%;
-  display: block;
-  background-color: transparent;
-}
-
-/* ===== TOUCH CONTROLS ===== */
-#touch-controls {
-  position: relative; /* <<< changed from fixed */
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  z-index: 1; /* No need to be super high anymore */
-}
-
-#touch-controls button {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2px solid white;
-  border-radius: 10px;
-  font-size: 24px;
-  padding: 10px 20px;
-  backdrop-filter: blur(6px);
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
-
-#touch-controls button:hover {
-  background: rgba(255, 255, 255, 0.4);
-  transform: scale(1.05);
-}
-
-#cloud-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 20; /* Lower than rain/snow layers */
-  overflow: hidden;
-}
-
-.lightning-flash {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255, 255, 255, 0.7);
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* News Toggle Button */
-
-/* Top Bar Styles */
+/* ===== TOP BAR & NEWS BUTTON ===== */
 #top-bar {
   width: 100%;
   display: flex;
-  justify-content: flex-end; /* <=== this pushes button to the right */
+  justify-content: flex-end;
   align-items: center;
   padding: 10px 20px 0 20px;
   box-sizing: border-box;
   z-index: 200;
 }
 
-/* News Button Style */
 #news-toggle {
   background: linear-gradient(90deg, #8e2de2, #4a00e0);
   color: white;
@@ -2120,20 +276,515 @@ img {
   transform: scale(1.05);
 }
 
+/* ===== COMPANION STAGE ===== */
+.companion-stage {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25vh;
+  z-index: 50;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 2rem;
+}
+
+/* ===== FOX COMPANION ===== */
+#animal-companion {
+  position: fixed;
+  top: 80vh;
+  left: 0;
+  animation: roam 20s linear infinite alternate;
+  display: block;
+  opacity: 1;
+  z-index: 2000; /* match bunny/dog layering */
+  pointer-events: auto;
+}
+
+.animal-body {
+  width: 100px;
+  height: 85px;
+  background-color: #ff6b35;
+  border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
+  position: relative;
+  animation: walk 0.8s ease-in-out infinite, float 4s ease-in-out infinite;
+}
+
+.animal-face {
+  position: absolute;
+  width: 40px;
+  height: 30px;
+  background-color: #f7c59f;
+  border-radius: 50%;
+  top: 15px;
+  left: 20px;
+}
+
+.animal-face::before,
+.animal-face::after {
+  content: '';
+  position: absolute;
+  background-color: #333;
+  border-radius: 50%;
+  width: 6px;
+  height: 6px;
+  top: 10px;
+  animation: blink 3s infinite;
+}
+
+.animal-face::before { left: 8px; }
+.animal-face::after { right: 8px; }
+
+.animal-tail {
+  position: absolute;
+  width: 40px;
+  height: 25px;
+  background-color: #e05a2b;
+  border-radius: 50%;
+  right: -20px;
+  top: 15px;
+  animation: wag 3s ease-in-out infinite;
+}
+
+.animal-message {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  background: white;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 12px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  width: 150px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#animal-companion:hover .animal-message {
+  opacity: 1;
+}
+
+.animal-hearts {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: float-hearts 2s ease-in-out infinite;
+}
+
+#animal-companion:hover .animal-hearts {
+  opacity: 1;
+}
+
+.animal-legs {
+  position: absolute;
+  bottom: -5px; /* lower legs slightly outside body */
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+.animal-leg {
+  width: 10px;
+  height: 18px; /* longer legs */
+  background: #ff6b35;
+  border-radius: 5px;
+  animation: legMove 0.8s ease-in-out infinite alternate;
+}
+
+/* Cute staggered movement */
+.animal-leg:nth-child(odd) {
+  animation-delay: 0s;
+}
+.animal-leg:nth-child(even) {
+  animation-delay: 0.4s;
+}
+
+/* Walking animation */
+@keyframes legMove {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(8deg); }
+}
+
+@keyframes roam {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(30vw); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes fox-dash {
+  0%   { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(100vw); opacity: 1; } /* keep opacity */
+}
+
+
+/* When wind blows */
+.wind-blown {
+  animation: roam 20s linear infinite alternate, fox-wiggle 2s ease-in-out infinite;
+}
+
+@keyframes fox-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  75% { transform: rotate(-2deg); }
+}
+
+/* ===== BUNNY COMPANION ===== */
+#bunny-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: 200px;
+  pointer-events: none;
+  z-index: 1500;
+}
+
+#bunny-companion {
+  position: fixed;
+  top: 80vh; /* Adjust as needed, try 40vh or 45vh for higher */
+  left: 0;
+  animation: bunny-roam 18s linear infinite alternate;
+  transform-origin: center;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  pointer-events: auto;
+  z-index: 2000; /* Ensure it's in front of radar */
+}
+
+
+.bunny-body {
+  width: 80px;
+  height: 100px;
+  background-color: #f0f0f0;
+  border-radius: 50% 50% 40% 40% / 60% 60% 30% 30%;
+  position: relative;
+  animation: bunny-hop 0.8s ease-in-out infinite, bunny-float 4s ease-in-out infinite;
+}
+
+.bunny-ears {
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  top: -40px;
+}
+
+.bunny-ear {
+  width: 20px;
+  height: 50px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  position: absolute;
+  transform-origin: bottom center;
+}
+
+.bunny-ear.left {
+  left: 15px;
+  animation: ear-twitch-left 3s ease-in-out infinite;
+}
+
+.bunny-ear.right {
+  right: 15px;
+  animation: ear-twitch-right 3s ease-in-out infinite;
+}
+
+.bunny-face {
+  position: absolute;
+  width: 50px;
+  height: 40px;
+  background-color: #fff;
+  border-radius: 40%;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bunny-eyes {
+  display: flex;
+  justify-content: space-around;
+  position: absolute;
+  top: 10px;
+  width: 100%;
+}
+
+.bunny-eye {
+    width: 12px;
+    height: 12px;
+    background: #6b4f40;
+    border-radius: 50%;
+    position: relative;
+    animation: blink 4s infinite, eye-follow 15s infinite linear;
+}
+
+@keyframes blink {
+    0%, 90%, 100% { height: 12px; }
+    92%, 98% { height: 2px; }
+}
+
+.bunny-nose {
+  position: absolute;
+  width: 8px;
+  height: 6px;
+  background-color: #ff9999;
+  border-radius: 40%;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bunny-message, .bunny-carrot {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+#bunny-companion:hover .bunny-message,
+#bunny-companion:hover .bunny-carrot {
+  opacity: 1;
+}
+
+/* ===== DOG COMPANION ===== */
+#dog-container {
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 70px;
+  height: 80px;
+  pointer-events: none;
+  z-index: 1500;
+}
+
+#dog-companion {
+  position: fixed; /* Changed from absolute */
+  top: 85vh;        /* Adjust as needed: lower value = higher on screen */
+  left: 0;
+  animation: dog-roam 24s linear infinite alternate;
+  transform-origin: center;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  pointer-events: auto;
+  z-index: 2000; /* Ensure it renders above radar */
+}
+
+.dog-body {
+  width: 60px;
+  height: 60px;
+  background-color: #555;
+  border-radius: 50%;
+  position: relative;
+  animation: dog-bounce 2s ease-in-out infinite;
+}
+
+.dog-face {
+  position: absolute;
+  width: 40px;
+  height: 30px;
+  background: #ccc;
+  border-radius: 50%;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dog-ears {
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  top: -10px;
+}
+
+.dog-ear {
+  width: 14px;
+  height: 20px;
+  background: #222;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.dog-ear.left { left: 5px; transform: rotate(-20deg); }
+.dog-ear.right { right: 5px; transform: rotate(20deg); }
+
+.dog-eyes {
+  position: absolute;
+  width: 100%;
+  top: 8px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.dog-eye {
+  width: 6px;
+  height: 6px;
+  background: #000;
+  border-radius: 50%;
+}
+
+.dog-nose {
+  position: absolute;
+  width: 6px;
+  height: 4px;
+  background: #000;
+  border-radius: 50%;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dog-message {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 5px 8px;
+  border-radius: 10px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+#dog-companion:hover .dog-message {
+  opacity: 1;
+}
+
+#animal-companion {
+  animation: roam 20s linear infinite alternate;
+}
+
+#bunny-companion {
+  animation: bunny-roam 18s linear infinite alternate;
+}
+
+#dog-companion {
+  animation: dog-roam 24s linear infinite alternate;
+}
+
+@keyframes roam {
+  0% { left: 0; }
+  100% { left: 80vw; }
+}
+
+@keyframes bunny-roam {
+  0% { left: 0; }
+  100% { left: 70vw; }
+}
+
+@keyframes dog-roam {
+  0% { left: 25%; }
+  100% { left: 65vw; }
+}
+
+
+/* ===== EMERGENCY ALERT SYSTEM ===== */
+#emergency-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 0, 0, 0.6);
+  z-index: 9998;
+  display: none;
+  animation: flashRed 1s infinite alternate;
+  pointer-events: none;
+}
+
+#emergency-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 600px;
+  background: white;
+  color: red;
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px red;
+  z-index: 9999;
+  text-align: center;
+  overflow: hidden; /* Important */
+  pointer-events: auto;
+  display: none;
+}
+
+#emergency-intro {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+#emergency-scrollbox {
+  max-height: 150px; /* limit height of scrollbox */
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  padding-right: 10px;
+  text-align: left;
+}
+
+/* Optional: nicer scrollbars */
+#emergency-scrollbox::-webkit-scrollbar {
+  width: 8px;
+}
+#emergency-scrollbox::-webkit-scrollbar-thumb {
+  background: red;
+  border-radius: 10px;
+}
+#emergency-scrollbox::-webkit-scrollbar-track {
+  background: #ffe5e5;
+}
+
+/* STOP button */
+#stop-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 12px 20px;
+  font-size: 1.5rem;
+  background: white;
+  color: red;
+  border: 2px solid red;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 10000;
+  display: none;
+}
+
+/* Background flash animation */
+@keyframes flashRed {
+  0% { background: rgba(255, 0, 0, 0.6); }
+  50% { background: rgba(255, 0, 0, 0.3); }
+  100% { background: rgba(255, 0, 0, 0.6); }
+}
+
+
+/* ===== NEWS TICKER ===== */
 #news-ticker {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 30px; /* or however tall you want */
+  height: 30px;
   overflow: hidden;
   background: linear-gradient(90deg, #8e2de2, #4a00e0);
   color: white;
   font-size: 1.2rem;
+  line-height: 30px;
   white-space: nowrap;
-  line-height: 30px; /* centers text vertically */
-  z-index: 9999; /* stay on top of other stuff */
-  display: none; /* Start hidden */
+  z-index: 9999;
+  display: none;
 }
 
 #news-items {
@@ -2143,14 +794,81 @@ img {
 }
 
 @keyframes scrollNews {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
 }
 
+/* ===== WEATHER EFFECTS LAYERS ===== */
+#weather-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.rain-layer, .snow-layer, .wind-layer {
+  background-color: transparent;
+  background-repeat: repeat;
+  background-size: contain;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.rain-layer {
+  background-image: url('assets/effects/rain.png');
+  animation: rainFall 0.8s linear infinite;
+}
+
+.snow-layer {
+  background-image: url('assets/effects/snow.png');
+  animation: snowFall 3s linear infinite;
+}
+
+.wind-layer {
+  background-image: url('assets/effects/wind.png');
+  animation: windBlow 5s linear infinite;
+}
+
+/* Weather Effect Keyframes */
+@keyframes rainFall {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100vh; }
+}
+
+@keyframes snowFall {
+  0% { background-position: 0 -100vh; }
+  100% { background-position: 0 100vh; }
+}
+
+@keyframes windBlow {
+  0% { background-position: -100vw 0; }
+  100% { background-position: 100vw 0; }
+}
+
+/* ===== LIGHTNING EFFECT ===== */
+.lightning-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  z-index: 9999;
+  animation: lightningFlash 0.5s ease-in-out;
+}
+
+/* Lightning Flash */
+@keyframes lightningFlash {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ===== FIREWORKS ===== */
 .firework {
   position: fixed;
   width: 10px;
@@ -2159,6 +877,7 @@ img {
   border-radius: 50%;
   animation: explode 1s ease-out forwards;
   pointer-events: none;
+  z-index: 9999;
 }
 
 @keyframes explode {
@@ -2166,4 +885,247 @@ img {
   100% { transform: scale(5) translate(100px, -100px); opacity: 0; }
 }
 
-</style>
+
+/* ===== FINAL TOUCH: GENERAL ===== */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.carrot-mode #carrot-container::before {
+  content: "🥕 Carrots incoming!";
+  position: absolute;
+  top: 50px;
+  left: 20px;
+  color: orange;
+  font-size: 2rem;
+}
+
+@keyframes legMove {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(10deg); }
+}
+
+@keyframes fox-dash {
+  0% { transform: translateX(0) scaleX(1); }
+  20% { transform: translateX(20vw) scaleX(1) translateY(-20px); }
+  50% { transform: translateX(70vw) scaleX(-1) translateY(0); }
+  70% { transform: translateX(40vw) scaleX(-1) translateY(10px); }
+  100% { transform: translateX(100vw) scaleX(1) translateY(0); }
+}
+
+#time-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  margin: 20px 0;
+  color: white;
+  font-family: 'Arial', sans-serif;
+  max-width: 100%;
+}
+
+#time {
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+#date {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+#currentTemp, #btcprice, #stockData, #weatherAlerts {
+  font-size: 1.2rem;
+  margin: 5px 0;
+  word-break: break-word;
+  max-width: 90%;
+}
+
+
+
+#five-day-forecast {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.forecast-day {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-size: 1rem;
+  width: 90px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.forecast-icon {
+  font-size: 2rem;
+  margin-bottom: 5px;
+}
+
+.forecast-text {
+  font-size: 1rem;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+  #time {
+    font-size: 2.5rem;
+  }
+  #date {
+    font-size: 1.3rem;
+  }
+  #currentTemp, #btcprice, #stockData, #weatherAlerts {
+    font-size: 1rem;
+  }
+  .forecast-day {
+    width: 70px;
+    padding: 8px;
+  }
+  .forecast-icon {
+    font-size: 1.6rem;
+  }
+  .forecast-text {
+    font-size: 0.9rem;
+  }
+}
+.forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  animation: fadeIn 0.8s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#debug-toggle {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: #222;
+  color: lime;
+  padding: 8px 12px;
+  border: 2px solid lime;
+  border-radius: 6px;
+  font-family: monospace;
+  cursor: pointer;
+  z-index: 99999;
+}
+
+#tetris-wrapper {
+  position: fixed;
+  top: 45px;
+  left: 20px;
+  width: 240px;
+  z-index: 9999;
+  display: none;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
+}
+
+@keyframes rgbPulse {
+  0%   { box-shadow: 0 0 10px red; border-color: red; }
+  25%  { box-shadow: 0 0 10px orange; border-color: orange; }
+  50%  { box-shadow: 0 0 10px lime; border-color: lime; }
+  75%  { box-shadow: 0 0 10px cyan; border-color: cyan; }
+  100% { box-shadow: 0 0 10px magenta; border-color: magenta; }
+}
+
+#tetris-wrapper {
+  border: 3px solid red; /* Starting color, will animate */
+  animation: rgbPulse 3s linear infinite;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 12px;
+  box-shadow: 0 0 10px red;
+  outline: none; /* Kill the old lime debug border */
+}
+
+#tetris-wrapper {
+  display: none;
+}
+
+#tetris-wrapper.tetris-active {
+  display: block;
+}
+
+#scoreboard {
+  color: #00ffcc !important;
+  background: rgba(0,0,0,0.6) !important;
+  border: 2px solid #00ffcc !important;
+  text-shadow: 2px 2px 4px black !important;
+}
+
+#wolf3d-gun-toggle.animate-fire {
+  animation: recoil 0.3s ease;
+}
+
+@keyframes recoil {
+  0% { transform: rotate(0); }
+  25% { transform: rotate(-10deg); }
+  50% { transform: rotate(0); }
+}
+
+#wolf3d-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 1000px;
+  height: 80vh;
+  background: black;
+  z-index: 99999;
+  border: 4px solid red;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+  overflow: hidden;
+
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#wolf3d-wrapper.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
