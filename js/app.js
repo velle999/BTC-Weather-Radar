@@ -57,7 +57,7 @@ function createDebugPanel() {
   const debugPanel = document.createElement('div');
   debugPanel.id = 'debug-panel';
   debugPanel.style.position = 'fixed';
-  debugPanel.style.bottom = '10px';
+  debugPanel.style.bottom = '275px';
   debugPanel.style.left = '10px';
   debugPanel.style.padding = '10px';
   debugPanel.style.background = 'rgba(0,0,0,0.7)';

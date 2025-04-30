@@ -1041,17 +1041,26 @@ html {
 
 #debug-toggle {
   position: fixed;
-  bottom: 10px;
-  right: 10px;
-  background: #222;
+  bottom: 100px; /* 🆙 raised above companions and edge */
+  right: 20px;
+  background: #111; /* slightly darker terminal vibe */
   color: lime;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: 2px solid lime;
-  border-radius: 6px;
-  font-family: monospace;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
   cursor: pointer;
-  z-index: 99999;
+  z-index: 9999;
+  box-shadow: 0 0 8px lime;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
+
+#debug-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px lime;
+}
+
 
 #tetris-wrapper {
   position: fixed;
