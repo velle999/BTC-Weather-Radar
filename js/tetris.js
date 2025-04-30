@@ -10,6 +10,7 @@ let cols = 10;
 let dropCounter = 0;
 let dropInterval = 1000;
 let lastTime = 0;
+let paused = false;
 let posX = 0;
 let posY = 0;
 let currentPiece = null;
@@ -48,6 +49,10 @@ function drawMatrix(matrix, offsetX = 0, offsetY = 0) {
 
 function drawTetris(time = 0) {
     if (!running) return;
+    if (paused) {
+        requestAnimationFrame(drawTetris);
+        return;
+    }
 
     const deltaTime = time - lastTime;
     lastTime = time;
@@ -282,13 +287,16 @@ document.getElementById('tetris-toggle').addEventListener('click', () => {
 });
 
 document.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        if (!running) {
-            startTetris();
-        }
-        return;
-    }
+   if (event.key === 'Enter') {
+  event.preventDefault();
+  if (!running) {
+    startTetris();
+  } else {
+    paused = !paused;
+    console.log(paused ? '⏸️ Paused' : '▶️ Resumed');
+  }
+  return;
+}
     if (!running) return;
     event.preventDefault();
 
