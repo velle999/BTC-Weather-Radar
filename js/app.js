@@ -637,12 +637,12 @@ function setupUIControls() {
       if (!carrotInterval) {
         carrotInterval = setInterval(createCarrot, 250);
         document.body.classList.add('carrot-mode');
-        carrotToggle.textContent = 'Stop Carrot Rain';
+        carrotToggle.textContent = '🥕';
       } else {
         clearInterval(carrotInterval);
         carrotInterval = null;
         document.body.classList.remove('carrot-mode');
-        carrotToggle.textContent = 'Carrot Rain 🥕';
+        carrotToggle.textContent = '🥕';
         const carrotLayer = document.getElementById('carrot-layer');
         if (carrotLayer) carrotLayer.innerHTML = '';
       }
@@ -663,7 +663,7 @@ if (tetrisToggle && tetrisWrapper) {
     e.stopPropagation(); // Prevents bubbling from interfering with other UI
 
     const isActive = tetrisWrapper.classList.toggle('tetris-active');
-    tetrisToggle.textContent = isActive ? 'Hide Tetris 🎮' : 'Play Tetris 🎮';
+    tetrisToggle.textContent = isActive ? '🎮' : '🎮';
 
     // Optional: Focus on the Tetris canvas after activation
     const canvas = tetrisWrapper.querySelector('canvas');
