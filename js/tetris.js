@@ -233,6 +233,25 @@ function saveHighScoreOnline(initials, score) {
     });
 }
 
+function isValidMove(piece, offsetX, offsetY) {
+    for (let y = 0; y < piece.length; y++) {
+        for (let x = 0; x < piece[y].length; x++) {
+            if (piece[y][x]) {
+                const newX = x + offsetX;
+                const newY = y + offsetY;
+
+                if (
+                    newX < 0 || newX >= cols || newY >= rows ||
+                    (newY >= 0 && playfield[newY][newX] !== 0)
+                ) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 // Load high scores from server
 function loadHighScores() {
     return fetch('get_scores.php')
@@ -287,40 +306,51 @@ document.getElementById('tetris-toggle').addEventListener('click', () => {
 });
 
 document.addEventListener('keydown', (event) => {
-   if (event.key === 'Enter') {
-  event.preventDefault();
-  if (!running) {
-    startTetris();
-  } else {
-    paused = !paused;
-    console.log(paused ? '⏸️ Paused' : '▶️ Resumed');
-  }
-  return;
-}
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        if (!running) {
+            startTetris();
+        } else {
+            paused = !paused;
+            console.log(paused ? '⏸️ Paused' : '▶️ Resumed');
+        }
+        return;
+    }
+
     if (!running) return;
     event.preventDefault();
 
-    if (event.key === 'ArrowLeft') posX--;
-    if (event.key === 'ArrowRight') posX++;
-    if (event.key === 'ArrowDown') posY++;
-    if (event.key === 'ArrowUp') tryRotateClockwise();
-
-    if (collide(playfield, currentPiece, posX, posY)) {
-        if (event.key === 'ArrowLeft') posX++;
-        if (event.key === 'ArrowRight') posX--;
-        if (event.key === 'ArrowDown') posY--;
+    if (event.key === 'ArrowLeft' && isValidMove(currentPiece, posX - 1, posY)) {
+        posX--;
+    }
+    if (event.key === 'ArrowRight' && isValidMove(currentPiece, posX + 1, posY)) {
+        posX++;
+    }
+    if (event.key === 'ArrowDown' && isValidMove(currentPiece, posX, posY + 1)) {
+        posY++;
+    }
+    if (event.key === 'ArrowUp') {
+        tryRotateClockwise(); // already handles wall kicks
     }
 });
+
 
 ['left-btn', 'right-btn', 'rotate-btn', 'down-btn'].forEach(id => {
     document.getElementById(id)?.addEventListener('click', () => {
         if (!running) return;
+
         switch (id) {
-            case 'left-btn': posX--; break;
-            case 'right-btn': posX++; break;
-            case 'rotate-btn': tryRotateClockwise(); break;
+            case 'left-btn':
+                if (isValidMove(currentPiece, posX - 1, posY)) posX--;
+                break;
+            case 'right-btn':
+                if (isValidMove(currentPiece, posX + 1, posY)) posX++;
+                break;
+            case 'rotate-btn':
+                tryRotateClockwise();
+                break;
             case 'down-btn':
-                while (!collide(playfield, currentPiece, posX, posY + 1)) posY++;
+                while (isValidMove(currentPiece, posX, posY + 1)) posY++;
                 merge(playfield, currentPiece, posX, posY, currentColor);
                 clearRows();
                 spawnNewPiece();
@@ -328,3 +358,4 @@ document.addEventListener('keydown', (event) => {
         }
     });
 });
+
