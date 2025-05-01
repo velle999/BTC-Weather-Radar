@@ -496,7 +496,7 @@ async function loadRadarData() {
 function toggleRadar() {
   radarActive = !radarActive;
   $('#radar-container').toggleClass('active', radarActive);
-  $('#radar-toggle').text(radarActive ? 'Refresh Radar' : 'Show Radar');
+  $('#radar-toggle').text(radarActive ? '🛰️' : '🛰️');
   if (radarActive) loadRadarData();
 }
 
@@ -608,7 +608,7 @@ function setupUIControls() {
     stocksToggle.addEventListener('click', () => {
       const isHidden = stocksContainer.style.display === 'none';
       stocksContainer.style.display = isHidden ? 'block' : 'none';
-      stocksToggle.textContent = isHidden ? 'Hide CNBC' : 'Show CNBC';
+      stocksToggle.textContent = isHidden ? '📺' : '📺';
     });
   }
 
@@ -622,10 +622,10 @@ function setupUIControls() {
       if (isHidden) {
         fetchNewsHeadlines();
         newsTicker.style.display = 'block';
-        newsToggle.textContent = 'Hide Headlines';
+        newsToggle.textContent = '📰';
       } else {
         newsTicker.style.display = 'none';
-        newsToggle.textContent = 'Show Headlines';
+        newsToggle.textContent = '📰';
       }
     });
   }
