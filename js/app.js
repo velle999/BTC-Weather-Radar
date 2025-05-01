@@ -224,7 +224,7 @@ function updateCurrentWeather(data) {
       updateRadarLocation(data.coord.lat, data.coord.lon);
     }
 
-    // Optional effects function
+    // Apply visual effects based on weather description
     if (typeof applyWeatherEffects === 'function') {
       applyWeatherEffects(weatherDesc);
     }
@@ -236,7 +236,6 @@ function updateCurrentWeather(data) {
     elements.currentIcon.html('<span style="color:red;">⚠️</span>');
   }
 }
-
 
 async function fetchForecast() {
   console.log('📅 Fetching 5-day forecast...');
@@ -251,37 +250,55 @@ async function fetchForecast() {
 }
 
 function applyWeatherEffects(description = '') {
-  const rainLayer = document.querySelector('.rain-layer');
-  const snowLayer = document.querySelector('.snow-layer');
-  const windLayer = document.querySelector('.wind-layer');
-  const cloudLayer = document.getElementById('cloud-layer');
-
-  // Hide all layers first
-  if (rainLayer) rainLayer.style.opacity = '0';
-  if (snowLayer) snowLayer.style.opacity = '0';
-  if (windLayer) windLayer.style.opacity = '0';
-  if (cloudLayer) cloudLayer.style.opacity = '0';
-
+  const effectsContainer = document.getElementById('weather-effects');
   const desc = description.toLowerCase();
 
+  // Helper to create or find a layer
+  function ensureLayer(selector, className) {
+    let layer = document.querySelector(selector);
+    if (!layer) {
+      layer = document.createElement('div');
+      layer.className = className;
+      effectsContainer?.appendChild(layer);
+    }
+    return layer;
+  }
+
+  const rainLayer = ensureLayer('.rain-layer', 'rain-layer');
+  const snowLayer = ensureLayer('.snow-layer', 'snow-layer');
+  const windLayer = ensureLayer('.wind-layer', 'wind-layer');
+  const cloudLayer = document.getElementById('cloud-layer');
+
+  // Hide all layers by default
+  rainLayer.style.opacity = '0';
+  snowLayer.style.opacity = '0';
+  windLayer.style.opacity = '0';
+  if (cloudLayer) cloudLayer.style.opacity = '0';
+
+  // Priority-based logic
   if (desc.includes('rain') || desc.includes('drizzle')) {
-    if (rainLayer) rainLayer.style.opacity = '1';
+    rainLayer.style.opacity = '1';
+    return;
   }
 
   if (desc.includes('snow')) {
-    if (snowLayer) snowLayer.style.opacity = '1';
-  }
-
-  if (desc.includes('wind')) {
-    if (windLayer) windLayer.style.opacity = '1';
-  }
-
-  if (desc.includes('cloud') || desc.includes('overcast')) {
-    if (cloudLayer) cloudLayer.style.opacity = '1';
+    snowLayer.style.opacity = '1';
+    return;
   }
 
   if (desc.includes('storm') || desc.includes('thunder')) {
     flashLightning();
+    return;
+  }
+
+  if (desc.includes('wind')) {
+    windLayer.style.opacity = '1';
+    return;
+  }
+
+  if (desc.includes('cloud') || desc.includes('overcast')) {
+    if (cloudLayer) cloudLayer.style.opacity = '1';
+    return;
   }
 }
 
@@ -318,7 +335,7 @@ function updateForecast(data) {
 
 function initRadar() {
   $('#radar-container').addClass('active');
-  $('#radar-toggle').text('Refresh Radar');
+  $('#radar-toggle').text('🛰️');
 
   const leafletCSS = document.createElement('link');
   leafletCSS.rel = 'stylesheet';
@@ -430,7 +447,7 @@ function stopEmergency() {
 // ---------------------------
 function initRadar() {
   $('#radar-container').addClass('active');
-  $('#radar-toggle').text('Refresh Radar');
+  $('#radar-toggle').text('🛰️');
 
   const leafletCSS = document.createElement('link');
   leafletCSS.rel = 'stylesheet';
@@ -938,11 +955,11 @@ function applyNightMode() {
   const nightToggleBtn = document.getElementById('night-toggle');
   if (nightToggleBtn) {
     if (manualNightOverride === true) {
-      nightToggleBtn.textContent = '🌞 Day Mode';
+      nightToggleBtn.textContent = '🌞';
     } else if (manualNightOverride === false) {
-      nightToggleBtn.textContent = '🌙 Night Mode';
+      nightToggleBtn.textContent = '🌒';
     } else {
-      nightToggleBtn.textContent = '🌙 Auto Night';
+      nightToggleBtn.textContent = '☀️🌙';
     }
   }
 }
