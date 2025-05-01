@@ -841,6 +841,18 @@ function fetchNewsHeadlines() {
     });
 }
 
+document.getElementById('ahahah-button').addEventListener('click', () => {
+  const audio = new Audio('sounds/ahahah.mp3');
+  const img = document.getElementById('ahahah-image');
+
+  audio.play().catch(console.error); // handle autoplay policies gracefully
+
+  img.style.display = 'block';
+  setTimeout(() => {
+    img.style.display = 'none';
+  }, 3000);
+});
+
 // ---------------------------
 // Time & App Initialization
 // ---------------------------
