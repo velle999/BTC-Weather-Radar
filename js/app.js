@@ -716,7 +716,7 @@ if (wolfGunToggle && wolfWrapper && wolfIframe) {
 
     // 🕹️ Load the game only once
     if (isVisible && !wolfIframe.src) {
-      wolfIframe.src = "https://dos.zone/wolfenstein-3d-may-05-1992/";
+      wolfIframe.src = "https://dos.zone/";
     }
 
     wolfWrapper.style.display = isVisible ? 'block' : 'none';
