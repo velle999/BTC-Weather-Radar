@@ -60,11 +60,17 @@ img {
 .rain-layer,
 .snow-layer,
 .wind-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;             /* Ensures full screen coverage */
+  height: 100vh;
   background-color: transparent;
   background-repeat: repeat;
   background-size: contain;
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
+  z-index: 9999;            /* Ensures above other content */
 }
 
 /* Rain Effect */
@@ -114,6 +120,7 @@ img {
   50%      { transform: rotate(-5deg); }
   75%      { transform: rotate(5deg); }
 }
+
 
 /* ===== MAIN APP CONTAINER ===== */
 #shell {

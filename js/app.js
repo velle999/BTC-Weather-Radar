@@ -263,24 +263,51 @@ async function fetchForecast() {
 function applyWeatherEffects(description = '') {
   const effectsContainer = document.getElementById('weather-effects');
   const desc = description.toLowerCase();
+  const ASSET_BASE = 'https://velle999.github.io/BTC-Weather-Radar/assets/effects/';
+
+  if (!effectsContainer) {
+    console.warn('⚠️ No #weather-effects container found.');
+    return;
+  }
 
   // Helper to create or find a layer
-  function ensureLayer(selector, className) {
+  function ensureLayer(selector, className, imageFile) {
     let layer = document.querySelector(selector);
     if (!layer) {
       layer = document.createElement('div');
       layer.className = className;
-      effectsContainer?.appendChild(layer);
+      layer.style.position = 'absolute';
+      layer.style.top = 0;
+      layer.style.left = 0;
+      layer.style.width = '100vw';
+      layer.style.height = '100vh';
+      layer.style.pointerEvents = 'none';
+      layer.style.zIndex = '9999';
+      layer.style.backgroundImage = `url('${ASSET_BASE}${imageFile}')`;
+      layer.style.backgroundRepeat = 'repeat';
+      layer.style.backgroundSize = 'contain';
+      layer.style.animation = getAnimation(className);
+      effectsContainer.appendChild(layer);
     }
     return layer;
   }
 
-  const rainLayer = ensureLayer('.rain-layer', 'rain-layer');
-  const snowLayer = ensureLayer('.snow-layer', 'snow-layer');
-  const windLayer = ensureLayer('.wind-layer', 'wind-layer');
+  // Returns the correct animation string
+  function getAnimation(className) {
+    switch (className) {
+      case 'rain-layer': return 'rainFall 0.8s linear infinite';
+      case 'snow-layer': return 'snowFall 3s linear infinite';
+      case 'wind-layer': return 'windBlow 5s linear infinite';
+      default: return '';
+    }
+  }
+
+  const rainLayer = ensureLayer('.rain-layer', 'rain-layer', 'rain.png');
+  const snowLayer = ensureLayer('.snow-layer', 'snow-layer', 'snow.png');
+  const windLayer = ensureLayer('.wind-layer', 'wind-layer', 'wind.png');
   const cloudLayer = document.getElementById('cloud-layer');
 
-  // Hide all layers by default
+  // Hide all by default
   rainLayer.style.opacity = '0';
   snowLayer.style.opacity = '0';
   windLayer.style.opacity = '0';
@@ -316,9 +343,19 @@ function applyWeatherEffects(description = '') {
 function flashLightning() {
   const flash = document.createElement('div');
   flash.className = 'lightning-flash';
+  flash.style.position = 'fixed';
+  flash.style.top = 0;
+  flash.style.left = 0;
+  flash.style.width = '100vw';
+  flash.style.height = '100vh';
+  flash.style.background = 'white';
+  flash.style.opacity = '0.8';
+  flash.style.zIndex = '10000';
+  flash.style.pointerEvents = 'none';
   document.body.appendChild(flash);
-  setTimeout(() => flash.remove(), 500);
+  setTimeout(() => flash.remove(), 200);
 }
+
 
 
 /** Render the forecast cards */
@@ -733,6 +770,14 @@ if (wolfGunToggle && wolfWrapper && wolfIframe) {
     wolfWrapper.style.display = isVisible ? 'block' : 'none';
   });
 }
+}
+
+function clearWeatherEffects() {
+  const layers = ['.rain-layer', '.snow-layer', '.wind-layer', '#cloud-layer'];
+  layers.forEach(sel => {
+    const el = document.querySelector(sel);
+    if (el) el.style.opacity = '0';
+  });
 }
 
 // ---------------------------
