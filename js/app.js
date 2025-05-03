@@ -71,6 +71,8 @@ function createDebugPanel() {
 
   debugPanel.innerHTML = `
     <strong>Debug Panel 🐞</strong><br>
+    <div id="debug-weather">Weather: Unknown</div>
+    <div id="debug-weather-class">Weather Class: None</div>
     <div id="debug-radar">Radar: Unknown</div>
     <div id="debug-stocks">Stocks: Unknown</div>
     <div id="debug-news">News: Unknown</div>
@@ -84,20 +86,28 @@ function createDebugPanel() {
 }
 
 function updateDebugPanel() {
-  const debugRadar  = document.getElementById('debug-radar');
-  const debugStocks = document.getElementById('debug-stocks');
-  const debugNews   = document.getElementById('debug-news');
-  const debugTetris = document.getElementById('debug-tetris');
-  const debugWolf   = document.getElementById('debug-wolf');
-  const debugCarrot = document.getElementById('debug-carrot');
+  const debugWeather      = document.getElementById('debug-weather');
+  const debugWeatherClass = document.getElementById('debug-weather-class');
+  const debugRadar        = document.getElementById('debug-radar');
+  const debugStocks       = document.getElementById('debug-stocks');
+  const debugNews         = document.getElementById('debug-news');
+  const debugTetris       = document.getElementById('debug-tetris');
+  const debugWolf         = document.getElementById('debug-wolf');
+  const debugCarrot       = document.getElementById('debug-carrot');
 
-  if (debugRadar)  debugRadar.textContent  = `Radar: ${$('#radar-container').hasClass('active') ? 'ON' : 'OFF'}`;
-  if (debugStocks) debugStocks.textContent = `Stocks: ${$('#stocks-container').is(':visible') ? 'Visible' : 'Hidden'}`;
-  if (debugNews)   debugNews.textContent   = `News: ${$('#news-ticker').is(':visible') ? 'Visible' : 'Hidden'}`;
-  if (debugTetris) debugTetris.textContent = `Tetris: ${$('#tetris-wrapper').is(':visible') ? 'Visible' : 'Hidden'}`;
-  if (debugWolf)   debugWolf.textContent   = `Wolf 3D: ${$('#wolf3d-wrapper').is(':visible') ? 'Visible' : 'Hidden'}`;
-  if (debugCarrot) debugCarrot.textContent = `Carrot Mode: ${document.body.classList.contains('carrot-mode') ? 'Active' : 'Inactive'}`;
+  const weatherText = elements.currentDesc?.text()?.trim() || 'Unknown';
+  const weatherClass = Array.from(document.body.classList).find(c => c.startsWith('weather-')) || 'None';
+
+  if (debugWeather)      debugWeather.textContent      = `Weather: ${weatherText}`;
+  if (debugWeatherClass) debugWeatherClass.textContent = `Weather Class: ${weatherClass}`;
+  if (debugRadar)        debugRadar.textContent        = `Radar: ${$('#radar-container').hasClass('active') ? 'ON' : 'OFF'}`;
+  if (debugStocks)       debugStocks.textContent       = `Stocks: ${$('#stocks-container').is(':visible') ? 'Visible' : 'Hidden'}`;
+  if (debugNews)         debugNews.textContent         = `News: ${$('#news-ticker').is(':visible') ? 'Visible' : 'Hidden'}`;
+  if (debugTetris)       debugTetris.textContent       = `Tetris: ${$('#tetris-wrapper').is(':visible') ? 'Visible' : 'Hidden'}`;
+  if (debugWolf)         debugWolf.textContent         = `Wolf 3D: ${$('#wolf3d-wrapper').is(':visible') ? 'Visible' : 'Hidden'}`;
+  if (debugCarrot)       debugCarrot.textContent       = `Carrot Mode: ${document.body.classList.contains('carrot-mode') ? 'Active' : 'Inactive'}`;
 }
+
 
 // Auto-update debug panel every second
 setInterval(updateDebugPanel, 1000);
@@ -178,6 +188,7 @@ async function fetchWeather() {
     if (!data || !data.main || !Array.isArray(data.weather) || !data.weather.length) {
       throw new Error('Malformed weather data');
     }
+console.log("Calling applyWeatherEffects with:", weatherDesc);
 
     updateCurrentWeather(data);
     $(document).trigger('dataUpdated', ['weather']);
@@ -932,6 +943,10 @@ function toggleIframeDisplay(buttonId, wrapperId, labelOn, labelOff) {
     });
   }
 }
+
+window.updateCurrentWeather = updateCurrentWeather;
+window.applyWeatherEffects = applyWeatherEffects;
+window.flashLightning = flashLightning;
 
 document.getElementById('debug-toggle')?.addEventListener('click', () => {
   const panel = document.getElementById('debug-panel');

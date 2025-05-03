@@ -120,7 +120,6 @@
   Loading weather alerts...
 </div>
 
-
   <!-- ✅ Added 5-Day Forecast -->
   <div id="five-day-forecast"></div>
 </div>
@@ -328,6 +327,36 @@
 <script defer src="js/carrot.js"></script>
 <script defer src="js/tetris.js"></script>
 <script defer src="alerts.js"></script>
+<script>
+  const chatInput = document.getElementById('chat-input');
+  const chatLog = document.getElementById('chat-log');
+
+  chatInput.addEventListener('keypress', async (e) => {
+    if (e.key === 'Enter' && chatInput.value.trim()) {
+      const msg = chatInput.value.trim();
+      appendToChat('👤', msg);
+      chatInput.value = '';
+
+      try {
+        const res = await fetch('/bot-chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg })
+        });
+        const data = await res.json();
+        appendToChat('🤖', data.reply || '[No reply]');
+      } catch (err) {
+        appendToChat('🚨', 'Bot backend error.');
+        console.error(err);
+      }
+    }
+  });
+
+  function appendToChat(sender, text) {
+    chatLog.innerHTML += `<div><strong>${sender}</strong>: ${text}</div>`;
+    chatLog.scrollTop = chatLog.scrollHeight;
+  }
+</script>
 
 </body>
 </html>

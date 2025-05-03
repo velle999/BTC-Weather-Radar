@@ -31,7 +31,11 @@ img {
 }
 
 /* ===== WEATHER EFFECTS ===== */
-#weather-effects, #carrot-container, #carrot-layer, #cloud-layer {
+/* Shared Container Styles */
+#weather-effects,
+#carrot-container,
+#carrot-layer,
+#cloud-layer {
   position: fixed;
   top: 0;
   left: 0;
@@ -40,11 +44,22 @@ img {
   pointer-events: none;
 }
 
-#weather-effects { z-index: 20; }
-#carrot-container, #carrot-layer { z-index: 99999; }
-#cloud-layer { z-index: 20; }
+/* Layer Z-Indexing */
+#weather-effects {
+  z-index: 20;
+}
+#cloud-layer {
+  z-index: 20;
+}
+#carrot-container,
+#carrot-layer {
+  z-index: 99999;
+}
 
-.rain-layer, .snow-layer, .wind-layer {
+/* Base Effect Layer Styles */
+.rain-layer,
+.snow-layer,
+.wind-layer {
   background-color: transparent;
   background-repeat: repeat;
   background-size: contain;
@@ -52,46 +67,52 @@ img {
   transition: opacity 0.5s ease-in-out;
 }
 
+/* Rain Effect */
 .rain-layer {
-  background-image: url('assets/effects/rain.png');
+  background-image: url('/BTC-Weather-Radar/assets/effects/rain.png');
   animation: rainFall 0.8s linear infinite;
 }
 
+/* Snow Effect */
 .snow-layer {
-  background-image: url('assets/effects/snow.png');
+  background-image: url('/BTC-Weather-Radar/assets/effects/snow.png');
   animation: snowFall 3s linear infinite;
 }
 
+/* Wind Effect */
 .wind-layer {
-  background-image: url('assets/effects/wind.png');
+  background-image: url('/BTC-Weather-Radar/assets/effects/wind.png');
   animation: windBlow 5s linear infinite;
 }
 
+/* Rain Animation */
 @keyframes rainFall {
-  0% { background-position: 0 0; }
+  0%   { background-position: 0 0; }
   100% { background-position: 0 100vh; }
 }
 
+/* Snow Animation */
 @keyframes snowFall {
-  0% { background-position: 0 -100vh; }
+  0%   { background-position: 0 -100vh; }
   100% { background-position: 0 100vh; }
 }
 
+/* Wind Animation */
 @keyframes windBlow {
-  0% { background-position: -100vw 0; }
+  0%   { background-position: -100vw 0; }
   100% { background-position: 100vw 0; }
 }
 
-/* WIND WIGGLE EFFECT */
+/* Wiggle Effect for Wind Gusts */
 .wind-wiggle {
   animation: wiggle 1.5s ease-in-out infinite;
 }
 
 @keyframes wiggle {
   0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(5deg); }
-  50% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
+  25%      { transform: rotate(5deg); }
+  50%      { transform: rotate(-5deg); }
+  75%      { transform: rotate(5deg); }
 }
 
 /* ===== MAIN APP CONTAINER ===== */
