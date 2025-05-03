@@ -815,30 +815,44 @@ async function fetchBitcoinPrice() {
   }
 }
 
-function fetchNewsHeadlines() {
+async function fetchNewsHeadlines() {
   console.log('📰 Fetching news headlines...');
-  fetch(`${CONFIG.CORS_PROXY}https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en`)
-    .then(response => response.text())
-    .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
-    .then(data => {
-      const items = data.querySelectorAll("item");
-      const headlines = Array.from(items).slice(0, 10).map(item => item.querySelector("title").textContent);
-      const newsItemsEl = document.getElementById('news-items');
-      if (newsItemsEl) {
-        newsItemsEl.innerHTML = headlines.join(' 🥕 ');
-        newsItemsEl.style.animation = 'none';
-        void newsItemsEl.offsetWidth;
-        newsItemsEl.style.animation = 'scrollNews 60s linear infinite';
-      }
-      $(document).trigger('dataUpdated', ['news']);
-    })
-    .catch(error => {
-      console.error('Error fetching Google News:', error);
-      const newsItemsEl = document.getElementById('news-items');
-      if (newsItemsEl) {
-        newsItemsEl.innerHTML = "Failed to load news.";
-      }
+  const newsItemsEl = document.getElementById('news-items');
+  if (newsItemsEl) {
+    newsItemsEl.textContent = "Loading news...";
+  }
+
+  try {
+    const response = await fetch(`${CONFIG.CORS_PROXY}https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en`);
+
+    if (!response.ok) {
+      throw new Error(`Network response was not ok (${response.status})`);
+    }
+
+    const xmlText = await response.text();
+    const parsed = new DOMParser().parseFromString(xmlText, "text/xml");
+    const items = parsed.querySelectorAll("item");
+
+    const headlines = Array.from(items).slice(0, 10).map(item => {
+      const titleEl = item.querySelector("title");
+      return titleEl ? titleEl.textContent : "(No title)";
     });
+
+    if (newsItemsEl) {
+      newsItemsEl.innerHTML = headlines.join(' 🥕 ');
+      newsItemsEl.style.animation = 'none'; // Reset animation
+      void newsItemsEl.offsetWidth;         // Trigger reflow
+      newsItemsEl.style.animation = 'scrollNews 60s linear infinite';
+    }
+
+    // Custom event for system updates
+    document.dispatchEvent(new CustomEvent('dataUpdated', { detail: 'news' }));
+  } catch (error) {
+    console.error('🛑 Error fetching Google News:', error);
+    if (newsItemsEl) {
+      newsItemsEl.innerHTML = "Failed to load news.";
+    }
+  }
 }
 
 document.getElementById('ahahah-button').addEventListener('click', () => {
