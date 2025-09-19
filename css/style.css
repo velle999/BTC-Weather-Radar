@@ -1152,9 +1152,9 @@ html {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90vw;
+  width: 560px;
   max-width: 1000px;
-  height: 80vh;
+  height: 384px;
   background: black;
   z-index: 99999;
   border: 4px solid red;

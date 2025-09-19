@@ -764,7 +764,7 @@ if (wolfGunToggle && wolfWrapper && wolfIframe) {
 
     // 🕹️ Load the game only once
     if (isVisible && !wolfIframe.src) {
-      wolfIframe.src = "https://dos.zone/";
+      wolfIframe.src = "https://archive.org/embed/wolfenstein3d_202105";
     }
 
     wolfWrapper.style.display = isVisible ? 'block' : 'none';
